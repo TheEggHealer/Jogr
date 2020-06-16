@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:learningflutter2/utils/models/userdata.dart';
+import 'package:jogr/utils/models/userdata.dart';
 
 class DatabaseService {
 

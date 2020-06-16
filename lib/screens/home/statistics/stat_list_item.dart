@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/utils/constants.dart';
+import 'package:jogr/utils/constants.dart';
 
 class StatListItem extends StatelessWidget {
 

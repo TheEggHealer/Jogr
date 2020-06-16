@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:learningflutter2/utils/constants.dart';
-import 'package:learningflutter2/utils/custom_icons.dart';
-import 'package:learningflutter2/utils/models/userdata.dart';
+import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
 
 import '../../home_component.dart';

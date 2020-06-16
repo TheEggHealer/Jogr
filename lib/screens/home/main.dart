@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/services/auth.dart';
-import 'package:learningflutter2/services/database.dart';
-import 'package:learningflutter2/utils/models/user.dart';
-import 'package:learningflutter2/utils/models/userdata.dart';
+import 'package:jogr/services/auth.dart';
+import 'package:jogr/services/database.dart';
+import 'package:jogr/utils/models/user.dart';
+import 'package:jogr/utils/models/userdata.dart';
 
 import 'package:provider/provider.dart';
 import 'home.dart';

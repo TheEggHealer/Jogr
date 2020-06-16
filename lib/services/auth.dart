@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:learningflutter2/services/database.dart';
-import 'package:learningflutter2/utils/models/user.dart';
+import 'package:jogr/services/database.dart';
+import 'package:jogr/utils/models/user.dart';
 
 class AuthService {
 

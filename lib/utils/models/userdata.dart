@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:learningflutter2/utils/models/run.dart';
+import 'package:jogr/utils/models/run.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';

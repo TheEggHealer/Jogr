@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/screens/wrapper.dart';
-import 'package:learningflutter2/services/auth.dart';
-import 'package:learningflutter2/utils/models/user.dart';
+import 'package:jogr/screens/wrapper.dart';
+import 'package:jogr/services/auth.dart';
+import 'package:jogr/utils/models/user.dart';
 import 'package:provider/provider.dart';
 
 void main() {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/screens/home/statistics/previous_runs.dart';
-import 'package:learningflutter2/screens/home/statistics/stat_list_item.dart';
-import 'package:learningflutter2/services/database.dart';
-import 'package:learningflutter2/utils/constants.dart';
+import 'package:jogr/screens/home/statistics/previous_runs.dart';
+import 'package:jogr/screens/home/statistics/stat_list_item.dart';
+import 'package:jogr/services/database.dart';
+import 'package:jogr/utils/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:learningflutter2/utils/models/user.dart';
-import 'package:learningflutter2/utils/models/userdata.dart';
+import 'package:jogr/utils/models/user.dart';
+import 'package:jogr/utils/models/userdata.dart';
 import 'dart:math';
 
 import 'package:provider/provider.dart';

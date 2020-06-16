@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/screens/authenticate/start.dart';
+import 'package:jogr/screens/authenticate/start.dart';
 import 'register.dart';
 import 'login.dart';
 

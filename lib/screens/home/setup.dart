@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/services/database.dart';
-import 'package:learningflutter2/utils/constants.dart';
-import 'package:learningflutter2/utils/models/user.dart';
+import 'package:jogr/services/database.dart';
+import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/models/user.dart';
 import 'package:provider/provider.dart';
 
 class Setup extends StatefulWidget {

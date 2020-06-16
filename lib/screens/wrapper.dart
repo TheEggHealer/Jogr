@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/screens/authenticate/authenticate.dart';
-import 'package:learningflutter2/screens/home/main.dart';
-import 'package:learningflutter2/screens/splash/splash.dart';
-import 'package:learningflutter2/utils/models/user.dart';
+import 'package:jogr/screens/authenticate/authenticate.dart';
+import 'package:jogr/screens/home/main.dart';
+import 'package:jogr/screens/splash/splash.dart';
+import 'package:jogr/utils/models/user.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatefulWidget {

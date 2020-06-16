@@ -1,14 +1,14 @@
 import 'package:cool_nav/cool_nav.dart';
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/screens/home/route/route_planner.dart';
-import 'package:learningflutter2/screens/home/setup.dart';
-import 'package:learningflutter2/screens/home/statistics/statistics.dart';
-import 'package:learningflutter2/screens/splash/splash.dart';
-import 'package:learningflutter2/services/auth.dart';
-import 'package:learningflutter2/utils/constants.dart';
-import 'package:learningflutter2/utils/custom_icons.dart';
-import 'package:learningflutter2/utils/models/user.dart';
-import 'package:learningflutter2/utils/models/userdata.dart';
+import 'package:jogr/screens/home/route/route_planner.dart';
+import 'package:jogr/screens/home/setup.dart';
+import 'package:jogr/screens/home/statistics/statistics.dart';
+import 'package:jogr/screens/splash/splash.dart';
+import 'package:jogr/services/auth.dart';
+import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/models/user.dart';
+import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
 
 import 'home_widget.dart';

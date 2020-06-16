@@ -1,6 +1,11 @@
+import 'dart:isolate';
+import 'dart:ui';
+
+import 'package:background_locator/background_locator.dart';
+import 'package:background_locator/location_dto.dart';
+import 'package:background_locator/location_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_background_location/flutter_background_location.dart';
 
 class Map extends StatefulWidget {
   @override
@@ -9,22 +14,57 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> {
 
+  static const String _isolateName = "JogrIsolator";
+  ReceivePort port = ReceivePort();
+
+  @override
+  void initState() {
+    super.initState();
+
+    IsolateNameServer.registerPortWithName(port.sendPort, _isolateName);
+    port.listen((dynamic data) {
+      print('Data: $data');
+    });
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    await BackgroundLocator.initialize();
+  }
+
+  static void callback(LocationDto locationDto) async {
+    final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
+    send?.send(locationDto);
+  }
+
+  //Optional
+  static void notificationCallback() {
+    print('User clicked on the notification');
+  }
+
+  void startLocationService(){
+    BackgroundLocator.registerLocationUpdate(
+      callback,
+      //optional
+      androidNotificationCallback: notificationCallback,
+      settings: LocationSettings(
+        //Scroll down to see the different options
+          notificationTitle: "Start Location Tracking example",
+          notificationMsg: "Track location in background exapmle",
+          wakeLockTime: 20,
+          autoStop: false,
+          interval: 1
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
 
-                                                LatLng position = LatLng(55.7096178, 13.2328676);
+    LatLng position = LatLng(55.7096178,13.2328676);
 
-                                                void onCreate(GoogleMapController controller) {
-                                                  FlutterBackgroundLocation.startLocationService();
-                                                  FlutterBackgroundLocation.getLocationUpdates((loc) => {
-                                                    controller.animateCamera(
-                                                      CameraUpdate.newCameraPosition(CameraPosition(
-                                                        target: LatLng(loc.latitude, loc.longitude),
-                                                        zoom: 18
-                                                      ))
-                                                    )
-                                                  });
+    void onCreate(GoogleMapController controller) {
+
     }
 
     return Container(
@@ -48,6 +88,5 @@ class _MapState extends State<Map> {
   @override
   void dispose() {
     super.dispose();
-    FlutterBackgroundLocation.stopLocationService();
   }
 }

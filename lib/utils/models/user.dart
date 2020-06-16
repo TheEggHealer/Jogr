@@ -1,4 +1,4 @@
-import 'package:learningflutter2/services/database.dart';
+import 'package:jogr/services/database.dart';
 
 class User {
 

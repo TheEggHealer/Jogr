@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:learningflutter2/screens/authenticate/authenticate.dart';
-import 'package:learningflutter2/services/auth.dart';
-import 'package:learningflutter2/utils/constants.dart';
-import 'package:learningflutter2/utils/custom_icons.dart';
-import 'package:learningflutter2/utils/loading.dart';
+import 'package:jogr/screens/authenticate/authenticate.dart';
+import 'package:jogr/services/auth.dart';
+import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/loading.dart';
 
 class SplashScreen extends StatelessWidget {
 
