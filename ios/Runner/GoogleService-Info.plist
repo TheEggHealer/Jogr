@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>526469828895-p294ton8s4i4i57cccfa8kr1v68kvukp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.526469828895-p294ton8s4i4i57cccfa8kr1v68kvukp</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>526469828895-ddflqqfd2i2r0u1t71jqldegrs5r2p8e.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAfVZMsh7abV_1AwUHdNGqq7AJDiwSUKR0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>526469828895</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.jonathan.jogr</string>
+	<key>PROJECT_ID</key>
+	<string>joggingtracker-e2493</string>
+	<key>STORAGE_BUCKET</key>
+	<string>joggingtracker-e2493.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:526469828895:ios:d00f801ddb24740338602a</string>
+	<key>DATABASE_URL</key>
+	<string>https://joggingtracker-e2493.firebaseio.com</string>
+</dict>
+</plist>

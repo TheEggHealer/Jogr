@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "526469828895",
+    "firebase_url": "https://joggingtracker-e2493.firebaseio.com",
+    "project_id": "joggingtracker-e2493",
+    "storage_bucket": "joggingtracker-e2493.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526469828895:android:5c0ee8ded3bd059138602a",
+        "android_client_info": {
+          "package_name": "com.jonathan.jogr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526469828895-ddflqqfd2i2r0u1t71jqldegrs5r2p8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jonathan.jogr",
+            "certificate_hash": "24163d37ef7ec526b3ecbdee6b5547e21ad5848e"
+          }
+        },
+        {
+          "client_id": "526469828895-548sdpe4t9ivqa1ahl51ko71c3pfc47k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALdT4jGDn8RIc3DffPoC0MjHi3RLBzbX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526469828895-548sdpe4t9ivqa1ahl51ko71c3pfc47k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "526469828895-vad60ktvj1jvuou767828vl35h4ku4ll.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jonathan.learningflutter2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526469828895:android:3621b71670ca64cd38602a",
+        "android_client_info": {
+          "package_name": "com.jonathan.learningflutter2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526469828895-k5m4r64ndnbthm0rp6uhhlb0npd28env.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jonathan.learningflutter2",
+            "certificate_hash": "24163d37ef7ec526b3ecbdee6b5547e21ad5848e"
+          }
+        },
+        {
+          "client_id": "526469828895-548sdpe4t9ivqa1ahl51ko71c3pfc47k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALdT4jGDn8RIc3DffPoC0MjHi3RLBzbX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526469828895-548sdpe4t9ivqa1ahl51ko71c3pfc47k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "526469828895-vad60ktvj1jvuou767828vl35h4ku4ll.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jonathan.learningflutter2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
