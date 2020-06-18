@@ -22,7 +22,6 @@ class UserData {
     if (raw.containsKey('name')) name = raw['name'];
     if (raw.containsKey('weight')) weight = raw['weight'];
 
-
     addRuns(raw['previous_runs']);
   }
 

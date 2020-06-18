@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
             controller: controller,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              RoutePlanner(),
+              RoutePlanner(user, userData),
               SplashScreen(auth: widget.auth,),
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
