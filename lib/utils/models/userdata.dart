@@ -1,8 +1,10 @@
-import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
+import 'package:latlong/latlong.dart';
+
 
 import '../constants.dart';
 
@@ -13,6 +15,7 @@ class UserData {
   String name;
   double weight;
   List<Run> runs;
+  List<Route> routes;
 
   static const int _plotDetail = 8;
 
@@ -23,6 +26,7 @@ class UserData {
     if (raw.containsKey('weight')) weight = raw['weight'];
 
     addRuns(raw['previous_runs']);
+    addRoutes(raw['saved_routes']);
   }
 
   addRuns(Map<String, dynamic> runs) {
@@ -44,6 +48,41 @@ class UserData {
     result.sort((a, b) => a.date.compareTo(b.date));
 
     this.runs = result;
+  }
+
+  addRoutes(Map<String, dynamic> routes) {
+    List<Route> result = [];
+
+    if(routes != null) {
+      routes.forEach((key, value) {
+        List<LatLng> waypoints = [];
+        int distance = 0;
+        int timesRan = 0;
+        int totalDistanceRan = 0;
+        int totalTime = 0;
+
+        value.forEach((key2, value2) {
+          if(key2 == 'distance') distance = int.parse(value2);
+          else if(key2 == 'timesRan') timesRan = int.parse(value2);
+          else if(key2 == 'totalDistanceRan') totalDistanceRan = int.parse(value2);
+          else if(key2 == 'totalTime') totalTime = int.parse(value2);
+          else waypoints.add(LatLng(double.parse(value2.split('&')[0]), double.parse(value2.split('&')[1])));
+        });
+
+        result.add(
+          Route(
+            name: name,
+            waypoints: waypoints,
+            distance: distance,
+            timesRan: timesRan,
+            totalDistanceRan: totalDistanceRan,
+            totalTime: totalTime,
+          )
+        );
+      });
+    }
+
+    this.routes = result;
   }
 
   Run get lastRun => runs.length > 0 ? runs[runs.length - 1] : null;

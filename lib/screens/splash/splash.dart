@@ -21,7 +21,7 @@ class SplashScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Jogging Tracker',
+              'Jogr',
               style: TextStyle(
                 fontFamily: 'Quicksand',
                 color: color_text_dark,
@@ -57,7 +57,7 @@ class SplashScreen extends StatelessWidget {
                 dynamic result = await auth.signOut();
               },
               child: Text(
-                  'LOGIN',
+                  'LOGOUT',
                   style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Roboto',

@@ -40,7 +40,7 @@ class _StartState extends State<Start> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Jogging Tracker',
+                  'Jogr',
                   style: TextStyle(
                     fontSize: 35,
                     fontFamily: 'Quicksand',
