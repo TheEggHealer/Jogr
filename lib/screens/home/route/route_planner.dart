@@ -408,6 +408,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                     focusColor: color_text_highlight,
                     hoverColor: color_text_highlight,
                     textColor: color_text_dark,
+                    splashColor: color_text_highlight,
                     borderSide: BorderSide(color: color_text_highlight),
                   ),
                   OutlineButton(
@@ -424,6 +425,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                     focusColor: color_text_highlight,
                     hoverColor: color_text_highlight,
                     textColor: color_text_dark,
+                    splashColor: color_text_highlight,
                     borderSide: BorderSide(color: color_text_highlight),
                   ),
                   OutlineButton(
@@ -435,6 +437,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                     focusColor: color_error,
                     hoverColor: color_error,
                     textColor: color_text_dark,
+                    splashColor: color_error,
                     borderSide: BorderSide(color: color_error),
                   ),
 
@@ -453,6 +456,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                     focusColor: color_text_highlight,
                     hoverColor: color_text_highlight,
                     textColor: color_text_dark,
+                    splashColor: color_text_highlight,
                     borderSide: BorderSide(color: color_text_highlight),
                   ),
                   OutlineButton(
@@ -464,6 +468,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                     focusColor: color_text_highlight,
                     hoverColor: color_text_highlight,
                     textColor: color_text_dark,
+                    splashColor: color_text_highlight,
                     borderSide: BorderSide(color: color_text_highlight),
                   ),
                   OutlineButton(
@@ -479,6 +484,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                     focusColor: color_button_green,
                     hoverColor: color_button_green,
                     textColor: color_text_dark,
+                    splashColor: color_text_highlight,
                     borderSide: BorderSide(color: color_button_green),
                   ),
                 ],
