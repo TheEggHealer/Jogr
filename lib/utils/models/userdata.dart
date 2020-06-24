@@ -1,9 +1,9 @@
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:flutter/material.dart' hide Route;
-import 'package:latlong/latlong.dart';
 
 
 import '../constants.dart';
@@ -60,6 +60,7 @@ class UserData {
         int timesRan = 0;
         int totalDistanceRan = 0;
         int totalTime = 0;
+        String name = key;
 
         value.forEach((key2, value2) {
           if(key2 == 'distance') distance = int.parse(value2);

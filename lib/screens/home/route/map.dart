@@ -28,6 +28,7 @@ class Map extends StatefulWidget {
 class _MapState extends State<Map> {
 
   LatLng position = LatLng(0, 0);
+  bool showMarkes = true;
 
 
   Future<LatLng> setupLocation() async {
@@ -154,9 +155,14 @@ class _MapState extends State<Map> {
       myLocationEnabled: true,
       buildingsEnabled: true,
       onMapCreated: onCreate,
+      onCameraMove: (pos) {
+        setState(() {
+          showMarkes = pos.zoom > 14;
+        });
+      },
       onTap: addWaypoint,
       polylines: widget.polylines,
-      markers: widget.markers,
+      markers: showMarkes ? widget.markers : {},
     );
   }
 
