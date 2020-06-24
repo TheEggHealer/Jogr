@@ -1,16 +1,20 @@
 # jogr
+A jogging app. 
 
-A new Flutter application.
+## Current features
+* Preiew prevoius runs and statistics.
+* Create / save / load routes on a map. The distance of the route is calculated. 
+* Sign in using google. 
+* Sign / Registring with email and password. 
+* The app uses Firebase for its authorization and storage. 
 
-## Getting Started
+## Screenshots and gifs
+![Map demo](demo/start.jpg)
 
-This project is a starting point for a Flutter application.
+![Map demo](demo/register.jpg)
 
-A few resources to get you started if this is your first Flutter project:
+![Map demo](demo/home.jpg)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+![Map demo](demo/map.gif)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Map demo](demo/stats.gif)
