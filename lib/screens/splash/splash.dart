@@ -36,9 +36,9 @@ class SplashScreen extends StatelessWidget {
                   Positioned(
                     left: 4.0,
                     top: 8.0,
-                    child: Icon(CustomIcons.shoe, color: Colors.black54, size: 180),
+                    child: Icon(CustomIcons.jogr, color: Colors.black54, size: 180),
                   ),
-                  Icon(CustomIcons.shoe, color: Color(0xff2B2B2B), size: 180),
+                  Icon(CustomIcons.jogr, color: Color(0xff2B2B2B), size: 180),
                 ],
               ),
             ),

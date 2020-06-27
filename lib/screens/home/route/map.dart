@@ -59,7 +59,6 @@ class _MapState extends State<Map> {
     super.initState();
     rootBundle.loadString('assets/map_theme.json').then((string) {
       widget._mapTheme = string;
-      print(string);
     });
   }
 

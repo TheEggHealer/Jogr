@@ -40,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "526469828895-vad60ktvj1jvuou767828vl35h4ku4ll.apps.googleusercontent.com",
+              "client_id": "526469828895-p294ton8s4i4i57cccfa8kr1v68kvukp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.jonathan.learningflutter2"
+                "bundle_id": "com.jonathan.jogr"
               }
             }
           ]
@@ -54,7 +54,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:526469828895:android:3621b71670ca64cd38602a",
         "android_client_info": {
-          "package_name": "com.jonathan.learningflutter2"
+          "package_name": "com.jonathan.jogr"
         }
       },
       "oauth_client": [
@@ -62,7 +62,7 @@
           "client_id": "526469828895-k5m4r64ndnbthm0rp6uhhlb0npd28env.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.jonathan.learningflutter2",
+            "package_name": "com.jonathan.jogr",
             "certificate_hash": "24163d37ef7ec526b3ecbdee6b5547e21ad5848e"
           }
         },
@@ -84,10 +84,10 @@
               "client_type": 3
             },
             {
-              "client_id": "526469828895-vad60ktvj1jvuou767828vl35h4ku4ll.apps.googleusercontent.com",
+              "client_id": "526469828895-p294ton8s4i4i57cccfa8kr1v68kvukp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.jonathan.learningflutter2"
+                "bundle_id": "com.jonathan.jogr"
               }
             }
           ]

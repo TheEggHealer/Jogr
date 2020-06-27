@@ -24,50 +24,29 @@ class _StartState extends State<Start> {
       backgroundColor: color_background,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
             //Title
             Column(
               children: [
+                SizedBox(height: 100),
+                Icon(CustomIcons.jogr, color: color_text_highlight, size: 60),
                 Text(
-                  'Welcome to',
+                  'JOGR',
                   style: TextStyle(
-                    fontSize: 28,
-                    fontFamily: 'Quicksand',
-                    color: color_text_highlight,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Jogr',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontFamily: 'Quicksand',
-                    color: color_text_highlight,
+                    fontSize: 90,
+                    fontFamily: 'Dosis',
+                    color: color_text_dark,
                   ),
                 ),
               ],
             ),
 
-            //Logo
-            Container(
-              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    left: 4.0,
-                    top: 8.0,
-                    child: Icon(CustomIcons.shoe, color: Colors.black54, size: 180),
-                  ),
-                  Icon(CustomIcons.shoe, color: Color(0xff2B2B2B), size: 180),
-                ],
-              ),
-            ),
 
             //Buttons
             Column(
               children: [
+                SizedBox(height: 60),
                 Container(
                   height: 70,
                   padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -197,14 +176,19 @@ class _StartState extends State<Start> {
             ),
 
             //Copyright
-            Text(
-              '© Copyright Jonathan Runeke 2020',
-              style: TextStyle(
-                fontSize: 10,
-                fontFamily: 'RobotoLight',
-                color: color_text_dark,
-              ),
-              textAlign: TextAlign.center,
+            Column(
+              children: [
+                Text(
+                  '© Copyright Jonathan Runeke 2020',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'RobotoLight',
+                    color: color_text_dark,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+              ],
             ),
           ],
         ),
