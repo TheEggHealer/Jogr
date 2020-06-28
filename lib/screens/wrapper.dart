@@ -39,7 +39,7 @@ class _WrapperState extends State<Wrapper> {
       if (user == null)
         return Authenticate();
       else
-        return Main();
+        return MediaQuery.of(context).size.width > 100 ? Main() : SplashScreen();
     } else {
       return SplashScreen();
     }

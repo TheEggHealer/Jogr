@@ -41,16 +41,11 @@ class Statistics extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                  'Statistics',
-                  style: textStyleHeader,
+                    'Statistics',
+                    style: textStyleHeader,
+                  ),
                 ),
-                ),
-                Divider(
-                  color: Color(0xff555555),
-                  endIndent: 20,
-                  indent: 20,
-                  height: 60,
-                ),
+                divider,
                 Container(
                   height: 70,
                   padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -78,12 +73,7 @@ class Statistics extends StatelessWidget {
                     highlightedBorderColor: color_text_highlight,
                   ),
                 ),
-                Divider(
-                  color: Color(0xff555555),
-                  endIndent: 20,
-                  indent: 20,
-                  height: 60,
-                ),
+                divider,
                 Text(
                     'Your running speed over time:',
                     style: textStyleHeaderSmall
@@ -101,12 +91,7 @@ class Statistics extends StatelessWidget {
                 _distanceChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
                   userData.getDistanceChart(),
                 ),
-                Divider(
-                  color: Color(0xff555555),
-                  endIndent: 20,
-                  indent: 20,
-                  height: 60,
-                ),
+                divider,
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 30),
                   child: Column(

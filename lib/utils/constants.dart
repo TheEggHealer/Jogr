@@ -39,6 +39,13 @@ const textStyleHeaderSmall = TextStyle(
   color: color_text_highlight,
 );
 
+const Divider divider = Divider(
+  color: Color(0xff555555),
+  endIndent: 20,
+  indent: 20,
+  height: 60,
+);
+
 
 
 String roundedString(double value, int digits) {

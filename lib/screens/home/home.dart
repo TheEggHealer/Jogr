@@ -1,5 +1,6 @@
 import 'package:cool_nav/cool_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:jogr/screens/home/profile/profile.dart';
 import 'package:jogr/screens/home/route/route_planner.dart';
 import 'package:jogr/screens/home/setup.dart';
 import 'package:jogr/screens/home/statistics/statistics.dart';
@@ -121,7 +122,7 @@ class _HomeState extends State<Home> {
                   ),
               ),
               Statistics(userData: userData, user: user),
-              SplashScreen(auth: widget.auth,),
+              Profile(),
             ],
           ),
           bottomNavigationBar: SpotlightBottomNavigationBar(
