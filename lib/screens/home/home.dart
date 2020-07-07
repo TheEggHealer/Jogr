@@ -45,6 +45,7 @@ class _HomeState extends State<Home> {
     } else {
         return  Scaffold(
           backgroundColor: color_background,
+          resizeToAvoidBottomPadding: false,
           body: PageView(
             controller: controller,
             physics: NeverScrollableScrollPhysics(),
@@ -55,36 +56,41 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Text(
-                        'Welcome back, ${userData.name}',
-                        style: textStyleHeader,
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            'Welcome back, ${userData.name}',
+                            style: textStyleHeader,
+                          ),
+                        ),
+
+                        Divider(
+                          color: Color(0xff555555),
+                          endIndent: 20,
+                          indent: 20,
+                          height: 60,
+                        ),
+
+                        HomeWidget(),
+
+                        SizedBox(height: 30),
+
+                        Divider(
+                          color: Color(0xff555555),
+                          endIndent: 20,
+                          indent: 20,
+                          height: 0,
+                        ),
+                      ],
                     ),
-
-                    Divider(
-                      color: Color(0xff555555),
-                      endIndent: 20,
-                      indent: 20,
-                      height: 60,
-                    ),
-
-                    HomeWidget(),
-
-                    Divider(
-                      color: Color(0xff555555),
-                      endIndent: 20,
-                      indent: 20,
-                      height: 60,
-                    ),
-
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
+                    Expanded(
                       child: Center(
                         child: RawMaterialButton(
-                          elevation: 30,
+                          elevation: 0,
                           onPressed: () {},
                           child: Container(
                             child: Icon(Icons.directions_run, color: color_text_highlight, size: 30),
@@ -99,27 +105,8 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-
-
-                    /**                      //Sign out button
-                        Center(
-                        child: OutlineButton(
-                        onPressed: () async {
-                        await widget.auth.signOut();
-                        },
-                        child: Text('SIGN OUT'),
-                        color: color_text_highlight,
-                        splashColor: color_text_highlight,
-                        highlightColor: color_text_highlight,
-                        focusColor: color_text_highlight,
-                        textColor: color_text_dark,
-                        borderSide: BorderSide(color: color_text_highlight),
-                        highlightedBorderColor: color_text_highlight,
-                        ),
-                        )    */
-
-                    ],
-                  ),
+                  ],
+                ),
               ),
               Statistics(userData: userData, user: user),
               Profile(),

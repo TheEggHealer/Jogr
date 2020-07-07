@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:background_locator/location_dto.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,7 +30,7 @@ class _MapState extends State<Map> {
 
   LatLng position = LatLng(0, 0);
   bool showMarkes = true;
-
+  int selectedMarked = -1;
 
   Future<LatLng> setupLocation() async {
     Location location = Location();
@@ -71,6 +72,10 @@ class _MapState extends State<Map> {
       textDirection: TextDirection.ltr,
     );
 
+    paint.strokeWidth = 10;
+    paint.strokeCap = StrokeCap.butt;
+    paint.strokeJoin = StrokeJoin.round;
+
     final double radius = width / 2;
 
     canvas.drawCircle(
@@ -78,6 +83,10 @@ class _MapState extends State<Map> {
       radius,
       paint,
     );
+
+
+    Vertices vertices = Vertices(VertexMode.triangles, [Offset(radius/2, radius), Offset(radius, radius * 3), Offset(radius+radius/2, radius)]);
+    canvas.drawVertices(vertices, BlendMode.color, paint);
 
     textPainter.text = TextSpan(
       text: clusterSize.toString(),
@@ -99,12 +108,38 @@ class _MapState extends State<Map> {
 
     final image = await pictureRecorder.endRecording().toImage(
       radius.toInt() * 2,
-      radius.toInt() * 2,
+      radius.toInt() * 3,
     );
 
     final data = await image.toByteData(format: ImageByteFormat.png);
 
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+  }
+
+  void swapMarkers(int a, int b) async {
+    Marker last = widget.markers.firstWhere((m) => m.markerId.value == 'point$b');
+    Marker selected = widget.markers.firstWhere((m) => m.markerId.value == 'point$a');
+
+    LatLng tmp = widget.waypoints[b - 1];
+    widget.waypoints[b - 1] = widget.waypoints[a - 1];
+    widget.waypoints[a - 1] = tmp;
+
+    widget.markers.remove(last);
+    widget.markers.remove(selected);
+    widget.markers.add(await createMarker(widget.waypoints[b - 1], b));
+    widget.markers.add(await createMarker(widget.waypoints[a - 1], a));
+    setState(() {});
+  }
+
+  void removeMarker(int id) async {
+    widget.markers.clear();
+    widget.waypoints.removeAt(id-1);
+
+    for(int i = 0; i < widget.waypoints.length; i++) {
+      widget.markers.add(await createMarker(widget.waypoints[i], i+1));
+    }
+
+    setState(() {});
   }
 
   Future<Marker> createMarker(LatLng loc, int num) async {
@@ -113,21 +148,147 @@ class _MapState extends State<Map> {
     BitmapDescriptor icon = await getMarkerIcon(
         num,
         color_button_green,
-        color_text_dark,
+        color_background,
         70
     );
 
     Marker m = Marker(
       markerId: MarkerId('point$num'),
-      infoWindow: InfoWindow(
-          title: 'title',
-          snippet: 'snippet'
-      ),
+      draggable: true,
+      anchor: Offset(0.5, 1),
+      onDragEnd: (pos) {
+        widget.waypoints[num-1] = pos;
+        print(widget.waypoints.length);
+        widget.polylines.clear();
+        setState(() {});
+      },
+      onTap: () {
+        selectedMarked = num;
+        showDialog(context: context, builder: swapDialog);
+      },
       icon: icon,
       position: loc,
     );
 
     return m;
+  }
+
+  Widget swapDialog(BuildContext context) {
+    int num = selectedMarked;
+    int start = selectedMarked;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Dialog(
+          backgroundColor: color_background,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Modify',
+                        style: textStyleHeader,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: IconButton(
+                        icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Order:',
+                      style: textStyleDarkLightLarge,
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(CustomIcons.down, color: num == 1 ? color_text_dark : color_text_highlight),
+                          onPressed: num == 1 ? null : () {
+                            setState(() {
+                              num--;
+                            });
+                          },
+                        ),
+                        Text(
+                          '$num',
+                          style: textStyleHeader,
+                        ),
+                        IconButton(
+                          icon: Icon(CustomIcons.up, color: num == widget.waypoints.length ? color_text_dark : color_text_highlight),
+                          onPressed: num == widget.waypoints.length ? null : () {
+                            setState(() {
+                              num++;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      OutlineButton(
+                        onPressed: () {
+                          removeMarker(start);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          child: Text('REMOVE')
+                        ),
+                        color: color_error,
+                        highlightColor: color_error,
+                        highlightedBorderColor: color_error,
+                        focusColor: color_error,
+                        hoverColor: color_error,
+                        textColor: color_text_dark,
+                        splashColor: color_error,
+                        borderSide: BorderSide(color: color_error),
+                      ),
+                      OutlineButton(
+                        onPressed: () {
+                          swapMarkers(start, num);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                            child: Text('CONFIRM'),
+                        ),
+                        color: color_text_highlight,
+                        highlightColor: color_text_highlight,
+                        highlightedBorderColor: color_text_highlight,
+                        focusColor: color_text_highlight,
+                        hoverColor: color_text_highlight,
+                        textColor: color_text_dark,
+                        splashColor: color_text_highlight,
+                        borderSide: BorderSide(color: color_text_highlight),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
   }
 
   @override
@@ -141,6 +302,7 @@ class _MapState extends State<Map> {
     }
 
     void addWaypoint(LatLng loc) async {
+      showMarkes = true;
       widget.waypoints.add(loc);
       Marker m = await createMarker(loc, widget.waypoints.length);
 
@@ -154,11 +316,6 @@ class _MapState extends State<Map> {
       myLocationEnabled: true,
       buildingsEnabled: true,
       onMapCreated: onCreate,
-      onCameraMove: (pos) {
-        setState(() {
-          showMarkes = pos.zoom > 14;
-        });
-      },
       onTap: addWaypoint,
       polylines: widget.polylines,
       markers: showMarkes ? widget.markers : {},

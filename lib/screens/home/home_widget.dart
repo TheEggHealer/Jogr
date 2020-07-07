@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:jogr/screens/home/statistics/previous_run_widget.dart';
 
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../home_component.dart';
 
@@ -16,122 +19,155 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
 
+  Widget goalsBuilder(BuildContext context, int index) {
+    return Container(
+      padding: EdgeInsets.all(30),
+      child: Card(
+        elevation: 5,
+        color: color_card,
+        child: Center(
+          child: Text(
+            'Run 10km',
+            style: textStyleHeader,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
     UserData userData = Provider.of<UserData>(context);
 
+    PageController controller = PageController(initialPage: 0);
+
     return  Container(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                '• LAST RUN',
-                style: textStyleDark
-            ),
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              '• LAST RUN',
+              style: textStyleDark
+          ),
 
-            SizedBox(height: 10),
+          SizedBox(height: 10),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                HomeComponent(
-                  icon: CustomIcons.distance,
-                  data: userData.runs.length > 0 ? userData.lastRun.distanceString : '--',
-                  label: 'km',
-                ),
-                HomeComponent(
-                  icon: CustomIcons.timer,
-                  data: userData.runs.length > 0 ? userData.lastRun.timeString : '--:--',
-                  label: userData.runs.length > 0 ? (userData.lastRun.timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss') : 'mm:ss',
-                ),
-                HomeComponent(
-                  icon: CustomIcons.burn,
-                  data: userData.runs.length > 0 ? userData.lastRun.calories.toString() : '--',
-                  label: 'cal',
-                )
-              ],
-            ),
-
-            SizedBox(height: 30),
-
-            Text(
-                '• NEXT RUN',
-                style: textStyleDark
-            ),
-
-            SizedBox(height: 10),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                HomeComponent(
-                  icon: null,
-                  data: '2',
-                  label: 'days left',
-                ),
-                HomeComponent(
-                  icon: CustomIcons.distance,
-                  data: '3,4',
-                  label: 'km',
-                ),
-                OutlineButton(
-                  onPressed: () {},
-                  child: Text('SEE ROUTE'),
-                  color: color_text_highlight,
-                  highlightColor: color_text_highlight,
-                  highlightedBorderColor: color_text_highlight,
-                  focusColor: color_text_highlight,
-                  hoverColor: color_text_highlight,
-                  textColor: color_text_dark,
-                  borderSide: BorderSide(color: color_text_highlight),
-                )
-              ],
-            ),
-
-            SizedBox(height: 10),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.ideographic,
-
-              children: [
-                Icon(Icons.cloud, color: color_text_highlight),
-
-                SizedBox(width: 10),
-
-                Text(
-                  '18',
-                  style: textStyleHeader,
-                ),
-
-                SizedBox(width: 10),
-
-                Text(
-                    'cloudy forecast',
-                    style: textStyleDark
-                ),
-              ],
-            ),
-
-            SizedBox(height: 20),
-
-            Center(
-              child: OutlineButton(
-                onPressed: () {},
-                child: Text('CHANGE PLAN'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                borderSide: BorderSide(color: color_text_highlight),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              HomeComponent(
+                icon: CustomIcons.distance,
+                data: userData.runs.length > 0 ? userData.lastRun.distanceString : '--',
+                label: 'km',
               ),
-            )
-          ]
+              HomeComponent(
+                icon: CustomIcons.timer,
+                data: userData.runs.length > 0 ? userData.lastRun.timeString : '--:--',
+                label: userData.runs.length > 0 ? (userData.lastRun.timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss') : 'mm:ss',
+              ),
+              HomeComponent(
+                icon: CustomIcons.burn,
+                data: userData.runs.length > 0 ? userData.lastRun.calories.toString() : '--',
+                label: 'cal',
+              )
+            ],
+          ),
+
+          SizedBox(height: 30),
+
+          Text(
+              '• GOALS',
+              style: textStyleDark
+          ),
+
+          SizedBox(height: 10),
+
+          Column(
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: double.infinity,
+                  maxHeight: 160,
+                ),
+                child: PageView.builder(
+                  controller: controller,
+                  itemBuilder: goalsBuilder,
+                  itemCount: 5,
+                ),
+              ),
+              Center(
+                child: SmoothPageIndicator(
+                  controller: controller,
+                  count: 5,
+                  effect: ExpandingDotsEffect(
+                      dotColor: color_text_dark,
+                      activeDotColor: color_text_highlight,
+                      dotWidth: 6,
+                      dotHeight: 6,
+                      spacing: 3
+                  ),
+                ),
+              )
+            ],
+          ),
+
+          /**
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: double.infinity,
+              maxHeight: 160,
+            ),
+            child: Swiper(
+              itemBuilder: goalsBuilder,
+              itemCount: 5,
+              layout: SwiperLayout.DEFAULT,
+              loop: true,
+              pagination: SwiperCustomPagination(
+                builder: (context, config) {
+                  Widget circle = Container(
+                    margin: EdgeInsets.all(2),
+                    width: 7.0,
+                    height: 7.0,
+                    decoration: BoxDecoration(
+                      color: color_text_dark,
+                      shape: BoxShape.circle,
+                    ),
+                  );
+
+                  Widget selected = Container(
+                    margin: EdgeInsets.all(2),
+                    width: 10.0,
+                    height: 10.0,
+                    decoration: BoxDecoration(
+                      color: color_text_highlight,
+                      shape: BoxShape.circle,
+                    ),
+                  );
+
+                  List<Widget> dots = [];
+                  for(int i = 0; i < config.itemCount; i++) {
+                    if(i == config.activeIndex) dots.add(selected);
+                    else dots.add(circle);
+                  }
+
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: dots,
+                    ),
+                  );
+                }
+
+              ),
+
+            ),
+          ),
+           */
+        ]
       ),
     );
   }

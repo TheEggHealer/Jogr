@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jogr/screens/wrapper.dart';
 import 'package:jogr/services/auth.dart';
+import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       child: MaterialApp(
         home: Wrapper(),
+        theme: ThemeData(
+          accentColor: color_text_dark
+        ),
       ),
     );
   }

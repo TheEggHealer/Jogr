@@ -32,81 +32,78 @@ class Statistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ScrollConfiguration(
-      behavior: NoScrollGlow(),
-      child: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(top: 60),
-          child: Column(
-              children: [
-                Center(
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.only(top: 60),
+        child: Column(
+            children: [
+              Center(
+                child: Text(
+                  'Statistics',
+                  style: textStyleHeader,
+                ),
+              ),
+              divider,
+              Container(
+                height: 70,
+                padding: const EdgeInsets.symmetric(horizontal: 60),
+                child: OutlineButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (con) => PreviousRuns(user, userData)));
+                    //await db.mergeUserDataFields({
+                    //  'previous_runs': userData.raw['previous_runs'].putIfAbsent('', () => {'20200714': {'distance': 2843 + rng.nextInt(1000),'time':900 + rng.nextInt(150),'calories':90 + rng.nextInt(50)}})
+                    //});
+                  },
                   child: Text(
-                    'Statistics',
-                    style: textStyleHeader,
+                      'SEE ALL PREVIOUS RUNS',
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          color: color_text_dark
+                      )
                   ),
+                  color: color_text_highlight,
+                  splashColor: color_text_highlight,
+                  highlightColor: color_text_highlight,
+                  focusColor: color_text_highlight,
+                  textColor: color_text_dark,
+                  borderSide: BorderSide(color: color_text_highlight),
+                  highlightedBorderColor: color_text_highlight,
                 ),
-                divider,
-                Container(
-                  height: 70,
-                  padding: const EdgeInsets.symmetric(horizontal: 60),
-                  child: OutlineButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (con) => PreviousRuns(user, userData)));
-                      //await db.mergeUserDataFields({
-                      //  'previous_runs': userData.raw['previous_runs'].putIfAbsent('', () => {'20200714': {'distance': 2843 + rng.nextInt(1000),'time':900 + rng.nextInt(150),'calories':90 + rng.nextInt(50)}})
-                      //});
-                    },
-                    child: Text(
-                        'SEE ALL PREVIOUS RUNS',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            color: color_text_dark
-                        )
-                    ),
-                    color: color_text_highlight,
-                    splashColor: color_text_highlight,
-                    highlightColor: color_text_highlight,
-                    focusColor: color_text_highlight,
-                    textColor: color_text_dark,
-                    borderSide: BorderSide(color: color_text_highlight),
-                    highlightedBorderColor: color_text_highlight,
-                  ),
+              ),
+              divider,
+              Text(
+                  'Your running speed over time:',
+                  style: textStyleHeaderSmall
+              ),
+              SizedBox(height: 25),
+              _speedChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
+                _speedChart,
+              ),
+              SizedBox(height: 50),
+              Text(
+                  'Your running distance over time:',
+                  style: textStyleHeaderSmall
+              ),
+              SizedBox(height: 25),
+              _distanceChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
+                userData.getDistanceChart(),
+              ),
+              divider,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  children: [
+                    StatListItem(title: 'Average running speed:', value: _stats[0], label: 'm/s',),
+                    StatListItem(title: 'Fastest running speed:', value: _stats[1], label: 'm/s',),
+                    StatListItem(title: 'Average time / 10km:', value: _stats[5], label: _stats[5].split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',),
+                    StatListItem(title: 'Total distance ran:', value: _stats[2], label: 'km',),
+                    StatListItem(title: 'Total calories burned:', value: _stats[3], label: 'cal',),
+                    StatListItem(title: 'Total amount of runs:', value: _stats[4], label: 'runs', spacing: 40,),
+                  ],
                 ),
-                divider,
-                Text(
-                    'Your running speed over time:',
-                    style: textStyleHeaderSmall
-                ),
-                SizedBox(height: 25),
-                _speedChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
-                  _speedChart,
-                ),
-                SizedBox(height: 50),
-                Text(
-                    'Your running distance over time:',
-                    style: textStyleHeaderSmall
-                ),
-                SizedBox(height: 25),
-                _distanceChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
-                  userData.getDistanceChart(),
-                ),
-                divider,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    children: [
-                      StatListItem(title: 'Average running speed:', value: _stats[0], label: 'm/s',),
-                      StatListItem(title: 'Fastest running speed:', value: _stats[1], label: 'm/s',),
-                      StatListItem(title: 'Average time / 10km:', value: _stats[5], label: _stats[5].split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',),
-                      StatListItem(title: 'Total distance ran:', value: _stats[2], label: 'km',),
-                      StatListItem(title: 'Total calories burned:', value: _stats[3], label: 'cal',),
-                      StatListItem(title: 'Total amount of runs:', value: _stats[4], label: 'runs', spacing: 40,),
-                    ],
-                  ),
-                ),
-              ]
-          ),
+              ),
+            ]
         ),
       ),
     );

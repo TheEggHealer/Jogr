@@ -70,17 +70,14 @@ class _PreviousRunsState extends State<PreviousRuns> {
               height: 0,
             ),
             Expanded(
-              child: ScrollConfiguration(
-                behavior: NoScrollGlow(),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                          entries
-                      )
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                        entries
                     )
-                  ],
-                ),
+                  )
+                ],
               ),
             )
           ],

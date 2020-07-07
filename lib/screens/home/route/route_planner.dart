@@ -33,6 +33,8 @@ class _RoutePlannerState extends State<RoutePlanner> {
   int totalDistance = 0;
   bool loading = false;
 
+  static final _formKey = GlobalKey<FormState>();
+
   void generateRoute() async {
     _polylines.clear();
     List<LatLng> routeCoordinates = [];
@@ -221,24 +223,29 @@ class _RoutePlannerState extends State<RoutePlanner> {
         ],
       ),
       SizedBox(height: 20),
+      TextFormField(
+
+      )
     ]..addAll(widget.userData.routes.map((e) => routeWidget(context, e)).toList());
 
     widget.userData.routes.forEach((element) {print(element.name);});
 
     return Dialog(
       backgroundColor: color_background,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: ScrollConfiguration(
-          behavior: NoScrollGlow(),
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  items
-                )
-              ),
-            ]
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ScrollConfiguration(
+            behavior: NoScrollGlow(),
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    items
+                  )
+                ),
+              ]
+            ),
           ),
         ),
       ),
@@ -314,6 +321,109 @@ class _RoutePlannerState extends State<RoutePlanner> {
     );
   }
 
+  Widget saveDialog(BuildContext context) {
+    String routeName = '';
+
+    return Dialog(
+      backgroundColor: color_background,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Center(
+                    child: Text(
+                      'Save',
+                      style: textStyleHeader,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: IconButton(
+                      icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.ideographic,
+
+                children: [
+                  Text(
+                    'Distance:',
+                    style: textStyleDarkLightLarge,
+                  ),
+                  SizedBox(width: 15,),
+                  Text(
+                    '$totalDistance',
+                    style: textStyleHeader,
+                  ),
+                  SizedBox(width: 5,),
+                  Text(
+                    'm',
+                    style: textStyleDark,
+                  )
+                ],
+              ),
+              SizedBox(height:10),
+              TextFormField(
+                validator: checkName,
+                cursorColor: color_text_highlight,
+                onChanged: (val) {
+                  routeName = val;
+                },
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
+                    border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                    hintText: 'Name your route',
+                    hintStyle: TextStyle(
+                        fontFamily: 'RobotoLight',
+                        color: Color(0x1fffffff)
+                    )
+                ),
+                style: textStyleDarkLight,
+              ),
+              SizedBox(height:10),
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: OutlineButton(
+                  onPressed: () {
+                    if(_formKey.currentState.validate()) {
+                      save(routeName);
+                    }
+                  },
+                  child: Container(
+                    child: Text('SAVE')
+                  ),
+                  color: color_button_green,
+                  highlightColor: color_button_green,
+                  highlightedBorderColor: color_button_green,
+                  focusColor: color_button_green,
+                  hoverColor: color_button_green,
+                  textColor: color_text_dark,
+                  splashColor: color_button_green,
+                  borderSide: BorderSide(color: color_button_green),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void load(Route route) async {
     Set<Marker> markers = {};
     for(int i = 0; i < route.waypoints.length; i++) {
@@ -336,14 +446,10 @@ class _RoutePlannerState extends State<RoutePlanner> {
 
   @override
   Widget build(BuildContext context) {
-
-    final _formKey = GlobalKey<FormState>();
-    String routeName = '';
-
     return SlidingUpPanel(
       renderPanelSheet: false,
       borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
-      maxHeight: MediaQuery.of(context).size.height/2.1, //2.7
+      maxHeight: MediaQuery.of(context).size.height/2.7, //2.7
       minHeight: 70,
 
       collapsed: Container(
@@ -379,171 +485,152 @@ class _RoutePlannerState extends State<RoutePlanner> {
             ),
           ]
         ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Text(
-                  'Add waypoints to the map',
-                  style: textStyleHeaderSmall,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                'Add waypoints to the map',
+                style: textStyleHeaderSmall,
+              ),
+            ),
+            Divider(
+              color: Color(0xff555555),
+              endIndent: 20,
+              indent: 20,
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlineButton(
+                  onPressed: () { showDialog(context: context, builder: helpDialog); },
+                  child: Text('HELP'),
+                  color: color_text_highlight,
+                  highlightColor: color_text_highlight,
+                  highlightedBorderColor: color_text_highlight,
+                  focusColor: color_text_highlight,
+                  hoverColor: color_text_highlight,
+                  textColor: color_text_dark,
+                  splashColor: color_text_highlight,
+                  borderSide: BorderSide(color: color_text_highlight),
                 ),
-              ),
-              Divider(
-                color: Color(0xff555555),
-                endIndent: 20,
-                indent: 20,
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlineButton(
-                    onPressed: () { showDialog(context: context, builder: helpDialog); },
-                    child: Text('HELP'),
-                    color: color_text_highlight,
-                    highlightColor: color_text_highlight,
-                    highlightedBorderColor: color_text_highlight,
-                    focusColor: color_text_highlight,
-                    hoverColor: color_text_highlight,
-                    textColor: color_text_dark,
-                    splashColor: color_text_highlight,
-                    borderSide: BorderSide(color: color_text_highlight),
-                  ),
-                  OutlineButton(
-                    onPressed: () {
-                      setState(() {
-                        loading = true;
-                      });
-                      generateRoute();
-                    },
-                    child: Text('GENERATE ROUTE'),
-                    color: color_text_highlight,
-                    highlightColor: color_text_highlight,
-                    highlightedBorderColor: color_text_highlight,
-                    focusColor: color_text_highlight,
-                    hoverColor: color_text_highlight,
-                    textColor: color_text_dark,
-                    splashColor: color_text_highlight,
-                    borderSide: BorderSide(color: color_text_highlight),
-                  ),
-                  OutlineButton(
-                    onPressed: () { clearRoute(); },
-                    child: Text('CLEAR'),
-                    color: color_error,
-                    highlightColor: color_error,
-                    highlightedBorderColor: color_error,
-                    focusColor: color_error,
-                    hoverColor: color_error,
-                    textColor: color_text_dark,
-                    splashColor: color_error,
-                    borderSide: BorderSide(color: color_error),
-                  ),
+                OutlineButton(
+                  onPressed: () {
+                    setState(() {
+                      loading = true;
+                    });
+                    generateRoute();
+                  },
+                  child: Text('GENERATE ROUTE'),
+                  color: color_text_highlight,
+                  highlightColor: color_text_highlight,
+                  highlightedBorderColor: color_text_highlight,
+                  focusColor: color_text_highlight,
+                  hoverColor: color_text_highlight,
+                  textColor: color_text_dark,
+                  splashColor: color_text_highlight,
+                  borderSide: BorderSide(color: color_text_highlight),
+                ),
+                OutlineButton(
+                  onPressed: () { clearRoute(); },
+                  child: Text('CLEAR'),
+                  color: color_error,
+                  highlightColor: color_error,
+                  highlightedBorderColor: color_error,
+                  focusColor: color_error,
+                  hoverColor: color_error,
+                  textColor: color_text_dark,
+                  splashColor: color_error,
+                  borderSide: BorderSide(color: color_error),
+                ),
 
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlineButton(
-                    onPressed: () { removeLast(); },
-                    child: Text('REMOVE LAST'),
-                    color: color_text_highlight,
-                    highlightColor: color_text_highlight,
-                    highlightedBorderColor: color_text_highlight,
-                    focusColor: color_text_highlight,
-                    hoverColor: color_text_highlight,
-                    textColor: color_text_dark,
-                    splashColor: color_text_highlight,
-                    borderSide: BorderSide(color: color_text_highlight),
-                  ),
-                  OutlineButton(
-                    onPressed: () { showDialog(context: context, builder: loadDialog); },
-                    child: Text('LOAD'),
-                    color: color_text_highlight,
-                    highlightColor: color_text_highlight,
-                    highlightedBorderColor: color_text_highlight,
-                    focusColor: color_text_highlight,
-                    hoverColor: color_text_highlight,
-                    textColor: color_text_dark,
-                    splashColor: color_text_highlight,
-                    borderSide: BorderSide(color: color_text_highlight),
-                  ),
-                  OutlineButton(
-                    onPressed: () {
-                      if(_formKey.currentState.validate()) {
-                        save(routeName);
-                      }
-                    },
-                    child: Text('SAVE'),
-                    color: color_button_green,
-                    highlightColor: color_button_green,
-                    highlightedBorderColor: color_button_green,
-                    focusColor: color_button_green,
-                    hoverColor: color_button_green,
-                    textColor: color_text_dark,
-                    splashColor: color_text_highlight,
-                    borderSide: BorderSide(color: color_button_green),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Stack(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.ideographic,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Distance:',
-                        style: textStyleDarkLightLarge,
-                      ),
-                      SizedBox(width: 15,),
-                      Text(
-                        '$totalDistance',
-                        style: textStyleHeader,
-                      ),
-                      SizedBox(width: 5,),
-                      Text(
-                        'm',
-                        style: textStyleDark,
-                      )
-                    ],
-                  ),
-                  Positioned(
-                    right: 30,
-                    child: AnimatedOpacity(
-                      opacity: loading ? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 200),
-                      child: Loading(),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                validator: checkName,
-                cursorColor: color_text_highlight,
-                onChanged: (val) {
-                  routeName = val;
-                },
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                  border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                  hintText: 'Name your route',
-                  hintStyle: TextStyle(
-                    fontFamily: 'RobotoLight',
-                    color: Color(0x1fffffff)
-                  )
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlineButton(
+                  onPressed: () {
+                    map.state.setState(() {
+                      map.state.showMarkes = !map.state.showMarkes;
+                    });
+                    setState(() {});
+                  },
+                  child: Text(map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
+                  color: color_text_highlight,
+                  highlightColor: color_text_highlight,
+                  highlightedBorderColor: color_text_highlight,
+                  focusColor: color_text_highlight,
+                  hoverColor: color_text_highlight,
+                  textColor: color_text_dark,
+                  splashColor: color_text_highlight,
+                  borderSide: BorderSide(color: color_text_highlight),
                 ),
-                style: textStyleDarkLight,
-              )
-            ],
-          ),
+                OutlineButton(
+                  onPressed: () { showDialog(context: context, builder: loadDialog); },
+                  child: Text('LOAD'),
+                  color: color_text_highlight,
+                  highlightColor: color_text_highlight,
+                  highlightedBorderColor: color_text_highlight,
+                  focusColor: color_text_highlight,
+                  hoverColor: color_text_highlight,
+                  textColor: color_text_dark,
+                  splashColor: color_text_highlight,
+                  borderSide: BorderSide(color: color_text_highlight),
+                ),
+                OutlineButton(
+                  onPressed: () {
+                    showDialog(context: context, builder: saveDialog);
+                  },
+                  child: Text('SAVE'),
+                  color: color_button_green,
+                  highlightColor: color_button_green,
+                  highlightedBorderColor: color_button_green,
+                  focusColor: color_button_green,
+                  hoverColor: color_button_green,
+                  textColor: color_text_dark,
+                  splashColor: color_text_highlight,
+                  borderSide: BorderSide(color: color_button_green),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Stack(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.ideographic,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Distance:',
+                      style: textStyleDarkLightLarge,
+                    ),
+                    SizedBox(width: 15,),
+                    Text(
+                      '$totalDistance',
+                      style: textStyleHeader,
+                    ),
+                    SizedBox(width: 5,),
+                    Text(
+                      'm',
+                      style: textStyleDark,
+                    )
+                  ],
+                ),
+                Positioned(
+                  right: 30,
+                  child: AnimatedOpacity(
+                    opacity: loading ? 1.0 : 0.0,
+                    duration: Duration(milliseconds: 200),
+                    child: Loading(),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       body: map,

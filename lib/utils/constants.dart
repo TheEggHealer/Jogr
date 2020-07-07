@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-const Color color_background = Color(0xff151515);
-const Color color_card = Color(0xff1C1C1C);
-const Color color_text_highlight = Color(0xffE3C36F);
-const Color color_text_dark = Color(0xff555555);
+const bool darkMode = true;
+
+const Color color_background = darkMode ? Color(0xff151515) : Color(0xffffffff);
+const Color color_card = darkMode ? Color(0xff1C1C1C): Color(0xffcccccc);
+const Color color_text_highlight = darkMode ? Color(0xffE3C36F): Color(0xff1C1C1C);
+const Color color_text_dark = darkMode ? Color(0xff555555) : Color(0xff444444);
 const Color color_button_green = Color(0xff61B25F);
 const Color color_error = Color(0xffAF3232);
 
