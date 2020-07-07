@@ -89,19 +89,24 @@ class _HomeState extends State<Home> {
                     ),
                     Expanded(
                       child: Center(
-                        child: RawMaterialButton(
-                          elevation: 0,
-                          onPressed: () {},
-                          child: Container(
-                            child: Icon(Icons.directions_run, color: color_text_highlight, size: 30),
-                            padding: EdgeInsets.all(30),
-                          ),
-                          shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          hoverColor: color_button_green,
-                          focusColor: color_button_green,
-                          highlightColor: color_button_green,
-                          splashColor: color_button_green,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            print(constraints);
+                            return RawMaterialButton(
+                              elevation: 0,
+                              onPressed: () {},
+                              child: Container(
+                                child: Icon(Icons.directions_run, color: color_text_highlight, size: constraints.maxHeight / 5),
+                                padding: EdgeInsets.all(constraints.maxHeight / 5),
+                              ),
+                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              hoverColor: color_button_green,
+                              focusColor: color_button_green,
+                              highlightColor: color_button_green,
+                              splashColor: color_button_green,
+                            );
+                          }
                         ),
                       ),
                     ),
