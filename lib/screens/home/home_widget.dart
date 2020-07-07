@@ -21,7 +21,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   Widget goalsBuilder(BuildContext context, int index) {
     return Container(
-      padding: EdgeInsets.all(30),
+      padding: EdgeInsets.symmetric(horizontal: 30),
       child: Card(
         elevation: 5,
         color: color_card,
@@ -90,7 +90,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: double.infinity,
-                  maxHeight: 160,
+                  maxHeight: 100,
                 ),
                 child: PageView.builder(
                   controller: controller,
@@ -98,6 +98,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                   itemCount: 5,
                 ),
               ),
+              SizedBox(height: 10),
               Center(
                 child: SmoothPageIndicator(
                   controller: controller,

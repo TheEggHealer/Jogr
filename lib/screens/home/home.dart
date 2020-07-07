@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
 
                         HomeWidget(),
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 10),
 
                         Divider(
                           color: Color(0xff555555),
