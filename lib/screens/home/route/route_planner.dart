@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/screens/home/route/map.dart';
+import 'package:jogr/screens/home/route/route_panel.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
@@ -18,10 +19,12 @@ class RoutePlanner extends StatefulWidget {
   final User user;
   final UserData userData;
 
+  _RoutePlannerState state = _RoutePlannerState();
+
   RoutePlanner(this.user, this.userData);
 
   @override
-  _RoutePlannerState createState() => _RoutePlannerState();
+  _RoutePlannerState createState() => state;
 }
 
 class _RoutePlannerState extends State<RoutePlanner> {
@@ -446,34 +449,39 @@ class _RoutePlannerState extends State<RoutePlanner> {
 
   @override
   Widget build(BuildContext context) {
-    return SlidingUpPanel(
-      renderPanelSheet: false,
-      borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
-      maxHeight: MediaQuery.of(context).size.height/2.7, //2.7
-      minHeight: 70,
-
-      collapsed: Container(
-        margin: EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(
-          color: color_background,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        print(constraints);
+        return SlidingUpPanel(
+          renderPanelSheet: false,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              Icons.drag_handle,
-              size: 30,
-              color: color_text_dark
-            ),
-            Text(
-              'Route planner',
-              style: textStyleHeaderSmall,
-            ),
-          ],
-        )
-      ),
-      panel:
-      body: map,
+          maxHeight: constraints.maxWidth > 400 ? MediaQuery.of(context).size.height/2.7 : MediaQuery.of(context).size.height/1.7,
+          minHeight: 70,
+
+          collapsed: Container(
+              margin: EdgeInsets.only(top: 10),
+              decoration: BoxDecoration(
+                color: color_background,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                      Icons.drag_handle,
+                      size: 30,
+                      color: color_text_dark
+                  ),
+                  Text(
+                    'Route planner',
+                    style: textStyleHeaderSmall,
+                  ),
+                ],
+              )
+          ),
+          panel: constraints.maxWidth > 400 ? WideRoutePanel(widget) : NarrowRoutePanel(widget),
+          body: map,
+        );
+      },
     );
   }
 }
