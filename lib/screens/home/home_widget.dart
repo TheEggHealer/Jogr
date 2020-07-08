@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jogr/screens/home/home_component.dart';
 import 'package:jogr/screens/home/statistics/previous_run_widget.dart';
 
 import 'package:jogr/utils/constants.dart';
@@ -8,7 +9,7 @@ import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../home_component.dart';
+import 'goal_widget.dart';
 
 
 class HomeWidget extends StatefulWidget {
@@ -20,16 +21,50 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
 
   Widget goalsBuilder(BuildContext context, int index) {
+
+    List<Goal> goals = [
+      Goal(
+        header: 'THIS WEEK • RUN SOME DISTANCE',
+        fraction: true,
+        a: HomeComponent(data: '3.5', label: 'km',),
+        b: HomeComponent(data: '10', label: 'km'),
+      ),
+      Goal(
+        header: 'THIS MONTH • RUN SOME DISTANCE',
+        fraction: true,
+        a: HomeComponent(data: '17.4', label: 'km',),
+        b: HomeComponent(data: '40', label: 'km'),
+      ),
+      Goal(
+        header: 'THIS WEEK • BURN SOME CALORIES',
+        fraction: true,
+        a: HomeComponent(data: '2150', label: 'cal',),
+        b: HomeComponent(data: '2000', label: 'cal'),
+        completed: true,
+      ),
+      Goal(
+        header: 'THIS MONTH • REACH SOME PACE',
+        content: HomeComponent(data: '7.1', label: 'm/s'),
+      ),
+      Goal(
+        header: 'THIS WEEK • RUN SOME DISTANCE',
+        fraction: true,
+        a: HomeComponent(data: '3.5', label: 'km',),
+        b: HomeComponent(data: '10', label: 'km'),
+        post: 'ran',
+      ),
+
+    ];
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Card(
         elevation: 5,
         color: color_card,
-        child: Center(
-          child: Text(
-            'Run 10km',
-            style: textStyleHeader,
-          ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(child: goals[index]),
+
         ),
       ),
     );
@@ -108,7 +143,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                       activeDotColor: color_text_highlight,
                       dotWidth: 6,
                       dotHeight: 6,
-                      spacing: 3
+                      spacing: 3,
+                    paintStyle: PaintingStyle.fill,
+                    strokeWidth: 1
                   ),
                 ),
               )

@@ -14,6 +14,7 @@ class UserData {
 
   String name;
   double weight;
+  Route lastRoute;
   List<Run> runs;
   List<Route> routes;
 
@@ -27,6 +28,8 @@ class UserData {
 
     addRuns(raw['previous_runs']);
     addRoutes(raw['saved_routes']);
+
+    if (raw.containsKey('lastRoute')) lastRoute = routes[raw['lastRoute']];
   }
 
   addRuns(Map<String, dynamic> runs) {

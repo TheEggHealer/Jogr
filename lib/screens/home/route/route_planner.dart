@@ -226,12 +226,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
         ],
       ),
       SizedBox(height: 20),
-      TextFormField(
-
-      )
     ]..addAll(widget.userData.routes.map((e) => routeWidget(context, e)).toList());
-
-    widget.userData.routes.forEach((element) {print(element.name);});
 
     return Dialog(
       backgroundColor: color_background,

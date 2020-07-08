@@ -1,9 +1,12 @@
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:cool_nav/cool_nav.dart';
+import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:jogr/screens/home/profile/profile.dart';
 import 'package:jogr/screens/home/route/route_planner.dart';
 import 'package:jogr/screens/home/setup.dart';
 import 'package:jogr/screens/home/statistics/statistics.dart';
+import 'package:jogr/screens/run/run_begin.dart';
 import 'package:jogr/screens/splash/splash.dart';
 import 'package:jogr/services/auth.dart';
 import 'package:jogr/utils/constants.dart';
@@ -91,10 +94,11 @@ class _HomeState extends State<Home> {
                       child: Center(
                         child: LayoutBuilder(
                           builder: (context, constraints) {
-                            print(constraints);
                             return RawMaterialButton(
                               elevation: 0,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (con) => RunBegin(userData)));
+                              },
                               child: Container(
                                 child: Icon(Icons.directions_run, color: color_text_highlight, size: constraints.maxHeight / 5),
                                 padding: EdgeInsets.all(constraints.maxHeight / 5),
@@ -117,6 +121,37 @@ class _HomeState extends State<Home> {
               Profile(),
             ],
           ),
+          bottomNavigationBar: FFNavigationBar(
+
+            theme: FFNavigationBarTheme(
+              barBackgroundColor: color_background,
+              selectedItemBorderColor: color_card,
+              selectedItemBackgroundColor: color_background,
+              selectedItemIconColor: color_text_highlight,
+              selectedItemLabelColor: color_text_highlight,
+              unselectedItemIconColor: color_text_dark,
+              unselectedItemLabelColor: color_text_dark,
+              selectedItemTextStyle: TextStyle(
+                fontFamily: 'Quicksand'
+              ),
+              showSelectedItemShadow: false,
+            ),
+            selectedIndex: selectedPage,
+            items: [
+              FFNavigationBarItem(iconData: CustomIcons.route, label: 'Planner'),
+              FFNavigationBarItem(iconData: CustomIcons.gps, label: 'Goals'),
+              FFNavigationBarItem(iconData: CustomIcons.home, label: 'Home'),
+              FFNavigationBarItem(iconData: CustomIcons.stats, label: 'Statistics'),
+              FFNavigationBarItem(iconData: CustomIcons.profile, label: 'Profile'),
+            ],
+            onSelectTab: (index) {
+              setState(() {
+                selectedPage = index;
+                controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+              });
+            },
+          ),
+          /**
           bottomNavigationBar: SpotlightBottomNavigationBar(
             items: [
               SpotlightBottomNavigationBarItem(icon: CustomIcons.route),
@@ -137,6 +172,7 @@ class _HomeState extends State<Home> {
               });
             },
           ),
+              */
       );
     }
 

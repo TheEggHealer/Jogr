@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'utils/constants.dart';
+import '../../utils/constants.dart';
 
 class HomeComponent extends StatefulWidget {
 
@@ -22,6 +22,7 @@ class _HomeComponentState extends State<HomeComponent> {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
