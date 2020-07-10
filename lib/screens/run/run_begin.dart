@@ -1,10 +1,19 @@
+import 'dart:async';
+import 'dart:isolate';
+import 'dart:ui';
+
+import 'package:background_locator/location_dto.dart';
 import 'package:flutter/cupertino.dart' hide Route;
 import 'package:flutter/material.dart' hide Route;
 import 'package:jogr/screens/home/home_component.dart';
+import 'package:jogr/screens/run/location_tracker.dart';
+import 'package:jogr/screens/run/map_dialog.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/models/route.dart';
+import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:latlong/latlong.dart';
 
 class RunBegin extends StatefulWidget {
 
@@ -16,10 +25,18 @@ class RunBegin extends StatefulWidget {
   _RunBeginState createState() => _RunBeginState(_userData);
 }
 
-class _RunBeginState extends State<RunBegin> {
+class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin {
 
   UserData userData;
   Route selectedRoute;
+  AnimationController _play_pause;
+  bool running = false;
+  String timeString = '00:00:00';
+  Stopwatch stopwatch = Stopwatch();
+  Timer timer;
+
+  MapDialog map = MapDialog();
+  LocationTracker tracker;
 
   _RunBeginState(this.userData) {
     selectedRoute = userData.routes.isNotEmpty ? (userData.lastRoute != null ? userData.lastRoute : userData.routes[0]) : null;
@@ -131,6 +148,28 @@ class _RunBeginState extends State<RunBegin> {
     );
   }
 
+  void startTimer() {
+    Timer(Duration(seconds: 1), () {
+      print('Is running: $running');
+      if(running) {
+        startTimer();
+        setState(() {
+          timeString = Run(time: stopwatch.elapsed.inSeconds).timeString;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tracker = LocationTracker(map);
+
+    _play_pause = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+
+    tracker.init();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -139,7 +178,6 @@ class _RunBeginState extends State<RunBegin> {
       body: Container(
         padding: EdgeInsets.only(top: 60),
         child: Column(
-
           children: [
             Stack(
               alignment: Alignment.centerLeft,
@@ -238,20 +276,19 @@ class _RunBeginState extends State<RunBegin> {
                     children: [
                       HomeComponent(
                         icon: CustomIcons.timer,
-                        data: '00:12:32',
-                        label: 'hh:mm:ss',
+                        data: timeString,
+                        label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
                       ),
                       HomeComponent(
                         icon: CustomIcons.distance,
-                        data: '1.4',
-                        label: 'km',
+                        data: tracker.totalDistance.toString(),
+                        label: 'm',
                       ),
                     ],
                   ),
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        print(constraints);
                         return Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment:
@@ -260,7 +297,7 @@ class _RunBeginState extends State<RunBegin> {
                             RawMaterialButton(
                               elevation: 0,
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (con) => RunBegin(userData)));
+                                tracker.stopLocationService();
                               },
                               child: Container(
                                 child: Icon(Icons.stop, color: color_text_highlight, size: constraints.maxHeight / 7),
@@ -276,10 +313,25 @@ class _RunBeginState extends State<RunBegin> {
                             RawMaterialButton(
                               elevation: 0,
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (con) => RunBegin(userData)));
+                                running = !running;
+                                running ? _play_pause.forward() : _play_pause.reverse();
+                                if(running) {
+                                  startTimer();
+                                  stopwatch.start();
+                                  if(!tracker.initializedTracking) tracker.startLocationService();
+                                  tracker.setTracking(true);
+                                } else {
+                                  stopwatch.stop();
+                                  tracker.setTracking(false);
+                                }
                               },
                               child: Container(
-                                child: Icon(Icons.play_arrow, color: color_text_highlight, size: constraints.maxHeight / 3),
+                                child: AnimatedIcon(
+                                  icon: AnimatedIcons.play_pause,
+                                  progress: _play_pause,
+                                  size: constraints.maxHeight / 3,
+                                  color: color_text_highlight,
+                                ),
                                 padding: EdgeInsets.all(constraints.maxHeight / 12),
                               ),
                               shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
@@ -292,7 +344,12 @@ class _RunBeginState extends State<RunBegin> {
                             RawMaterialButton(
                               elevation: 0,
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (con) => RunBegin(userData)));
+                                map.positions = tracker.positions;
+                                if(selectedRoute != null) map.setupRoute(selectedRoute);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => map));
+                                //showDialog(context: context, builder: (context) {
+                                //  return MapDialog();
+                                //});
                               },
                               child: Container(
                                 child: Icon(CustomIcons.gps, color: color_text_highlight, size: constraints.maxHeight / 7),
@@ -317,5 +374,16 @@ class _RunBeginState extends State<RunBegin> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    print('DISPOSING');
+    stopwatch.stop();
+    running = false;
+    tracker.dispose();
+    super.dispose();
+    print('DISPOSED');
   }
 }

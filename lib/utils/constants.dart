@@ -1,6 +1,8 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 const bool darkMode = true;
 
@@ -70,4 +72,57 @@ class NoScrollGlow extends ScrollBehavior {
   Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
   }
+}
+
+//Bitmap icon for markers
+Future<BitmapDescriptor> getMarkerIcon(int clusterSize, Color clusterColor, Color textColor, int width) async {
+  final PictureRecorder pictureRecorder = PictureRecorder();
+  final Canvas canvas = Canvas(pictureRecorder);
+  final Paint paint = Paint()..color = clusterColor;
+  final TextPainter textPainter = TextPainter(
+    textDirection: TextDirection.ltr,
+  );
+
+  paint.strokeWidth = 10;
+  paint.strokeCap = StrokeCap.butt;
+  paint.strokeJoin = StrokeJoin.round;
+
+  final double radius = width / 2;
+
+  canvas.drawCircle(
+    Offset(radius, radius),
+    radius,
+    paint,
+  );
+
+
+  Vertices vertices = Vertices(VertexMode.triangles, [Offset(radius/2, radius), Offset(radius, radius * 3), Offset(radius+radius/2, radius)]);
+  canvas.drawVertices(vertices, BlendMode.color, paint);
+
+  textPainter.text = TextSpan(
+    text: clusterSize.toString(),
+    style: TextStyle(
+      fontSize: radius,
+      fontWeight: FontWeight.bold,
+      color: textColor,
+    ),
+  );
+
+  textPainter.layout();
+  textPainter.paint(
+    canvas,
+    Offset(
+      radius - textPainter.width / 2,
+      radius - textPainter.height / 2,
+    ),
+  );
+
+  final image = await pictureRecorder.endRecording().toImage(
+    radius.toInt() * 2,
+    radius.toInt() * 3,
+  );
+
+  final data = await image.toByteData(format: ImageByteFormat.png);
+
+  return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
 }

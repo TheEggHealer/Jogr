@@ -63,59 +63,6 @@ class _MapState extends State<Map> {
     });
   }
 
-  //Bitmap icon for markers
-  Future<BitmapDescriptor> getMarkerIcon(int clusterSize, Color clusterColor, Color textColor, int width) async {
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = clusterColor;
-    final TextPainter textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
-
-    paint.strokeWidth = 10;
-    paint.strokeCap = StrokeCap.butt;
-    paint.strokeJoin = StrokeJoin.round;
-
-    final double radius = width / 2;
-
-    canvas.drawCircle(
-      Offset(radius, radius),
-      radius,
-      paint,
-    );
-
-
-    Vertices vertices = Vertices(VertexMode.triangles, [Offset(radius/2, radius), Offset(radius, radius * 3), Offset(radius+radius/2, radius)]);
-    canvas.drawVertices(vertices, BlendMode.color, paint);
-
-    textPainter.text = TextSpan(
-      text: clusterSize.toString(),
-      style: TextStyle(
-        fontSize: radius,
-        fontWeight: FontWeight.bold,
-        color: textColor,
-      ),
-    );
-
-    textPainter.layout();
-    textPainter.paint(
-      canvas,
-      Offset(
-        radius - textPainter.width / 2,
-        radius - textPainter.height / 2,
-      ),
-    );
-
-    final image = await pictureRecorder.endRecording().toImage(
-      radius.toInt() * 2,
-      radius.toInt() * 3,
-    );
-
-    final data = await image.toByteData(format: ImageByteFormat.png);
-
-    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
-  }
-
   void swapMarkers(int a, int b) async {
     Marker last = widget.markers.firstWhere((m) => m.markerId.value == 'point$b');
     Marker selected = widget.markers.firstWhere((m) => m.markerId.value == 'point$a');
