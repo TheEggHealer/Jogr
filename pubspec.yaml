@@ -44,7 +44,7 @@ dependencies:
   bottom_navy_bar: ^5.4.0 # Not used
   bubbled_navigation_bar: ^0.0.3 # Not used
   ff_navigation_bar: ^0.1.4
-
+  intl: ^0.16.1 # Date formatting
   path_provider: ^1.6.11
 
   # The following adds the Cupertino Icons font to your application.

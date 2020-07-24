@@ -9,6 +9,7 @@ import 'package:jogr/screens/home/home.dart';
 import 'package:jogr/screens/home/home_component.dart';
 import 'package:jogr/screens/run/location_tracker.dart';
 import 'package:jogr/screens/run/map_dialog.dart';
+import 'package:jogr/screens/run/run_complete.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
@@ -18,7 +19,6 @@ import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:jogr/utils/tracking/callback_handler.dart';
-import 'package:latlong/latlong.dart';
 
 class RunScreen extends StatefulWidget {
 
@@ -265,17 +265,21 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     print(await FileManager.read());
     await FileManager.clear();
     _play_pause.reverse();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData)));
   }
 
   void _onMap() {
-    map.positions = log.locations;
-    if(selectedRoute != null) map.setupRoute(selectedRoute);
+    map.map.positions = log.locations;
+    if(selectedRoute != null) map.map.setupRoute(selectedRoute);
     Navigator.push(context, MaterialPageRoute(builder: (context) => map));
   }
 
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       backgroundColor: color_background,
       body: Container(

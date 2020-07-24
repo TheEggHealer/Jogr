@@ -2,6 +2,7 @@ import 'package:latlong/latlong.dart';
 
 class RunLog {
 
+  bool empty = false;
   bool running = false;
   List<List<LatLng>> locations;
   List<double> speed;
@@ -34,6 +35,7 @@ class RunLog {
       }
       findDistance();
     } else {
+      empty = true;
       locations = [];
       speed = [];
       startTime = 0;

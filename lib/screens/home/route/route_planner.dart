@@ -15,9 +15,12 @@ import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../run/map_widget.dart';
+
 class RoutePlanner extends StatefulWidget {
   final User user;
   final UserData userData;
+  final MapWidget map = MapWidget();
 
   _RoutePlannerState state = _RoutePlannerState();
 
