@@ -1,0 +1,55 @@
+import 'package:latlong/latlong.dart';
+
+class RunLog {
+
+  bool running = false;
+  List<List<LatLng>> locations;
+  List<double> speed;
+  double distance;
+
+  int startTime;
+  int endTime;
+
+  RunLog(String log) {
+    if(log.isNotEmpty) {
+      List<String> data = log.split('\n');
+      running = true;
+      startTime = int.parse(data[0]);
+      locations = [];
+      locations.add([]);
+      distance = 0;
+      int part = 0;
+      int index = 0;
+      int size = 0;
+      while(index++ < data.length - 1) {
+        if(data[index] == '*') {
+          part++;
+          locations.add([]);
+        }
+        else if(data[index].isNotEmpty){
+          List<String> position = data[index].split('#');
+          locations[part].add(LatLng(double.parse(position[0]), double.parse(position[1])));
+          size++;
+        }
+      }
+      findDistance();
+    } else {
+      locations = [];
+      speed = [];
+      startTime = 0;
+      distance = 0;
+    }
+  }
+
+  void findDistance() {
+    Distance dist = Distance();
+    for(int i = 0; i < locations.length; i++) {
+      if(locations[i].length > 1) {
+        for (int j = 1; j < locations[i].length; j++) {
+          distance += dist.as(LengthUnit.Meter, locations[i][j-1], locations[i][j]);
+        }
+      }
+    }
+  }
+
+}

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:background_locator/background_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:jogr/screens/authenticate/authenticate.dart';
 import 'package:jogr/screens/home/main.dart';
@@ -22,11 +23,12 @@ class _WrapperState extends State<Wrapper> {
     super.initState();
     if(splash) {
       _timer = new Timer(Duration(seconds: 1), () =>
-          setState(() {
-            print('Splash end');
-            splash = false;
-            _timer.cancel();
-          }));
+        setState(() {
+          print('Splash end');
+          splash = false;
+          _timer.cancel();
+        })
+      );
     }
   }
 

@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:background_locator/location_dto.dart';
 import 'package:flutter/cupertino.dart' hide Route, Path;
 import 'package:flutter/material.dart' hide Route, Path;
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jogr/screens/map_widget.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/models/route.dart';
@@ -18,7 +18,7 @@ class MapDialog extends StatefulWidget {
   Set<Marker> markers = {};
   Set<Polyline> _polylines = {};
   List<LatLng> waypoints = [];
-  List<LocationDto> positions = [];
+  List<List<ll.LatLng>> positions = [];
 
   bool showMarkers = true;
   bool showRoute = true;
@@ -140,9 +140,9 @@ class _MapDialogState extends State<MapDialog> {
     });
   }
 
-  Polyline generateRan(List<LocationDto> latLongs) {
+  Polyline generateRan(List<ll.LatLng> latLongs) {
     if(latLongs.length >= 3) {
-      ll.Path path = ll.Path.from(latLongs.map((e) => ll.LatLng(e.latitude, e.longitude))).equalize(1, smoothPath: true);
+      ll.Path path = ll.Path.from(latLongs).equalize(1, smoothPath: true);
 
       return Polyline(
         polylineId: PolylineId('path'),
@@ -171,7 +171,9 @@ class _MapDialogState extends State<MapDialog> {
       controller.setMapStyle(_mapTheme);
       _controller.complete(controller);
       generateRoute();
-      if(widget.positions.length >= 2) widget._polylines.add(generateRan(widget.positions));
+      for(int i = 0; i < widget.positions.length; i++) {
+        if(widget.positions[i].length >= 2) widget._polylines.add(generateRan(widget.positions[i]));
+      }
       position = await setupLocation();
       controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: position, zoom: 18)));
     }

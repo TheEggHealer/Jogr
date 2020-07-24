@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
+
+import 'package:background_locator/background_locator.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:cool_nav/cool_nav.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
@@ -6,15 +11,16 @@ import 'package:jogr/screens/home/profile/profile.dart';
 import 'package:jogr/screens/home/route/route_planner.dart';
 import 'package:jogr/screens/home/setup.dart';
 import 'package:jogr/screens/home/statistics/statistics.dart';
-import 'package:jogr/screens/run/run_begin.dart';
+import 'package:jogr/screens/run/run.dart';
 import 'package:jogr/screens/splash/splash.dart';
 import 'package:jogr/services/auth.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/file_manager.dart';
+import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
-
 import 'home_widget.dart';
 
 class Home extends StatefulWidget {
@@ -23,19 +29,49 @@ class Home extends StatefulWidget {
   Home({ this.auth });
 
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
 
-  int selectedPage = 0;
+  bool running = false;
+
+  int selectedPage = 2;
   PageController controller = PageController(
-    initialPage: 0,
+    initialPage: 2,
   );
+
+  Future<int> isTracking() async {
+    await BackgroundLocator.initialize();
+    bool tracking = await BackgroundLocator.isRegisterLocationUpdate();
+
+    String fileContent = await FileManager.read();
+    bool background = fileContent.isNotEmpty;
+
+    if(tracking && background) return 1;
+    else if(tracking && !background) return 2;
+    else if(!tracking && background) return 3;
+    else return 0;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isTracking().then((value) {
+      if(value != 0) {
+        setState(() {
+          running = true;
+        });
+      } else {
+        setState(() {
+          running = false;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
     User user = Provider.of<User>(context);
     UserData userData = Provider.of<UserData>(context);
     bool setup = userData == null ? false : userData.raw['setup'];
@@ -45,6 +81,8 @@ class _HomeState extends State<Home> {
       return SplashScreen(auth: widget.auth,);
     } else if(!setup) {
       return Setup();
+    } else if(running) {
+      return RunScreen(userData, this);
     } else {
         return  Scaffold(
           backgroundColor: color_background,
@@ -97,7 +135,9 @@ class _HomeState extends State<Home> {
                             return RawMaterialButton(
                               elevation: 0,
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (con) => RunBegin(userData)));
+                                setState(() {
+                                  running = true;
+                                });
                               },
                               child: Container(
                                 child: Icon(Icons.directions_run, color: color_text_highlight, size: constraints.maxHeight / 5),

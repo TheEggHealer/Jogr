@@ -1,10 +1,15 @@
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:background_locator/background_locator.dart';
 import 'package:background_locator/location_dto.dart';
 import 'package:background_locator/location_settings.dart';
+import 'package:jogr/services/database.dart';
+import 'package:jogr/utils/tracking/callback_handler.dart';
+import 'package:jogr/utils/tracking/callback_repository.dart';
 import 'package:latlong/latlong.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'map_dialog.dart';
 
@@ -18,49 +23,21 @@ class LocationTracker {
 
   bool initializedTracking = false;
   bool tracking = false;
+  bool isRunning = false;
 
   MapDialog map;
-  LocationTracker(this.map);
+  static DatabaseService db;
+  LocationTracker(this.map, DatabaseService _d) {
+    db = DatabaseService(uid: 'IsT9DEc5gGVulFDWRRR9ubdDaw73');
+  }
 
   void init() {
-    print('Initializing');
-    IsolateNameServer.registerPortWithName(port.sendPort, _isolateName);
-    port.listen((dynamic data) {
-      if(tracking) {
-        print('$data');
-
-        Distance distance = Distance();
-
-        if (positions.length > 0 && distance.as(
-            LengthUnit.Meter,
-            LatLng(data.latitude, data.longitude),
-            LatLng(positions.last.latitude, positions.last.longitude)
-        ) >= stepSize) {
-          totalDistance += distance.as(
-              LengthUnit.Meter,
-              LatLng(data.latitude, data.longitude),
-              LatLng(positions.last.latitude, positions.last.longitude)
-          );;
-          positions.add(data);
-        } else if (positions.isEmpty) {
-          positions.add(data);
-        }
-      }
-    });
     initPlatformState();
   }
 
   Future<void> initPlatformState() async {
     await BackgroundLocator.initialize();
-  }
-
-  static void notificationCallback() {
-    print('User clicked on the notification');
-  }
-
-  static void callback(LocationDto loc) async {
-    final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
-    send?.send(loc);
+    isRunning = await BackgroundLocator.isRegisterLocationUpdate();
   }
 
   void setTracking(bool tracking) {
@@ -69,16 +46,18 @@ class LocationTracker {
 
   void startLocationService(){
     BackgroundLocator.registerLocationUpdate(
-      callback,
-      //optional
-      androidNotificationCallback: notificationCallback,
+      CallbackHandler.callback,
+      initCallback: CallbackHandler.initCallback,
+      disposeCallback: CallbackHandler.disposeCallback,
+      androidNotificationCallback: CallbackHandler.notificationCallback,
+
       settings: LocationSettings(
-        //Scroll down to see the different options
+          notificationChannelName: "Jogr tracking service",
           notificationTitle: "Start Location Tracking",
           notificationMsg: "Track location in background",
-          wakeLockTime: 20,
+          wakeLockTime: 120,
           autoStop: false,
-          interval: 5,
+          interval: 1,
       ),
     );
     initializedTracking = true;
@@ -86,13 +65,15 @@ class LocationTracker {
 
   void stopLocationService() {
     BackgroundLocator.unRegisterLocationUpdate();
+    IsolateNameServer.removePortNameMapping(_isolateName);
     initializedTracking = false;
   }
 
   void dispose() {
-    stopLocationService();
-    tracking = false;
-    IsolateNameServer.removePortNameMapping(_isolateName);
+    //stopLocationService();
+    //tracking = false;
+    //IsolateNameServer.removePortNameMapping(_isolateName);
+    port.close();
     print('disposed backgounr locator');
   }
 

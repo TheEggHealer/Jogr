@@ -5,40 +5,56 @@ import 'dart:ui';
 import 'package:background_locator/location_dto.dart';
 import 'package:flutter/cupertino.dart' hide Route;
 import 'package:flutter/material.dart' hide Route;
+import 'package:jogr/screens/home/home.dart';
 import 'package:jogr/screens/home/home_component.dart';
 import 'package:jogr/screens/run/location_tracker.dart';
 import 'package:jogr/screens/run/map_dialog.dart';
+import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/file_manager.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
+import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/tracking/callback_handler.dart';
 import 'package:latlong/latlong.dart';
 
-class RunBegin extends StatefulWidget {
+class RunScreen extends StatefulWidget {
 
   final UserData _userData;
+  HomeState home;
 
-  RunBegin(this._userData);
+  RunScreen(this._userData, this.home);
 
   @override
-  _RunBeginState createState() => _RunBeginState(_userData);
+  _RunScreenState createState() => _RunScreenState(_userData, home);
 }
 
-class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin {
+class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMixin {
 
   UserData userData;
+  DatabaseService db;
+  LocationTracker tracker;
+  HomeState home;
+  RunLog log = RunLog('');
+
   Route selectedRoute;
   AnimationController _play_pause;
   bool running = false;
-  String timeString = '00:00:00';
+  bool loading = true;
+
+  int distance = 0;
+
+  String timeString = '00:00';
   Stopwatch stopwatch = Stopwatch();
   Timer timer;
+  int startTimeSeconds = 0;
+  int updateTimeDistanceCooldown = 5;
 
   MapDialog map = MapDialog();
-  LocationTracker tracker;
 
-  _RunBeginState(this.userData) {
+  _RunScreenState(this.userData, this.home) {
     selectedRoute = userData.routes.isNotEmpty ? (userData.lastRoute != null ? userData.lastRoute : userData.routes[0]) : null;
   }
 
@@ -149,30 +165,117 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
   }
 
   void startTimer() {
-    Timer(Duration(seconds: 1), () {
-      print('Is running: $running');
+    Timer(Duration(milliseconds: 1000), () {
       if(running) {
         startTimer();
         setState(() {
-          timeString = Run(time: stopwatch.elapsed.inSeconds).timeString;
+          if(--updateTimeDistanceCooldown <= 0) {
+            updateTimeDistanceCooldown = 20;
+            update();
+            print('Updating');
+          }
+          timeString = Run(time: stopwatch.elapsed.inSeconds + startTimeSeconds).timeString;
         });
       }
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    tracker = LocationTracker(map);
+  void update() async {
+    String fileContent = await FileManager.read();
+    if(fileContent.isNotEmpty) {
+      this.log = RunLog(fileContent);
+      startTimeSeconds = ((DateTime.now().millisecondsSinceEpoch - log.startTime) / 1000).round();
+      distance = log.distance.round();
 
-    _play_pause = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+      stopwatch.reset();
+    }
+  }
 
-    tracker.init();
+  void setupAlreadyActive() async {
+    String fileContent = await FileManager.read();
+    print('SETING UP');
+    if(fileContent.isNotEmpty) {
+      this.log = RunLog(fileContent);
+
+      setState(() {
+        this.running = true;
+        _play_pause.forward();
+        startTimeSeconds = ((DateTime.now().millisecondsSinceEpoch - log.startTime) / 1000).round();
+        distance = log.distance.round();
+
+        startTimer();
+        stopwatch.start();
+        loading = false;
+      });
+
+      print('************** TRACKING');
+    } else {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    tracker = LocationTracker(map, db);
+    tracker.init();
 
+    _play_pause = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+
+    setupAlreadyActive();
+  }
+
+  void _onPlayPause() {
+    running = !running;
+    running ? _play_pause.forward() : _play_pause.reverse();
+
+    if(running) {
+      if(!tracker.initializedTracking) tracker.startLocationService();
+      startTimer();
+      stopwatch.start();
+      CallbackHandler.active = true;
+    } else {
+      CallbackHandler.active = false;
+      FileManager.write('*\n');
+    }
+
+    /**
+    running = !running;
+    running ? _play_pause.forward() : _play_pause.reverse();
+    if(running) {
+      startTimer();
+      stopwatch.start();
+      if(!tracker.initializedTracking) tracker.startLocationService();
+      tracker.setTracking(true);
+    } else {
+      stopwatch.stop();
+      tracker.setTracking(false);
+    }
+        */
+  }
+
+  void _onStop() async {
+    if((await FileManager.read()).isNotEmpty) tracker.startLocationService();
+    tracker.stopLocationService();
+    stopwatch.stop();
+    running = false;
+    CallbackHandler.active = false;
+    print(await FileManager.read());
+    await FileManager.clear();
+    _play_pause.reverse();
+  }
+
+  void _onMap() {
+    map.positions = log.locations;
+    if(selectedRoute != null) map.setupRoute(selectedRoute);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => map));
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color_background,
       body: Container(
@@ -193,7 +296,9 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
                   child: IconButton(
                     icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
                     onPressed: () {
-                      Navigator.pop(context);
+                      home.setState(() {
+                        home.running = false;
+                      });
                     },
                   ),
                 ),
@@ -276,12 +381,12 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
                     children: [
                       HomeComponent(
                         icon: CustomIcons.timer,
-                        data: timeString,
+                        data: loading ? '--:--:--' : timeString,
                         label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
                       ),
                       HomeComponent(
                         icon: CustomIcons.distance,
-                        data: tracker.totalDistance.toString(),
+                        data: loading ? '--' : '$distance',
                         label: 'm',
                       ),
                     ],
@@ -296,9 +401,7 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
                           children: [
                             RawMaterialButton(
                               elevation: 0,
-                              onPressed: () {
-                                tracker.stopLocationService();
-                              },
+                              onPressed: _onStop,
                               child: Container(
                                 child: Icon(Icons.stop, color: color_text_highlight, size: constraints.maxHeight / 7),
                                 padding: EdgeInsets.all(constraints.maxHeight / 18),
@@ -312,19 +415,7 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
                             ),
                             RawMaterialButton(
                               elevation: 0,
-                              onPressed: () {
-                                running = !running;
-                                running ? _play_pause.forward() : _play_pause.reverse();
-                                if(running) {
-                                  startTimer();
-                                  stopwatch.start();
-                                  if(!tracker.initializedTracking) tracker.startLocationService();
-                                  tracker.setTracking(true);
-                                } else {
-                                  stopwatch.stop();
-                                  tracker.setTracking(false);
-                                }
-                              },
+                              onPressed: _onPlayPause,
                               child: Container(
                                 child: AnimatedIcon(
                                   icon: AnimatedIcons.play_pause,
@@ -343,14 +434,7 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
                             ),
                             RawMaterialButton(
                               elevation: 0,
-                              onPressed: () {
-                                map.positions = tracker.positions;
-                                if(selectedRoute != null) map.setupRoute(selectedRoute);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => map));
-                                //showDialog(context: context, builder: (context) {
-                                //  return MapDialog();
-                                //});
-                              },
+                              onPressed: _onMap,
                               child: Container(
                                 child: Icon(CustomIcons.gps, color: color_text_highlight, size: constraints.maxHeight / 7),
                                 padding: EdgeInsets.all(constraints.maxHeight / 18),
@@ -382,8 +466,9 @@ class _RunBeginState extends State<RunBegin> with SingleTickerProviderStateMixin
     print('DISPOSING');
     stopwatch.stop();
     running = false;
+    loading = true;
     tracker.dispose();
-    super.dispose();
     print('DISPOSED');
+    super.dispose();
   }
 }

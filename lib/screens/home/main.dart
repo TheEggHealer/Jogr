@@ -1,3 +1,4 @@
+import 'package:background_locator/background_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:jogr/services/auth.dart';
 import 'package:jogr/services/database.dart';
@@ -10,6 +11,8 @@ import 'home.dart';
 class Main extends StatelessWidget {
 
   final AuthService _auth = AuthService();
+
+  bool tracking = false;
 
   @override
   Widget build(BuildContext context) {
