@@ -236,9 +236,9 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
       if(!tracker.initializedTracking) tracker.startLocationService();
       startTimer();
       stopwatch.start();
-      CallbackHandler.active = true;
+      CallbackHandler.setActive(true);
     } else {
-      CallbackHandler.active = false;
+      CallbackHandler.setActive(false);
       FileManager.write('*\n');
     }
 
@@ -262,7 +262,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     tracker.stopLocationService();
     stopwatch.stop();
     running = false;
-    CallbackHandler.active = false;
+    CallbackHandler.setActive(false);
     print(await FileManager.read());
     await FileManager.clear();
     _play_pause.reverse();
