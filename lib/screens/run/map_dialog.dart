@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart' hide Route, Path;
 import 'package:flutter/material.dart' hide Route, Path;
-import 'file:///E:/Documents/AndroidProjects/Flutter/jogr/lib/screens/run/map_widget.dart';
+import 'package:jogr/screens/run/map_widget.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
