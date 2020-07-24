@@ -24,6 +24,9 @@ class CustomIcons {
   static const IconData down = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData jogr = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData up = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData goal = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData trash = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData speed = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData back = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData burn = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData distance = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);

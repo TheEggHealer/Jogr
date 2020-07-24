@@ -53,7 +53,7 @@ class StatisticsWidget extends StatelessWidget {
                       label: 'cal',
                     ),
                     HomeComponent(
-                        icon: CustomIcons.up,
+                        icon: CustomIcons.speed,
                         data: roundedString(run.speed, 2),
                         label: 'm/s'
                     )

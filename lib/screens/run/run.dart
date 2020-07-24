@@ -23,12 +23,13 @@ import 'package:jogr/utils/tracking/callback_handler.dart';
 class RunScreen extends StatefulWidget {
 
   final UserData _userData;
+  final DatabaseService db;
   HomeState home;
 
-  RunScreen(this._userData, this.home);
+  RunScreen(this._userData, this.home, this.db);
 
   @override
-  _RunScreenState createState() => _RunScreenState(_userData, home);
+  _RunScreenState createState() => _RunScreenState(_userData, home, db);
 }
 
 class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMixin {
@@ -54,7 +55,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
 
   MapDialog map = MapDialog();
 
-  _RunScreenState(this.userData, this.home) {
+  _RunScreenState(this.userData, this.home, this.db) {
     selectedRoute = userData.routes.isNotEmpty ? (userData.lastRoute != null ? userData.lastRoute : userData.routes[0]) : null;
   }
 
@@ -266,7 +267,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     await FileManager.clear();
     _play_pause.reverse();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, home)));
   }
 
   void _onMap() {

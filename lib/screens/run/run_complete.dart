@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart' hide Route;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/screens/home/goal_widget.dart';
+import 'package:jogr/screens/home/home.dart';
 import 'package:jogr/screens/home/home_component.dart';
 import 'package:jogr/screens/run/statistics_widget.dart';
+import 'package:jogr/services/database.dart';
 import 'file:///E:/Documents/AndroidProjects/Flutter/jogr/lib/screens/run/map_widget.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
@@ -18,8 +20,11 @@ class RunComplete extends StatefulWidget {
   RunLog log;
   Run run;
   MapWidget map = MapWidget();
+  UserData userData;
+  DatabaseService db;
+  HomeState home;
 
-  RunComplete(this.log, Route route, UserData userData) {
+  RunComplete(this.log, Route route, this.userData, this.db, this.home) {
     map.positions = log.locations;
 
     run = !log.empty ? Run.from(log, route, userData) : Run(date: '20200724', distance: 3093, time: 839, calories: 132, route: route);
@@ -146,35 +151,104 @@ class _RunCompleteState extends State<RunComplete> {
                         indent: 20,
                         height: 30,
                       ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: double.infinity,
-                          maxHeight: constraints.maxHeight / 4,
-                        ),
-                        child: PageView.builder(
-                          controller: controller,
-                          itemBuilder: statsBuilder,
-                          itemCount: 5,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Center(
-                        child: SmoothPageIndicator(
-                          controller: controller,
-                          count: 5,
-                          effect: ExpandingDotsEffect(
-                              dotColor: color_text_dark,
-                              activeDotColor: color_text_highlight,
-                              dotWidth: 6,
-                              dotHeight: 6,
-                              spacing: 3,
-                              paintStyle: PaintingStyle.fill,
-                              strokeWidth: 1
-                          ),
-                        ),
-                      )
                     ],
                   ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: double.infinity,
+                      maxHeight: constraints.maxHeight / 4,
+                    ),
+                    child: PageView.builder(
+                      controller: controller,
+                      itemBuilder: statsBuilder,
+                      itemCount: 5,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: SmoothPageIndicator(
+                      controller: controller,
+                      count: 5,
+                      effect: ExpandingDotsEffect(
+                          dotColor: color_text_dark,
+                          activeDotColor: color_text_highlight,
+                          dotWidth: 6,
+                          dotHeight: 6,
+                          spacing: 3,
+                          paintStyle: PaintingStyle.fill,
+                          strokeWidth: 1
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height:60,
+                            width: 60,
+                            child: OutlineButton(
+                              onPressed: () async {
+                              },
+                              child: Icon(
+                                CustomIcons.trash,
+                              ),
+                              color: color_error,
+                              splashColor: color_error,
+                              highlightColor: color_error,
+                              focusColor: color_error,
+                              textColor: color_text_dark,
+                              borderSide: BorderSide(color: color_error),
+                              highlightedBorderColor: color_error,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          Expanded(
+                            flex: 10,
+                            child: SizedBox(
+                              height: 60,
+                              child: OutlineButton(
+                                onPressed: () async {
+                                  Run run = widget.run;
+                                  await widget.db.mergeUserDataFields({
+                                    'previous_runs': widget.userData.raw['previous_runs'].putIfAbsent('', () => {run.date: {'distance': run.distance,'time': run.time, 'calories': run.calories, 'route': run.route.name}})
+                                  });
+                                  widget.home.setState(() {
+                                    widget.home.running = false;
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(
+                                      'SAVE AND CONTINUE',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'Roboto',
+                                          color: color_text_dark
+                                      )
+                                  ),
+                                ),
+                                color: color_button_green,
+                                splashColor: color_button_green,
+                                highlightColor: color_button_green,
+                                focusColor: color_button_green,
+                                textColor: color_text_dark,
+                                borderSide: BorderSide(color: color_button_green),
+                                highlightedBorderColor: color_button_green,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

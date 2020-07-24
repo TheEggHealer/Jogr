@@ -14,6 +14,7 @@ import 'package:jogr/screens/home/statistics/statistics.dart';
 import 'package:jogr/screens/run/run.dart';
 import 'package:jogr/screens/splash/splash.dart';
 import 'package:jogr/services/auth.dart';
+import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/file_manager.dart';
@@ -82,7 +83,7 @@ class HomeState extends State<Home> {
     } else if(!setup) {
       return Setup();
     } else if(running) {
-      return RunScreen(userData, this);
+      return RunScreen(userData, this, DatabaseService(uid: user.uid));
     } else {
         return  Scaffold(
           backgroundColor: color_background,
@@ -179,7 +180,7 @@ class HomeState extends State<Home> {
             selectedIndex: selectedPage,
             items: [
               FFNavigationBarItem(iconData: CustomIcons.route, label: 'Planner'),
-              FFNavigationBarItem(iconData: CustomIcons.gps, label: 'Goals'),
+              FFNavigationBarItem(iconData: CustomIcons.goal, label: 'Goals'),
               FFNavigationBarItem(iconData: CustomIcons.home, label: 'Home'),
               FFNavigationBarItem(iconData: CustomIcons.stats, label: 'Statistics'),
               FFNavigationBarItem(iconData: CustomIcons.profile, label: 'Profile'),
