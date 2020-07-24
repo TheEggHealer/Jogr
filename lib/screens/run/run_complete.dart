@@ -193,6 +193,10 @@ class _RunCompleteState extends State<RunComplete> {
                             width: 60,
                             child: OutlineButton(
                               onPressed: () async {
+                                widget.home.setState(() {
+                                  widget.home.running = false;
+                                  Navigator.pop(context);
+                                });
                               },
                               child: Icon(
                                 CustomIcons.trash,
