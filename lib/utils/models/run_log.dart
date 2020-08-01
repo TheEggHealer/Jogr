@@ -8,6 +8,7 @@ class RunLog {
   List<double> speed;
   double distance;
 
+  List<int> times = [];
   int startTime;
   int endTime;
 
@@ -16,6 +17,7 @@ class RunLog {
       List<String> data = log.split('\n');
       running = true;
       startTime = int.parse(data[0]);
+      times.add(startTime);
       locations = [];
       locations.add([]);
       distance = 0;
@@ -23,14 +25,17 @@ class RunLog {
       int index = 0;
       int size = 0;
       while(index++ < data.length - 1) {
+        print('Added position ${index}');
         if(data[index] == '*') {
           part++;
           locations.add([]);
         }
-        else if(data[index].isNotEmpty){
+        else if(data[index].isNotEmpty && data[index].contains('#')){
           List<String> position = data[index].split('#');
           locations[part].add(LatLng(double.parse(position[0]), double.parse(position[1])));
           size++;
+        } else {
+
         }
       }
       findDistance();

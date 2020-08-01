@@ -27,6 +27,8 @@ class _MapDialogState extends State<MapDialog> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SlidingUpPanel(
+            parallaxOffset: 0.4,
+            parallaxEnabled: true,
             renderPanelSheet: false,
             borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
             maxHeight: constraints.maxWidth > 400 ? MediaQuery.of(context).size.height/3.2 : MediaQuery.of(context).size.height/3.2,
@@ -110,9 +112,9 @@ class _MapDialogState extends State<MapDialog> {
                       children: [
                         OutlineButton(
                           onPressed: () { setState(() {
-                            widget.showMarkers = !widget.showMarkers;
+                            widget.map.showMarkers = !widget.map.showMarkers;
                           }); },
-                          child: Text(widget.showMarkers ? 'HIDE MARKERS' : 'SHOW MARKERS'),
+                          child: Text(widget.map.showMarkers ? 'HIDE MARKERS' : 'SHOW MARKERS'),
                           color: color_text_highlight,
                           highlightColor: color_text_highlight,
                           highlightedBorderColor: color_text_highlight,
@@ -124,9 +126,9 @@ class _MapDialogState extends State<MapDialog> {
                         ),
                         OutlineButton(
                           onPressed: () { setState(() {
-                            widget.showRoute = !widget.showRoute;
+                            widget.map.showRoute = !widget.map.showRoute;
                           }); },
-                          child: Text(widget.showRoute ? 'HIDE ROUTE' : 'SHOW ROUTE'),
+                          child: Text(widget.map.showRoute ? 'HIDE ROUTE' : 'SHOW ROUTE'),
                           color: color_text_highlight,
                           highlightColor: color_text_highlight,
                           highlightedBorderColor: color_text_highlight,

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:package_info/package_info.dart';
 
 const bool darkMode = true;
 
@@ -50,6 +51,10 @@ const Divider divider = Divider(
   height: 60,
 );
 
+Future<String> get VERSION async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  return packageInfo.version;
+}
 
 
 String roundedString(double value, int digits) {
@@ -64,7 +69,9 @@ String formatDate(String date) {
   String year = date.substring(0, 4);
   String month = date.substring(4, 6);
   String day = date.substring(6, 8);
-  return '$year-$month-$day';
+  String minute = date.length > 8 ? date.substring(8, 10) : '';
+  String second = date.length > 8 ? date.substring(10, 12) : '';
+  return '${date.length > 8 ? ' $minute:$second ' : ''}$year-$month-$day';
 }
 
 class NoScrollGlow extends ScrollBehavior {

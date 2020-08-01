@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/home/home_component.dart';
+import 'package:jogr/screens/navigator/home/home_component.dart';
 import 'package:jogr/utils/constants.dart';
 
 class Goal extends StatelessWidget {

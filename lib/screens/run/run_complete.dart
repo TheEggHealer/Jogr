@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart' hide Route;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:jogr/screens/home/goal_widget.dart';
-import 'package:jogr/screens/home/home.dart';
-import 'package:jogr/screens/home/home_component.dart';
+import 'package:jogr/screens/navigator/home/home_component.dart';
+import 'file:///E:/Documents/AndroidProjects/Flutter/jogr/lib/screens/navigator/goals/goal_widget.dart';
+import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/screens/run/map_widget.dart';
 import 'package:jogr/screens/run/statistics_widget.dart';
 import 'package:jogr/services/database.dart';
@@ -22,12 +21,12 @@ class RunComplete extends StatefulWidget {
   MapWidget map = MapWidget();
   UserData userData;
   DatabaseService db;
-  HomeState home;
+  ScreenNavigatorState navigator;
 
-  RunComplete(this.log, Route route, this.userData, this.db, this.home) {
+  RunComplete(this.log, Route route, this.userData, this.db, this.navigator) {
     map.positions = log.locations;
 
-    run = !log.empty ? Run.from(log, route, userData) : Run(date: '20200724', distance: 3093, time: 839, calories: 132, route: route);
+    run = !log.empty ? Run.from(log, route, userData) : Run(date: '202007241901', distance: 3093, time: 839, calories: 132, pace: 243, route: route);
   }
 
   @override
@@ -193,8 +192,8 @@ class _RunCompleteState extends State<RunComplete> {
                             width: 60,
                             child: OutlineButton(
                               onPressed: () async {
-                                widget.home.setState(() {
-                                  widget.home.running = false;
+                                widget.navigator.setState(() {
+                                  widget.navigator.running = false;
                                   Navigator.pop(context);
                                 });
                               },
@@ -221,10 +220,18 @@ class _RunCompleteState extends State<RunComplete> {
                                 onPressed: () async {
                                   Run run = widget.run;
                                   await widget.db.mergeUserDataFields({
-                                    'previous_runs': widget.userData.raw['previous_runs'].putIfAbsent('', () => {run.date: {'distance': run.distance,'time': run.time, 'calories': run.calories, 'route': run.route.name}})
+                                    'previous_runs': widget.userData.raw['previous_runs'].putIfAbsent('', () => {
+                                      run.date: {
+                                        'distance': run.distance,
+                                        'time': run.time,
+                                        'calories': run.calories,
+                                        'route': run.route.name
+                                      }
+                                    })
                                   });
-                                  widget.home.setState(() {
-                                    widget.home.running = false;
+                                  print('Updated database');
+                                  widget.navigator.setState(() {
+                                    widget.navigator.running = false;
                                     Navigator.pop(context);
                                   });
                                 },

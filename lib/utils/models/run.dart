@@ -5,23 +5,26 @@ import 'package:jogr/utils/models/userdata.dart';
 
 class Run {
 
-  int distance; //Distance in meters
-  int time; //Time in seconds
-  int pace; //Pace in seconds / km
-  int calories;
-  int temperature;
-  String date;
+  int distance = 0; //Distance in meters
+  int time = 0; //Time in seconds
+  int pace = 0; //Pace in seconds / km
+  int calories = 0;
+  int temperature = 0;
+  String date = '';
   Route route;
 
-  Run({ this.date, this.distance, this.time, this.calories, this.route }) {
-    pace = time != null && distance != null ? (time / (distance / 1000)).round() : 0;
-  }
+  Run({ this.date, this.distance, this.time, this.calories, this.pace, this.route });
 
   static Run from(RunLog log, Route route, UserData userData) {
     int distance = log.distance.round();
     int time = ((DateTime.now().millisecondsSinceEpoch - log.startTime) / 1000).round();
+    int pace = time != 0 && distance != 0 ? (time / (distance / 1000)).round() : 0;
+    print('$pace, $time, $distance');
+
+    double MET = 7;
     int calories = (0.0175 * 7 * userData.weight * (time / 60)).round();                                    //TODO: Improve calories calculation
-    String date = DateFormat('yyMMdd').format(DateTime.now());
+    String date = DateFormat('yyyyMMddHHss').format(DateTime.now());
+    print('Date: $date');
 
     print(log.startTime);
 
@@ -30,6 +33,7 @@ class Run {
       distance: distance,
       time: time,
       calories: calories,
+      pace: pace,
       route: route,
     );
   }

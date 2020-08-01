@@ -266,6 +266,7 @@ class _MapState extends State<Map> {
       onTap: addWaypoint,
       polylines: widget.polylines,
       markers: showMarkes ? widget.markers : {},
+      padding: EdgeInsets.only(top: 20, bottom: 120),
     );
   }
 

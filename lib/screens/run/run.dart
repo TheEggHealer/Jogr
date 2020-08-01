@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'dart:ui';
-
-import 'package:background_locator/location_dto.dart';
 import 'package:flutter/cupertino.dart' hide Route;
 import 'package:flutter/material.dart' hide Route;
-import 'package:jogr/screens/home/home.dart';
-import 'package:jogr/screens/home/home_component.dart';
+import 'package:jogr/screens/navigator/home/home_component.dart';
+import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/screens/run/location_tracker.dart';
 import 'package:jogr/screens/run/map_dialog.dart';
 import 'package:jogr/screens/run/run_complete.dart';
@@ -18,18 +15,17 @@ import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/userdata.dart';
-import 'package:jogr/utils/tracking/callback_handler.dart';
 
 class RunScreen extends StatefulWidget {
 
   final UserData _userData;
   final DatabaseService db;
-  HomeState home;
+  ScreenNavigatorState navigator;
 
-  RunScreen(this._userData, this.home, this.db);
+  RunScreen(this._userData, this.navigator, this.db);
 
   @override
-  _RunScreenState createState() => _RunScreenState(_userData, home, db);
+  _RunScreenState createState() => _RunScreenState(_userData, navigator, db);
 }
 
 class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMixin {
@@ -37,7 +33,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
   UserData userData;
   DatabaseService db;
   LocationTracker tracker;
-  HomeState home;
+  ScreenNavigatorState navigator;
   RunLog log = RunLog('');
 
   Route selectedRoute;
@@ -55,7 +51,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
 
   MapDialog map = MapDialog();
 
-  _RunScreenState(this.userData, this.home, this.db) {
+  _RunScreenState(this.userData, this.navigator, this.db) {
     selectedRoute = userData.routes.isNotEmpty ? (userData.lastRoute != null ? userData.lastRoute : userData.routes[0]) : null;
   }
 
@@ -181,7 +177,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     });
   }
 
-  void update() async {
+  Future<void> update() async {
     String fileContent = await FileManager.read();
     if(fileContent.isNotEmpty) {
       this.log = RunLog(fileContent);
@@ -236,9 +232,9 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
       if(!tracker.initializedTracking) tracker.startLocationService();
       startTimer();
       stopwatch.start();
-      CallbackHandler.setActive(true);
+      //CallbackHandler.setActive(true);
     } else {
-      CallbackHandler.setActive(false);
+      //CallbackHandler.setActive(false);
       FileManager.write('*\n');
     }
 
@@ -259,21 +255,25 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
 
   void _onStop() async {
     if((await FileManager.read()).isNotEmpty) tracker.startLocationService();
-    tracker.stopLocationService();
     stopwatch.stop();
     running = false;
-    CallbackHandler.setActive(false);
+    //CallbackHandler.setActive(false);
     print(await FileManager.read());
+    print('File size: ${await FileManager.fileSize()}');
     await FileManager.clear();
     _play_pause.reverse();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, home)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, navigator)));
+    tracker.stopLocationService();
   }
 
   void _onMap() {
-    map.map.positions = log.locations;
-    if(selectedRoute != null) map.map.setupRoute(selectedRoute);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => map));
+    setState(() async {
+      await update();
+      map.map.positions = log.locations;
+      if(selectedRoute != null) map.map.setupRoute(selectedRoute);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => map));
+    });
   }
 
 
@@ -301,8 +301,8 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                   child: IconButton(
                     icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
                     onPressed: () {
-                      home.setState(() {
-                        home.running = false;
+                      navigator.setState(() {
+                        navigator.running = false;
                       });
                     },
                   ),

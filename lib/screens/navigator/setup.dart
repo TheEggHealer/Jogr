@@ -200,6 +200,8 @@ class _SetupState extends State<Setup> {
                                 'weight': weight,
                                 'kg': isSelected[0],
                                 'setup': true,
+                                'previous_runs': <String, dynamic>{},
+                                'saved_routes': <String, dynamic>{},
                               });
                             }
                           },

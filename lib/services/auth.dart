@@ -100,7 +100,7 @@ class AuthService {
       print(e.toString());
       switch(e.code) {
         case 'ERROR_EMAIL_ALREADY_IN_USE' : return 'Email is already taken.';
-        default: return 'Login failed.';
+        default: return 'Register failed. Error: ${e.code}';
       }
     }
   }

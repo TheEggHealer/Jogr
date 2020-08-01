@@ -40,6 +40,7 @@ class MapWidget extends StatefulWidget {
         polylineId: PolylineId(id),
         color: color_button_green,
         zIndex: 1,
+        width: 4,
         points: path.coordinates.map((e) => LatLng(e.latitude, e.longitude)).toList(),
       );
     } else {
@@ -106,6 +107,9 @@ class _MapWidgetState extends State<MapWidget> {
 
     if(widget.waypoints.length > 1) {
       routeCoordinates.clear();
+
+      //TODO: Use PolyWayPoint to speed up route generation
+
       for(int i = 0; i < widget.waypoints.length - 1; i++) {
         PolylineResult result = await _polylinePoints?.getRouteBetweenCoordinates(
             "AIzaSyDROcsS2YsgIGqjz8TOSIPbK9QFj9oo7s4",
@@ -371,6 +375,9 @@ class _MapWidgetState extends State<MapWidget> {
       onTap: widget.staticMap ? (pos) {} : addWaypoint,
       markers: widget.showMarkers ? widget.markers : {},
       polylines: widget.showRoute ? widget._polylines : widget._polylines.where((element) => element.zIndex == 1).toSet(),
+      padding: EdgeInsets.only(top: 20, bottom: 90),
+      zoomControlsEnabled: false,
+      mapType: MapType.normal,
     );
   }
 }

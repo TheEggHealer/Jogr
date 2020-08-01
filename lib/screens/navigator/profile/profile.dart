@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/home/profile/profile_item.dart';
+import 'package:jogr/screens/navigator/profile/profile_item.dart';
+import 'package:jogr/services/auth.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 
 class Profile extends StatefulWidget {
+
+  AuthService _auth;
+
+  Profile(this._auth);
+
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -11,9 +17,24 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   List<bool> isSelected = [true, false];
+  String version = "---";
+
+  void loadVersion() async {
+    print('Loading version');
+    version = await VERSION;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadVersion();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return ScrollConfiguration(
       behavior: NoScrollGlow(),
       child: SingleChildScrollView(
@@ -90,6 +111,7 @@ class _ProfileState extends State<Profile> {
               divider,
               OutlineButton(
                 onPressed: () async {
+                  await widget._auth.signOut();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -149,7 +171,7 @@ class _ProfileState extends State<Profile> {
                   children: <Widget>[
                     Icon(CustomIcons.jogr, color: color_text_dark, size: 40,),
                     Text(
-                      'Version 1.6.30 (200627)',
+                      version,
                       style: TextStyle(
                         fontSize: 10,
                         fontFamily: 'RobotoLight',

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/home/home_component.dart';
-import 'package:jogr/screens/home/statistics/previous_run_widget.dart';
-
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
-import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'goal_widget.dart';
+import '../goals/goal_widget.dart';
+import 'home_component.dart';
 
 
 class HomeWidget extends StatefulWidget {

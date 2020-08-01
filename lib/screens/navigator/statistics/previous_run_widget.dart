@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/home/home_component.dart';
+import 'package:jogr/screens/navigator/home/home_component.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/constants.dart';
@@ -65,7 +65,7 @@ class PreviousRunWidget extends StatelessWidget {
                 height: 20,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     formatDate(_run.date),

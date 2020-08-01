@@ -1,40 +1,38 @@
-import 'dart:collection';
 import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:jogr/screens/home/route/map.dart';
-import 'package:jogr/screens/home/route/route_panel.dart';
+import 'package:jogr/screens/navigator/route/map.dart';
+import 'package:jogr/screens/navigator/route/route_panel.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
-import 'package:jogr/utils/loading.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../run/map_widget.dart';
 
 class RoutePlanner extends StatefulWidget {
   final User user;
-  final UserData userData;
   final MapWidget map = MapWidget();
 
-  _RoutePlannerState state = _RoutePlannerState();
-
-  RoutePlanner(this.user, this.userData);
+  RoutePlanner(this.user);
 
   @override
-  _RoutePlannerState createState() => state;
+  RoutePlannerState createState() => RoutePlannerState();
 }
 
-class _RoutePlannerState extends State<RoutePlanner> {
+class RoutePlannerState extends State<RoutePlanner> {
 
   Map map = Map();
   double dist = 0;
   Set<Polyline> _polylines = {};
+
+  UserData userData;
 
   int totalDistance = 0;
   bool loading = false;
@@ -141,7 +139,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
     DatabaseService db = DatabaseService(uid: widget.user.uid);
 
     await db.mergeUserDataFields({
-      'saved_routes': widget.userData.raw['saved_routes'].putIfAbsent('', () => {
+      'saved_routes': userData.raw['saved_routes'].putIfAbsent('', () => {
         routeName: {
           'distance': totalDistance.toString(),
           'timesRan': '0',
@@ -206,6 +204,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
   }
 
   Widget loadDialog(BuildContext context) {
+    print(this.userData);
     List<Widget> items = [
       SizedBox(height: 20),
       Stack(
@@ -229,7 +228,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
         ],
       ),
       SizedBox(height: 20),
-    ]..addAll(widget.userData.routes.map((e) => routeWidget(context, e)).toList());
+    ]..addAll(this.userData.routes.map((e) => routeWidget(context, e)).toList());
 
     return Dialog(
       backgroundColor: color_background,
@@ -324,7 +323,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
 
   Widget saveDialog(BuildContext context) {
     String routeName = '';
-
+    print('Before: $userData');
     return Dialog(
       backgroundColor: color_background,
       child: Padding(
@@ -377,11 +376,14 @@ class _RoutePlannerState extends State<RoutePlanner> {
                 ],
               ),
               SizedBox(height:10),
+
               TextFormField(
                 validator: checkName,
                 cursorColor: color_text_highlight,
                 onChanged: (val) {
-                  routeName = val;
+                  setState(() {
+                    routeName = val;
+                  });
                 },
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
@@ -395,6 +397,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                 ),
                 style: textStyleDarkLight,
               ),
+
               SizedBox(height:10),
               SizedBox(
                 width: double.infinity,
@@ -442,15 +445,20 @@ class _RoutePlannerState extends State<RoutePlanner> {
   }
 
   String checkName(String name) {
-    return name.isEmpty ? 'Enter a valid name' : (widget.userData.routes.map((e) => e.name).contains(name) ? 'Route with that name already exists.' : null);
+    return name.isEmpty ? 'Enter a valid name' : (userData.routes.map((e) => e.name).contains(name) ? 'Route with that name already exists.' : null);
   }
 
   @override
   Widget build(BuildContext context) {
+
+    this.userData = Provider.of<UserData>(context);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         print(constraints);
         return SlidingUpPanel(
+          parallaxEnabled: true,
+          parallaxOffset: 0.4,
           renderPanelSheet: false,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
           maxHeight: constraints.maxWidth > 400 ? MediaQuery.of(context).size.height/2.7 : MediaQuery.of(context).size.height/1.7,
@@ -476,7 +484,7 @@ class _RoutePlannerState extends State<RoutePlanner> {
                 ],
               )
           ),
-          panel: constraints.maxWidth > 400 ? WideRoutePanel(widget) : NarrowRoutePanel(widget),
+          panel: constraints.maxWidth > 400 ? WideRoutePanel(this) : NarrowRoutePanel(this),
           body: map,
         );
       },

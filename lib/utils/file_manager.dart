@@ -15,6 +15,11 @@ class FileManager {
     return file.readAsString();
   }
 
+  static Future<int> fileSize() async {
+    final file = await _getTempLogFile();
+    return await file.length();
+  }
+
   static Future<File> _getTempLogFile() async {
     final directory = await getTemporaryDirectory();
     final file = File('${directory.path}/$fileName');

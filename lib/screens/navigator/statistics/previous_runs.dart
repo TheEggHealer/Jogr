@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/home/statistics/previous_run_widget.dart';
+import 'package:jogr/screens/navigator/statistics/previous_run_widget.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
-import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-import 'package:provider/provider.dart';
 
 class PreviousRuns extends StatefulWidget {
 
@@ -32,7 +30,12 @@ class _PreviousRunsState extends State<PreviousRuns> {
 
     print(dateFilter);
 
-    List<Widget> entries = [FilterSelect(parent: this, dateString: dateFilter.isEmpty ? DateTime.now().toString().split(' ')[0].substring(0,7) : dateFilter.replaceRange(4, 5, '-${dateFilter.substring(4,5)}'),)];
+    List<Widget> entries = [
+      FilterSelect(
+        parent: this,
+        dateString: dateFilter.isEmpty ? DateTime.now().toString().split(' ')[0].substring(0,7) : dateFilter.replaceRange(4, 5, '-${dateFilter.substring(4,5)}'),
+      )
+    ];
     entries.addAll(widget._userData.runs.where((e) => e.date.startsWith(dateFilter)).map((e) => PreviousRunWidget(e)).toList().reversed);
 
     return Scaffold(

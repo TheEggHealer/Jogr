@@ -1,12 +1,11 @@
 import 'dart:async';
-
-import 'package:background_locator/background_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:jogr/screens/authenticate/authenticate.dart';
-import 'package:jogr/screens/home/main.dart';
 import 'package:jogr/screens/splash/splash.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:provider/provider.dart';
+
+import 'navigator/user_provider.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -41,7 +40,7 @@ class _WrapperState extends State<Wrapper> {
       if (user == null)
         return Authenticate();
       else
-        return MediaQuery.of(context).size.width > 100 ? Main() : SplashScreen();
+        return MediaQuery.of(context).size.width > 100 ? UserProvider() : SplashScreen();
     } else {
       return SplashScreen();
     }

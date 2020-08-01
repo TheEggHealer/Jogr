@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/home/route/route_planner.dart';
+import 'package:jogr/screens/navigator/route/route_planner.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/loading.dart';
+import 'package:jogr/utils/models/userdata.dart';
 
 class WideRoutePanel extends StatefulWidget {
-  RoutePlanner planner;
+  RoutePlannerState planner;
+  UserData userData;
 
-  WideRoutePanel(RoutePlanner planner) {
+  WideRoutePanel(RoutePlannerState planner) {
     this.planner = planner;
   }
 
@@ -49,7 +51,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               OutlineButton(
-                onPressed: () { showDialog(context: context, builder: widget.planner.state.helpDialog); },
+                onPressed: () { showDialog(context: context, builder: widget.planner.helpDialog); },
                 child: Text('HELP'),
                 color: color_text_highlight,
                 highlightColor: color_text_highlight,
@@ -63,9 +65,9 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
               OutlineButton(
                 onPressed: () {
                   setState(() {
-                    widget.planner.state.loading = true;
+                    widget.planner.loading = true;
                   });
-                  widget.planner.state.generateRoute();
+                  widget.planner.generateRoute();
                 },
                 child: Text('GENERATE ROUTE'),
                 color: color_text_highlight,
@@ -78,7 +80,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
                 borderSide: BorderSide(color: color_text_highlight),
               ),
               OutlineButton(
-                onPressed: () { widget.planner.state.clearRoute(); },
+                onPressed: () { widget.planner.clearRoute(); },
                 child: Text('CLEAR'),
                 color: color_error,
                 highlightColor: color_error,
@@ -98,12 +100,12 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
             children: [
               OutlineButton(
                 onPressed: () {
-                  widget.planner.state.map.state.setState(() {
-                    widget.planner.state.map.state.showMarkes = !widget.planner.state.map.state.showMarkes;
+                  widget.planner.map.state.setState(() {
+                    widget.planner.map.state.showMarkes = !widget.planner.map.state.showMarkes;
                   });
                   setState(() {});
                 },
-                child: Text(widget.planner.state.map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
+                child: Text(widget.planner.map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
                 color: color_text_highlight,
                 highlightColor: color_text_highlight,
                 highlightedBorderColor: color_text_highlight,
@@ -114,7 +116,9 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
                 borderSide: BorderSide(color: color_text_highlight),
               ),
               OutlineButton(
-                onPressed: () { showDialog(context: context, builder: widget.planner.state.loadDialog); },
+                onPressed: () {
+                  showDialog(context: context, builder: widget.planner.loadDialog);
+                },
                 child: Text('LOAD'),
                 color: color_text_highlight,
                 highlightColor: color_text_highlight,
@@ -127,7 +131,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
               ),
               OutlineButton(
                 onPressed: () {
-                  showDialog(context: context, builder: widget.planner.state.saveDialog);
+                  showDialog(context: context, builder: widget.planner.saveDialog);
                 },
                 child: Text('SAVE'),
                 color: color_button_green,
@@ -155,7 +159,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
                   ),
                   SizedBox(width: 15,),
                   Text(
-                    '${widget.planner.state.totalDistance}',
+                    '${widget.planner.totalDistance}',
                     style: textStyleHeader,
                   ),
                   SizedBox(width: 5,),
@@ -168,7 +172,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
               Positioned(
                 right: 30,
                 child: AnimatedOpacity(
-                  opacity: widget.planner.state.loading ? 1.0 : 0.0,
+                  opacity: widget.planner.loading ? 1.0 : 0.0,
                   duration: Duration(milliseconds: 200),
                   child: Loading(),
                 ),
@@ -183,9 +187,9 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
 
 class NarrowRoutePanel extends StatefulWidget {
 
-  RoutePlanner planner;
+  RoutePlannerState planner;
 
-  NarrowRoutePanel(RoutePlanner planner) {
+  NarrowRoutePanel(RoutePlannerState planner) {
     this.planner = planner;
   }
 
@@ -228,7 +232,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               OutlineButton(
-                onPressed: () { showDialog(context: context, builder: widget.planner.state.helpDialog); },
+                onPressed: () { showDialog(context: context, builder: widget.planner.helpDialog); },
                 child: Text('HELP'),
                 color: color_text_highlight,
                 highlightColor: color_text_highlight,
@@ -242,9 +246,9 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               OutlineButton(
                 onPressed: () {
                   setState(() {
-                    widget.planner.state.loading = true;
+                    widget.planner.loading = true;
                   });
-                  widget.planner.state.generateRoute();
+                  widget.planner.generateRoute();
                 },
                 child: Text('GENERATE ROUTE'),
                 color: color_text_highlight,
@@ -264,7 +268,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               OutlineButton(
-                onPressed: () { widget.planner.state.clearRoute(); },
+                onPressed: () { widget.planner.clearRoute(); },
                 child: Text('CLEAR'),
                 color: color_error,
                 highlightColor: color_error,
@@ -277,12 +281,12 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               ),
               OutlineButton(
                 onPressed: () {
-                  widget.planner.state.map.state.setState(() {
-                    widget.planner.state.map.state.showMarkes = !widget.planner.state.map.state.showMarkes;
+                  widget.planner.map.state.setState(() {
+                    widget.planner.map.state.showMarkes = !widget.planner.map.state.showMarkes;
                   });
                   setState(() {});
                 },
-                child: Text(widget.planner.state.map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
+                child: Text(widget.planner.map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
                 color: color_text_highlight,
                 highlightColor: color_text_highlight,
                 highlightedBorderColor: color_text_highlight,
@@ -300,7 +304,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               OutlineButton(
-                onPressed: () { showDialog(context: context, builder: widget.planner.state.loadDialog); },
+                onPressed: () { showDialog(context: context, builder: widget.planner.loadDialog); },
                 child: Text('LOAD'),
                 color: color_text_highlight,
                 highlightColor: color_text_highlight,
@@ -313,7 +317,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               ),
               OutlineButton(
                 onPressed: () {
-                  showDialog(context: context, builder: widget.planner.state.saveDialog);
+                  showDialog(context: context, builder: widget.planner.saveDialog);
                 },
                 child: Text('SAVE'),
                 color: color_button_green,
@@ -341,7 +345,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
                   ),
                   SizedBox(width: 15,),
                   Text(
-                    '${widget.planner.state.totalDistance}',
+                    '${widget.planner.totalDistance}',
                     style: textStyleHeader,
                   ),
                   SizedBox(width: 5,),
@@ -354,7 +358,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               Positioned(
                 right: 30,
                 child: AnimatedOpacity(
-                  opacity: widget.planner.state.loading ? 1.0 : 0.0,
+                  opacity: widget.planner.loading ? 1.0 : 0.0,
                   duration: Duration(milliseconds: 200),
                   child: Loading(),
                 ),
