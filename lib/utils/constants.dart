@@ -5,43 +5,117 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:package_info/package_info.dart';
 
-const bool darkMode = true;
 
-const Color color_background = darkMode ? Color(0xff151515) : Color(0xffffffff);
-const Color color_card = darkMode ? Color(0xff1C1C1C): Color(0xffcccccc);
-const Color color_text_highlight = darkMode ? Color(0xffE3C36F): Color(0xff1C1C1C);
-const Color color_text_dark = darkMode ? Color(0xff555555) : Color(0xff444444);
-const Color color_button_green = Color(0xff61B25F);
-const Color color_error = Color(0xffAF3232);
+const double app_bar_height = 0.25; // % of screen height
+
+
+//DARK MODE COLORS -------------------OLD---------------------
+const Color color_dark_background = Color(0xff151515);
+const Color color_dark_card = Color(0xff1C1C1C);
+const Color color_dark_text_highlight = Color(0xffE3C36F);
+const Color color_dark_text_dark = Color(0xff555555);
+const Color color_dark_button_green = Color(0xff61B25F);
+const Color color_dark_error = Color(0xffAF3232);
+
+
+
+
+
+//LIGHT MODE COLORS
+const Color color_light_blue_1 = Color(0xff69C6BB);
+const Color color_light_blue_2 = Color(0xff28AFCD);
+const Color color_light_background = Color(0xffF5F5F5);
+const Color color_light_text_header = Color(0xff535353);
+const Color color_light_text_background = Color(0x99ffffff);
+const Color color_light_highlight_green = Color(0xff69F877);
+const Color color_light_shadow = Color(0x33000000);
+
+const light_gradient_main = LinearGradient(
+  begin: Alignment(-0.5, 0.3),
+  end: Alignment(1.5, 0.7),
+  colors: [
+    color_light_blue_1,
+    color_light_blue_2,
+  ]
+);
+
+const textLightHeader = TextStyle(
+  fontSize: 24,
+  color: color_light_text_header,
+  fontFamily: 'Quicksand',
+  fontWeight: FontWeight.bold
+);
+const textLightHeaderInvert = TextStyle(
+  fontSize: 28,
+  color: color_light_background,
+  fontFamily: 'Quicksand',
+  fontWeight: FontWeight.bold
+);
+const textLightBackground = TextStyle(
+  fontSize: 20,
+  color: color_light_text_background,
+  fontFamily: 'Quicksand',
+    fontWeight: FontWeight.w300
+);
+const textLightLabel = TextStyle(
+  fontSize: 12,
+  color: color_light_text_background,
+  fontFamily: 'Roboto',
+);
+
+
+//DARK MODE COLORS
+
+const dark_gradient_main = LinearGradient(
+    begin: Alignment(0, 0),
+    end: Alignment(1, 1),
+    colors: [
+      color_light_blue_1,
+      color_light_blue_2,
+    ]
+);
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------OLD---------------------
 
 const textStyleDark = TextStyle(
     fontSize: 12,
     fontFamily: 'Roboto',
-    color: color_text_dark,
+    color: color_dark_text_dark,
 );
 const textStyleDarkLight = TextStyle(
-  color: color_text_dark,
+  color: color_dark_text_dark,
   fontFamily: 'RobotoLight',
 );
 const textStyleDarkLightLarge = TextStyle(
-  color: color_text_dark,
+  color: color_dark_text_dark,
   fontFamily: 'Quicksand',
   fontSize: 20,
 );
 const textStyleHeader = TextStyle(
   fontSize: 28,
   fontFamily: 'Quicksand',
-  color: color_text_highlight,
+  color: color_dark_text_highlight,
 );
 const textStyleHeaderLarge = TextStyle(
   fontSize: 35,
   fontFamily: 'Quicksand',
-  color: color_text_highlight,
+  color: color_dark_text_highlight,
 );
 const textStyleHeaderSmall = TextStyle(
   fontSize: 20,
   fontFamily: 'Quicksand',
-  color: color_text_highlight,
+  color: color_dark_text_highlight,
 );
 
 const Divider divider = Divider(
@@ -55,7 +129,6 @@ Future<String> get VERSION async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   return packageInfo.version;
 }
-
 
 String roundedString(double value, int digits) {
   return rounded(value, digits).toString();

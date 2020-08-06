@@ -85,11 +85,11 @@ class _ProfileState extends State<Profile> {
                     ToggleButtons(
                       isSelected: isSelected,
                       borderRadius: BorderRadius.circular(5),
-                      selectedColor: color_text_highlight,
-                      disabledColor: color_text_dark,
-                      highlightColor: color_text_dark,
-                      borderColor: color_text_dark,
-                      color: color_text_dark,
+                      selectedColor: color_dark_text_highlight,
+                      disabledColor: color_dark_text_dark,
+                      highlightColor: color_dark_text_dark,
+                      borderColor: color_dark_text_dark,
+                      color: color_dark_text_dark,
                       fillColor: Colors.transparent,
                       onPressed: (selected) {
                         setState(() {
@@ -98,7 +98,7 @@ class _ProfileState extends State<Profile> {
                           }
                         });
                       },
-                      selectedBorderColor: color_text_highlight,
+                      selectedBorderColor: color_dark_text_highlight,
                       borderWidth: 1,
                       children: [
                         Text('km'),
@@ -120,17 +120,17 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'Roboto',
-                          color: color_text_dark
+                          color: color_dark_text_dark
                       )
                   ),
                 ),
-                color: color_text_highlight,
-                splashColor: color_text_highlight,
-                highlightColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                textColor: color_text_dark,
-                borderSide: BorderSide(color: color_text_highlight),
-                highlightedBorderColor: color_text_highlight,
+                color: color_dark_text_highlight,
+                splashColor: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                borderSide: BorderSide(color: color_dark_text_highlight),
+                highlightedBorderColor: color_dark_text_highlight,
               ),
               SizedBox(height: 30),
               Padding(
@@ -141,26 +141,26 @@ class _ProfileState extends State<Profile> {
                     OutlineButton(
                       onPressed: () { },
                       child: Text('RESET ACCOUNT'),
-                      color: color_error,
-                      highlightColor: color_error,
-                      highlightedBorderColor: color_error,
-                      focusColor: color_error,
-                      hoverColor: color_error,
-                      textColor: color_text_dark,
-                      splashColor: color_error,
-                      borderSide: BorderSide(color: color_error),
+                      color: color_dark_error,
+                      highlightColor: color_dark_error,
+                      highlightedBorderColor: color_dark_error,
+                      focusColor: color_dark_error,
+                      hoverColor: color_dark_error,
+                      textColor: color_dark_text_dark,
+                      splashColor: color_dark_error,
+                      borderSide: BorderSide(color: color_dark_error),
                     ),
                     OutlineButton(
                       onPressed: () { },
                       child: Text('REMOVE ACCOUNT'),
-                      color: color_error,
-                      highlightColor: color_error,
-                      highlightedBorderColor: color_error,
-                      focusColor: color_error,
-                      hoverColor: color_error,
-                      textColor: color_text_dark,
-                      splashColor: color_error,
-                      borderSide: BorderSide(color: color_error),
+                      color: color_dark_error,
+                      highlightColor: color_dark_error,
+                      highlightedBorderColor: color_dark_error,
+                      focusColor: color_dark_error,
+                      hoverColor: color_dark_error,
+                      textColor: color_dark_text_dark,
+                      splashColor: color_dark_error,
+                      borderSide: BorderSide(color: color_dark_error),
                     ),
                   ],
                 ),
@@ -169,13 +169,13 @@ class _ProfileState extends State<Profile> {
               Center(
                 child: Column(
                   children: <Widget>[
-                    Icon(CustomIcons.jogr, color: color_text_dark, size: 40,),
+                    Icon(CustomIcons.jogr, color: color_dark_text_dark, size: 40,),
                     Text(
                       version,
                       style: TextStyle(
                         fontSize: 10,
                         fontFamily: 'RobotoLight',
-                        color: color_text_dark,
+                        color: color_dark_text_dark,
                       ),
                     )
                   ],

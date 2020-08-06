@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/navigator/home/home_component.dart';
+import 'file:///C:/Users/jonru/Documents/GitHub/Jogr/lib/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/constants.dart';
@@ -18,7 +18,7 @@ class PreviousRunWidget extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Card(
         elevation: 5,
-        color: color_card,
+        color: color_dark_card,
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -26,17 +26,17 @@ class PreviousRunWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  HomeComponent(
+                  DataDisplay(
                     icon: CustomIcons.distance,
                     data: _run.distanceString,
                     label: 'km',
                   ),
-                  HomeComponent(
+                  DataDisplay(
                     icon: CustomIcons.timer,
                     data: _run.timeString,
                     label: _run.timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
                   ),
-                  HomeComponent(
+                  DataDisplay(
                     icon: CustomIcons.burn,
                     data: _run.calories.toString(),
                     label: 'cal',
@@ -47,13 +47,13 @@ class PreviousRunWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  HomeComponent(
+                  DataDisplay(
                     icon: CustomIcons.gps,
                     data: roundedString(_run.speed, 2),
                     label: 'km',
                   ),
 
-                  HomeComponent(
+                  DataDisplay(
                     icon: CustomIcons.timer,
                     data: Run(time: (10000 / _run.speed).round()).timeString,
                     label: _run.timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
@@ -74,14 +74,14 @@ class PreviousRunWidget extends StatelessWidget {
                   OutlineButton(
                     onPressed: () {},
                     child: Text('REMOVE'),
-                    color: color_error,
-                    highlightColor: color_error,
-                    highlightedBorderColor: color_error,
-                    focusColor: color_error,
-                    hoverColor: color_error,
-                    textColor: color_text_dark,
-                    splashColor: color_error,
-                    borderSide: BorderSide(color: color_error),
+                    color: color_dark_error,
+                    highlightColor: color_dark_error,
+                    highlightedBorderColor: color_dark_error,
+                    focusColor: color_dark_error,
+                    hoverColor: color_dark_error,
+                    textColor: color_dark_text_dark,
+                    splashColor: color_dark_error,
+                    borderSide: BorderSide(color: color_dark_error),
                   )
                 ],
               ),

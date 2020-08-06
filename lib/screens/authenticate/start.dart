@@ -21,7 +21,7 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -30,13 +30,13 @@ class _StartState extends State<Start> {
             Column(
               children: [
                 SizedBox(height: 100),
-                Icon(CustomIcons.jogr, color: color_text_highlight, size: 60),
+                Icon(CustomIcons.jogr, color: color_dark_text_highlight, size: 60),
                 Text(
                   'JOGR',
                   style: TextStyle(
                     fontSize: 90,
                     fontFamily: 'Dosis',
-                    color: color_text_dark,
+                    color: color_dark_text_dark,
                   ),
                 ),
               ],
@@ -71,19 +71,19 @@ class _StartState extends State<Start> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Roboto',
-                                  color: color_text_dark
+                                  color: color_dark_text_dark
                               )
                           ),
                         ],
                       ),
                     ),
-                    color: color_text_highlight,
-                    splashColor: color_text_highlight,
-                    highlightColor: color_text_highlight,
-                    focusColor: color_text_highlight,
-                    textColor: color_text_dark,
-                    borderSide: BorderSide(color: color_text_highlight),
-                    highlightedBorderColor: color_text_highlight,
+                    color: color_dark_text_highlight,
+                    splashColor: color_dark_text_highlight,
+                    highlightColor: color_dark_text_highlight,
+                    focusColor: color_dark_text_highlight,
+                    textColor: color_dark_text_dark,
+                    borderSide: BorderSide(color: color_dark_text_highlight),
+                    highlightedBorderColor: color_dark_text_highlight,
                   ),
                 ),
 
@@ -95,7 +95,7 @@ class _StartState extends State<Start> {
                     style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Roboto',
-                        color: color_text_dark
+                        color: color_dark_text_dark
                     )
                 ),
 
@@ -123,19 +123,19 @@ class _StartState extends State<Start> {
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'Roboto',
-                                        color: color_text_dark
+                                        color: color_dark_text_dark
                                     )
                                 ),
                               ],
                             ),
                           ),
-                          color: color_text_highlight,
-                          splashColor: color_text_highlight,
-                          highlightColor: color_text_highlight,
-                          focusColor: color_text_highlight,
-                          textColor: color_text_dark,
-                          borderSide: BorderSide(color: color_text_highlight),
-                          highlightedBorderColor: color_text_highlight,
+                          color: color_dark_text_highlight,
+                          splashColor: color_dark_text_highlight,
+                          highlightColor: color_dark_text_highlight,
+                          focusColor: color_dark_text_highlight,
+                          textColor: color_dark_text_dark,
+                          borderSide: BorderSide(color: color_dark_text_highlight),
+                          highlightedBorderColor: color_dark_text_highlight,
                         ),
                       ),
                       SizedBox(width: 30,),
@@ -154,19 +154,19 @@ class _StartState extends State<Start> {
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'Roboto',
-                                        color: color_text_dark
+                                        color: color_dark_text_dark
                                     )
                                 ),
                               ],
                             ),
                           ),
-                          color: color_text_highlight,
-                          splashColor: color_text_highlight,
-                          highlightColor: color_text_highlight,
-                          focusColor: color_text_highlight,
-                          textColor: color_text_dark,
-                          borderSide: BorderSide(color: color_text_highlight),
-                          highlightedBorderColor: color_text_highlight,
+                          color: color_dark_text_highlight,
+                          splashColor: color_dark_text_highlight,
+                          highlightColor: color_dark_text_highlight,
+                          focusColor: color_dark_text_highlight,
+                          textColor: color_dark_text_dark,
+                          borderSide: BorderSide(color: color_dark_text_highlight),
+                          highlightedBorderColor: color_dark_text_highlight,
                         ),
                       ),
                     ],
@@ -183,7 +183,7 @@ class _StartState extends State<Start> {
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: 'RobotoLight',
-                    color: color_text_dark,
+                    color: color_dark_text_dark,
                   ),
                   textAlign: TextAlign.center,
                 ),

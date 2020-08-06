@@ -29,7 +29,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       fontSize: 35,
                       fontFamily: 'Quicksand',
-                      color: color_text_highlight,
+                      color: color_dark_text_highlight,
                     ),
                   ),
                 ),
@@ -66,7 +66,7 @@ class _RegisterState extends State<Register> {
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: 'Roboto',
-                                  color: color_text_dark
+                                  color: color_dark_text_dark
                               )
                           ),
                           SizedBox(height: 5,),
@@ -77,11 +77,11 @@ class _RegisterState extends State<Register> {
                                 email = val;
                               });
                             },
-                            cursorColor: color_text_highlight,
+                            cursorColor: color_dark_text_highlight,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                              border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                              border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                             ),
                             style: textStyleDarkLight,
                           ),
@@ -96,7 +96,7 @@ class _RegisterState extends State<Register> {
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: 'Roboto',
-                                  color: color_text_dark
+                                  color: color_dark_text_dark
                               )
                           ),
                           SizedBox(height: 5,),
@@ -108,11 +108,11 @@ class _RegisterState extends State<Register> {
                               });
                             },
                             obscureText: true,
-                            cursorColor: color_text_highlight,
+                            cursorColor: color_dark_text_highlight,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                              border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                              border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                             ),
                             style: textStyleDarkLight,
                           ),
@@ -127,7 +127,7 @@ class _RegisterState extends State<Register> {
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: 'Roboto',
-                                  color: color_text_dark
+                                  color: color_dark_text_dark
                               )
                           ),
                           SizedBox(height: 5,),
@@ -139,11 +139,11 @@ class _RegisterState extends State<Register> {
                               });
                             },
                             obscureText: true,
-                            cursorColor: color_text_highlight,
+                            cursorColor: color_dark_text_highlight,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                              border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                              border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                             ),
                             style: textStyleDarkLight,
                           ),
@@ -165,7 +165,7 @@ class _RegisterState extends State<Register> {
                       error,
                       style: TextStyle(
                         fontFamily: 'RobotoLight',
-                        color: color_error,
+                        color: color_dark_error,
                       ),
                     ),
                     SizedBox(height: 10,),
@@ -182,14 +182,14 @@ class _RegisterState extends State<Register> {
                               child: Icon(
                                 CustomIcons.back,
                               ),
-                              disabledBorderColor: color_text_dark,
-                              color: color_text_highlight,
-                              splashColor: color_text_highlight,
-                              highlightColor: color_text_highlight,
-                              focusColor: color_text_highlight,
-                              textColor: color_text_dark,
-                              borderSide: BorderSide(color: color_text_highlight),
-                              highlightedBorderColor: color_text_highlight,
+                              disabledBorderColor: color_dark_text_dark,
+                              color: color_dark_text_highlight,
+                              splashColor: color_dark_text_highlight,
+                              highlightColor: color_dark_text_highlight,
+                              focusColor: color_dark_text_highlight,
+                              textColor: color_dark_text_dark,
+                              borderSide: BorderSide(color: color_dark_text_highlight),
+                              highlightedBorderColor: color_dark_text_highlight,
                             ),
                           ),
                         ),
@@ -216,17 +216,17 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: 'Roboto',
-                                      color: color_text_dark
+                                      color: color_dark_text_dark
                                   )
                               ),
-                              disabledBorderColor: color_text_dark,
-                              color: color_text_highlight,
-                              splashColor: color_text_highlight,
-                              highlightColor: color_text_highlight,
-                              focusColor: color_text_highlight,
-                              textColor: color_text_dark,
-                              borderSide: BorderSide(color: color_text_highlight),
-                              highlightedBorderColor: color_text_highlight,
+                              disabledBorderColor: color_dark_text_dark,
+                              color: color_dark_text_highlight,
+                              splashColor: color_dark_text_highlight,
+                              highlightColor: color_dark_text_highlight,
+                              focusColor: color_dark_text_highlight,
+                              textColor: color_dark_text_dark,
+                              borderSide: BorderSide(color: color_dark_text_highlight),
+                              highlightedBorderColor: color_dark_text_highlight,
                             ),
                           ),
                         ),

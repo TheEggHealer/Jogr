@@ -57,16 +57,16 @@ class Statistics extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'Roboto',
-                          color: color_text_dark
+                          color: color_dark_text_dark
                       )
                   ),
-                  color: color_text_highlight,
-                  splashColor: color_text_highlight,
-                  highlightColor: color_text_highlight,
-                  focusColor: color_text_highlight,
-                  textColor: color_text_dark,
-                  borderSide: BorderSide(color: color_text_highlight),
-                  highlightedBorderColor: color_text_highlight,
+                  color: color_dark_text_highlight,
+                  splashColor: color_dark_text_highlight,
+                  highlightColor: color_dark_text_highlight,
+                  focusColor: color_dark_text_highlight,
+                  textColor: color_dark_text_dark,
+                  borderSide: BorderSide(color: color_dark_text_highlight),
+                  highlightedBorderColor: color_dark_text_highlight,
                 ),
               ),
               divider,
@@ -116,13 +116,13 @@ class Statistics extends StatelessWidget {
         drawHorizontalLine: false,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: color_text_dark,
+            color: color_dark_text_dark,
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: color_text_dark,
+            color: color_dark_text_dark,
             strokeWidth: 1,
           );
         },
@@ -167,7 +167,7 @@ class Statistics extends StatelessWidget {
         ),
       ),
       borderData:
-      FlBorderData(show: false, border: Border.all(color: color_text_dark, width: 1)),
+      FlBorderData(show: false, border: Border.all(color: color_dark_text_dark, width: 1)),
       minX: 0,
       maxX: 5,
       minY: 0,
@@ -183,7 +183,7 @@ class Statistics extends StatelessWidget {
             FlSpot(5, 3),
           ],
           isCurved: true,
-          colors: [color_error, color_button_green],
+          colors: [color_dark_error, color_dark_button_green],
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -191,7 +191,7 @@ class Statistics extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: [color_error, color_button_green].map((color) => color.withOpacity(0.3)).toList(),
+            colors: [color_dark_error, color_dark_button_green].map((color) => color.withOpacity(0.3)).toList(),
           ),
         ),
       ],

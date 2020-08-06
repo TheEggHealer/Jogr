@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        backgroundColor: color_background,
+        backgroundColor: color_dark_background,
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -69,12 +69,12 @@ class _LoginState extends State<Login> {
                                   email = val;
                                 });
                               },
-                              cursorColor: color_text_highlight,
+                              cursorColor: color_dark_text_highlight,
                               decoration: InputDecoration(
                                 filled: false,
-                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                                border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                                border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                               ),
                               style: textStyleDarkLight,
                             ),
@@ -97,11 +97,11 @@ class _LoginState extends State<Login> {
                                 });
                               },
                               obscureText: true,
-                              cursorColor: color_text_highlight,
+                              cursorColor: color_dark_text_highlight,
                               decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                                border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                                border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                               ),
                               style: textStyleDarkLight,
                             ),
@@ -123,7 +123,7 @@ class _LoginState extends State<Login> {
                         error,
                         style: TextStyle(
                           fontFamily: 'RobotoLight',
-                          color: color_error,
+                          color: color_dark_error,
                         ),
                       ),
                       SizedBox(height: 10,),
@@ -140,14 +140,14 @@ class _LoginState extends State<Login> {
                                 child: Icon(
                                   CustomIcons.back,
                                 ),
-                                disabledBorderColor: color_text_dark,
-                                color: color_text_highlight,
-                                splashColor: color_text_highlight,
-                                highlightColor: color_text_highlight,
-                                focusColor: color_text_highlight,
-                                textColor: color_text_dark,
-                                borderSide: BorderSide(color: color_text_highlight),
-                                highlightedBorderColor: color_text_highlight,
+                                disabledBorderColor: color_dark_text_dark,
+                                color: color_dark_text_highlight,
+                                splashColor: color_dark_text_highlight,
+                                highlightColor: color_dark_text_highlight,
+                                focusColor: color_dark_text_highlight,
+                                textColor: color_dark_text_dark,
+                                borderSide: BorderSide(color: color_dark_text_highlight),
+                                highlightedBorderColor: color_dark_text_highlight,
                               ),
                             ),
                           ),
@@ -174,17 +174,17 @@ class _LoginState extends State<Login> {
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'Roboto',
-                                        color: color_text_dark
+                                        color: color_dark_text_dark
                                     )
                                 ),
-                                disabledBorderColor: color_text_dark,
-                                color: color_text_highlight,
-                                splashColor: color_text_highlight,
-                                highlightColor: color_text_highlight,
-                                focusColor: color_text_highlight,
-                                textColor: color_text_dark,
-                                borderSide: BorderSide(color: color_text_highlight),
-                                highlightedBorderColor: color_text_highlight,
+                                disabledBorderColor: color_dark_text_dark,
+                                color: color_dark_text_highlight,
+                                splashColor: color_dark_text_highlight,
+                                highlightColor: color_dark_text_highlight,
+                                focusColor: color_dark_text_highlight,
+                                textColor: color_dark_text_dark,
+                                borderSide: BorderSide(color: color_dark_text_highlight),
+                                highlightedBorderColor: color_dark_text_highlight,
                               ),
                             ),
                           ),

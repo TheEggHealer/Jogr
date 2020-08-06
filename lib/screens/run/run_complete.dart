@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart' hide Route;
-import 'package:jogr/screens/navigator/home/home_component.dart';
-import 'file:///E:/Documents/AndroidProjects/Flutter/jogr/lib/screens/navigator/goals/goal_widget.dart';
+import 'package:jogr/screens/navigator/goals/goal_widget.dart';
 import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/screens/run/map_widget.dart';
 import 'package:jogr/screens/run/statistics_widget.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/run_log.dart';
@@ -42,25 +42,25 @@ class _RunCompleteState extends State<RunComplete> {
       Goal(
         header: 'THIS MONTH • RUN SOME DISTANCE',
         fraction: true,
-        a: HomeComponent(data: '17.4', label: 'km',),
-        b: HomeComponent(data: '40', label: 'km'),
+        a: DataDisplay(data: '17.4', label: 'km',),
+        b: DataDisplay(data: '40', label: 'km'),
       ),
       Goal(
         header: 'THIS WEEK • BURN SOME CALORIES',
         fraction: true,
-        a: HomeComponent(data: '2150', label: 'cal',),
-        b: HomeComponent(data: '2000', label: 'cal'),
+        a: DataDisplay(data: '2150', label: 'cal',),
+        b: DataDisplay(data: '2000', label: 'cal'),
         completed: true,
       ),
       Goal(
         header: 'THIS MONTH • REACH SOME PACE',
-        content: HomeComponent(data: '7.1', label: 'm/s'),
+        content: DataDisplay(data: '7.1', label: 'm/s'),
       ),
       Goal(
         header: 'THIS WEEK • RUN SOME DISTANCE',
         fraction: true,
-        a: HomeComponent(data: '3.5', label: 'km',),
-        b: HomeComponent(data: '10', label: 'km'),
+        a: DataDisplay(data: '3.5', label: 'km',),
+        b: DataDisplay(data: '10', label: 'km'),
         post: 'ran',
       ),
 
@@ -70,7 +70,7 @@ class _RunCompleteState extends State<RunComplete> {
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Card(
         elevation: 5,
-        color: color_card,
+        color: color_dark_card,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Center(child: goals[index]),
@@ -100,7 +100,7 @@ class _RunCompleteState extends State<RunComplete> {
             collapsed: Container(
               margin: EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
-                color: color_background,
+                color: color_dark_background,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
               ),
                 child: Column(
@@ -109,7 +109,7 @@ class _RunCompleteState extends State<RunComplete> {
                     Icon(
                         Icons.drag_handle,
                         size: 30,
-                        color: color_text_dark
+                        color: color_dark_text_dark
                     ),
                     Center(
                       child: Text(
@@ -125,7 +125,7 @@ class _RunCompleteState extends State<RunComplete> {
               margin: EdgeInsets.only(top: 10),
               padding: EdgeInsets.only(top: 30),
               decoration: BoxDecoration(
-                color: color_background,
+                color: color_dark_background,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
                 boxShadow: [
                   BoxShadow(
@@ -169,8 +169,8 @@ class _RunCompleteState extends State<RunComplete> {
                       controller: controller,
                       count: 5,
                       effect: ExpandingDotsEffect(
-                          dotColor: color_text_dark,
-                          activeDotColor: color_text_highlight,
+                          dotColor: color_dark_text_dark,
+                          activeDotColor: color_dark_text_highlight,
                           dotWidth: 6,
                           dotHeight: 6,
                           spacing: 3,
@@ -200,13 +200,13 @@ class _RunCompleteState extends State<RunComplete> {
                               child: Icon(
                                 CustomIcons.trash,
                               ),
-                              color: color_error,
-                              splashColor: color_error,
-                              highlightColor: color_error,
-                              focusColor: color_error,
-                              textColor: color_text_dark,
-                              borderSide: BorderSide(color: color_error),
-                              highlightedBorderColor: color_error,
+                              color: color_dark_error,
+                              splashColor: color_dark_error,
+                              highlightColor: color_dark_error,
+                              focusColor: color_dark_error,
+                              textColor: color_dark_text_dark,
+                              borderSide: BorderSide(color: color_dark_error),
+                              highlightedBorderColor: color_dark_error,
                             ),
                           ),
                           Spacer(
@@ -242,17 +242,17 @@ class _RunCompleteState extends State<RunComplete> {
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontFamily: 'Roboto',
-                                          color: color_text_dark
+                                          color: color_dark_text_dark
                                       )
                                   ),
                                 ),
-                                color: color_button_green,
-                                splashColor: color_button_green,
-                                highlightColor: color_button_green,
-                                focusColor: color_button_green,
-                                textColor: color_text_dark,
-                                borderSide: BorderSide(color: color_button_green),
-                                highlightedBorderColor: color_button_green,
+                                color: color_dark_button_green,
+                                splashColor: color_dark_button_green,
+                                highlightColor: color_dark_button_green,
+                                focusColor: color_dark_button_green,
+                                textColor: color_dark_text_dark,
+                                borderSide: BorderSide(color: color_dark_button_green),
+                                highlightedBorderColor: color_dark_button_green,
                               ),
                             ),
                           ),

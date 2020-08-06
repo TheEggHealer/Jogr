@@ -39,7 +39,7 @@ class _PreviousRunsState extends State<PreviousRuns> {
     entries.addAll(widget._userData.runs.where((e) => e.date.startsWith(dateFilter)).map((e) => PreviousRunWidget(e)).toList().reversed);
 
     return Scaffold(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       body: Container(
         padding: EdgeInsets.only(top:40),
         child: Column(
@@ -57,7 +57,7 @@ class _PreviousRunsState extends State<PreviousRuns> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: IconButton(
-                    icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                    icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -141,14 +141,14 @@ class _FilterSelectState extends State<FilterSelect> {
                 }
               },
               child: Text('CHANGE'),
-              color: color_text_highlight,
-              highlightColor: color_text_highlight,
-              highlightedBorderColor: color_text_highlight,
-              focusColor: color_text_highlight,
-              hoverColor: color_text_highlight,
-              textColor: color_text_dark,
-              splashColor: color_text_highlight,
-              borderSide: BorderSide(color: color_text_highlight),
+              color: color_dark_text_highlight,
+              highlightColor: color_dark_text_highlight,
+              highlightedBorderColor: color_dark_text_highlight,
+              focusColor: color_dark_text_highlight,
+              hoverColor: color_dark_text_highlight,
+              textColor: color_dark_text_dark,
+              splashColor: color_dark_text_highlight,
+              borderSide: BorderSide(color: color_dark_text_highlight),
             ),
           ]
 

@@ -94,7 +94,7 @@ class RoutePlannerState extends State<RoutePlanner> {
     setState(() {
       Polyline polyline = Polyline(
           polylineId: PolylineId('Route'),
-          color: color_text_highlight,
+          color: color_dark_text_highlight,
           width: 4,
           points: routeCoordinates
       );
@@ -154,7 +154,7 @@ class RoutePlannerState extends State<RoutePlanner> {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Card(
-        color: color_card,
+        color: color_dark_card,
         elevation: 5,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -188,13 +188,13 @@ class RoutePlannerState extends State<RoutePlanner> {
               OutlineButton(
                 onPressed: () { load(route); Navigator.of(context).pop(); },
                 child: Text('LOAD'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
             ],
           ),
@@ -219,7 +219,7 @@ class RoutePlannerState extends State<RoutePlanner> {
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: IconButton(
-              icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+              icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -231,7 +231,7 @@ class RoutePlannerState extends State<RoutePlanner> {
     ]..addAll(this.userData.routes.map((e) => routeWidget(context, e)).toList());
 
     return Dialog(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       child: Container(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -260,11 +260,11 @@ class RoutePlannerState extends State<RoutePlanner> {
 
     TextStyle highlight = TextStyle(
       fontFamily: 'RobotoLight',
-      color: color_text_highlight,
+      color: color_dark_text_highlight,
     );
 
     return Dialog (
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -282,7 +282,7 @@ class RoutePlannerState extends State<RoutePlanner> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: IconButton(
-                    icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                    icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -325,7 +325,7 @@ class RoutePlannerState extends State<RoutePlanner> {
     String routeName = '';
     print('Before: $userData');
     return Dialog(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Form(
@@ -345,7 +345,7 @@ class RoutePlannerState extends State<RoutePlanner> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: IconButton(
-                      icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                      icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -379,16 +379,16 @@ class RoutePlannerState extends State<RoutePlanner> {
 
               TextFormField(
                 validator: checkName,
-                cursorColor: color_text_highlight,
+                cursorColor: color_dark_text_highlight,
                 onChanged: (val) {
                   setState(() {
                     routeName = val;
                   });
                 },
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                    border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                    border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                     hintText: 'Name your route',
                     hintStyle: TextStyle(
                         fontFamily: 'RobotoLight',
@@ -411,14 +411,14 @@ class RoutePlannerState extends State<RoutePlanner> {
                   child: Container(
                     child: Text('SAVE')
                   ),
-                  color: color_button_green,
-                  highlightColor: color_button_green,
-                  highlightedBorderColor: color_button_green,
-                  focusColor: color_button_green,
-                  hoverColor: color_button_green,
-                  textColor: color_text_dark,
-                  splashColor: color_button_green,
-                  borderSide: BorderSide(color: color_button_green),
+                  color: color_dark_button_green,
+                  highlightColor: color_dark_button_green,
+                  highlightedBorderColor: color_dark_button_green,
+                  focusColor: color_dark_button_green,
+                  hoverColor: color_dark_button_green,
+                  textColor: color_dark_text_dark,
+                  splashColor: color_dark_button_green,
+                  borderSide: BorderSide(color: color_dark_button_green),
                 ),
               ),
             ],
@@ -467,7 +467,7 @@ class RoutePlannerState extends State<RoutePlanner> {
           collapsed: Container(
               margin: EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
-                color: color_background,
+                color: color_dark_background,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
               ),
               child: Column(
@@ -475,7 +475,7 @@ class RoutePlannerState extends State<RoutePlanner> {
                   Icon(
                       Icons.drag_handle,
                       size: 30,
-                      color: color_text_dark
+                      color: color_dark_text_dark
                   ),
                   Text(
                     'Route planner',

@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../utils/constants.dart';
+import 'package:jogr/utils/constants.dart';
 
-class HomeComponent extends StatefulWidget {
+class DataDisplay extends StatefulWidget {
 
   final IconData icon;
   final String data;
   final String label;
+  final bool lightMode;
 
-  const HomeComponent({Key key, this.icon, this.data, this.label}) : super(key: key);
+  const DataDisplay({Key key, this.icon, this.data, this.label, this.lightMode = true}) : super(key: key);
 
   @override
-  _HomeComponentState createState() => _HomeComponentState();
+  _DataDisplayState createState() => _DataDisplayState();
 }
 
-class _HomeComponentState extends State<HomeComponent> {
+class _DataDisplayState extends State<DataDisplay> {
 
   static const double _baselineHeight = 4.0;
 
@@ -29,21 +30,19 @@ class _HomeComponentState extends State<HomeComponent> {
           children: [
             Icon(
               widget.icon,
-              color: color_text_highlight,
-              size: 20,
+              color: widget.lightMode ? color_light_background : color_dark_text_highlight,
+              size: 15,
             ),
             Text(
               widget.data,
               style: TextStyle(
                 fontSize: 28,
                 fontFamily: 'Quicksand',
-                color: color_text_highlight,
+                color: widget.lightMode ? color_light_background : color_dark_text_highlight,
               ),
             ),
           ],
         ),
-
-        SizedBox(width: 5),
 
         Padding(
           padding: const EdgeInsets.only(bottom: _baselineHeight),
@@ -52,7 +51,7 @@ class _HomeComponentState extends State<HomeComponent> {
               style: TextStyle(
                 fontSize: 12,
                 fontFamily: 'Roboto',
-                color: color_text_dark,
+                color: widget.lightMode ? color_light_text_background : color_dark_text_dark,
               )
           ),
         ),

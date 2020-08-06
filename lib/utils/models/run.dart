@@ -13,7 +13,11 @@ class Run {
   String date = '';
   Route route;
 
-  Run({ this.date, this.distance, this.time, this.calories, this.pace, this.route });
+  Run({ this.date, this.distance, this.time, this.calories, this.pace, this.route }) {
+    if(pace == null && distance != null && time != null) {
+      pace = time != 0 && distance != 0 ? (time / (distance / 1000)).round() : 0;
+    }
+  }
 
   static Run from(RunLog log, Route route, UserData userData) {
     int distance = log.distance.round();

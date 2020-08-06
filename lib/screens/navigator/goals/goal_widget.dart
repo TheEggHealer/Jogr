@@ -1,60 +1,44 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/navigator/home/home_component.dart';
 import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/custom_widgets/custom_card.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
+import 'package:jogr/utils/models/userdata.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Goal extends StatelessWidget {
 
+  UserData userData;
   String header;
   String pre, post;
-  HomeComponent a, b;
+  DataDisplay a, b;
   bool fraction;
   Widget content;
   bool completed;
 
-  Goal({ this.header = 'THIS WEEK', this.pre = '', this.post = '', this.a, this.b, this.fraction = false, this.content, this.completed = false });
+  Goal({ @required this.userData, this.header = 'THIS WEEK', this.pre = '', this.post = '', this.a, this.b, this.fraction = false, this.content, this.completed = false });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              header,
-              style: textStyleDark,
-            ),
-            Icon(
-              Icons.check,
-              size: 15,
-              color: completed ? color_button_green : color_background
-            )
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.ideographic,
-          children: [
-            pre.isNotEmpty ? Text(pre, style: textStyleHeader,) : SizedBox(width: 0,),
-            SizedBox(width: pre.isNotEmpty ? 10 : 0,),
-            (fraction && a != null && b != null) ? Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.ideographic,
-              children: [
-                a,
-                SizedBox(width: 10,),
-                Text('/', style: textStyleHeader,),
-                SizedBox(width: 10,),
-                b
-              ],
-            ) : content,
-            SizedBox(width: post.isNotEmpty ? 10 : 0,),
-            post.isNotEmpty ? Text(post, style: textStyleHeader,) : SizedBox(width: 0,),
-          ],
-        )
-      ],
+    return CustomCard(
+      userData: userData,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            header,
+            style: textLightLabel
+          ),
+          CircularPercentIndicator(
+            radius: 80,
+            lineWidth: 4,
+            percent: 0.7,
+            progressColor: color_light_highlight_green,
+            backgroundColor: color_light_shadow,
+          ),
+        ],
+      ),
     );
   }
 }

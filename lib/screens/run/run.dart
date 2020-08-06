@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart' hide Route;
 import 'package:flutter/material.dart' hide Route;
-import 'package:jogr/screens/navigator/home/home_component.dart';
+import 'file:///C:/Users/jonru/Documents/GitHub/Jogr/lib/utils/custom_widgets/data_display.dart';
 import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/screens/run/location_tracker.dart';
 import 'package:jogr/screens/run/map_dialog.dart';
@@ -59,7 +59,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Card(
-        color: color_card,
+        color: color_dark_card,
         elevation: 5,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -98,13 +98,13 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                   Navigator.of(context).pop();
                 },
                 child: Text('LOAD'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
             ],
           ),
@@ -128,7 +128,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: IconButton(
-              icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+              icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -140,7 +140,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     ]..addAll(userData.routes.map((e) => routeWidget(context, e)).toList());
 
     return Dialog(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       child: Container(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -282,7 +282,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
 
 
     return Scaffold(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       body: Container(
         padding: EdgeInsets.only(top: 60),
         child: Column(
@@ -299,7 +299,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: IconButton(
-                    icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                    icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                     onPressed: () {
                       navigator.setState(() {
                         navigator.running = false;
@@ -337,14 +337,14 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                             OutlineButton(
                               onPressed: () { showDialog(context: context, builder: pickRouteDialog); },
                               child: Text('PICK ROUTE'),
-                              color: color_text_highlight,
-                              highlightColor: color_text_highlight,
-                              highlightedBorderColor: color_text_highlight,
-                              focusColor: color_text_highlight,
-                              hoverColor: color_text_highlight,
-                              textColor: color_text_dark,
-                              splashColor: color_text_highlight,
-                              borderSide: BorderSide(color: color_text_highlight),
+                              color: color_dark_text_highlight,
+                              highlightColor: color_dark_text_highlight,
+                              highlightedBorderColor: color_dark_text_highlight,
+                              focusColor: color_dark_text_highlight,
+                              hoverColor: color_dark_text_highlight,
+                              textColor: color_dark_text_dark,
+                              splashColor: color_dark_text_highlight,
+                              borderSide: BorderSide(color: color_dark_text_highlight),
                             ),
                           ],
                         ),
@@ -384,12 +384,12 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      HomeComponent(
+                      DataDisplay(
                         icon: CustomIcons.timer,
                         data: loading ? '--:--:--' : timeString,
                         label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
                       ),
-                      HomeComponent(
+                      DataDisplay(
                         icon: CustomIcons.distance,
                         data: loading ? '--' : '$distance',
                         label: 'm',
@@ -408,15 +408,15 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                               elevation: 0,
                               onPressed: _onStop,
                               child: Container(
-                                child: Icon(Icons.stop, color: color_text_highlight, size: constraints.maxHeight / 7),
+                                child: Icon(Icons.stop, color: color_dark_text_highlight, size: constraints.maxHeight / 7),
                                 padding: EdgeInsets.all(constraints.maxHeight / 18),
                               ),
-                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
+                              shape: CircleBorder(side: BorderSide(width: 2, color: color_dark_button_green)),
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              hoverColor: color_button_green,
-                              focusColor: color_button_green,
-                              highlightColor: color_button_green,
-                              splashColor: color_button_green,
+                              hoverColor: color_dark_button_green,
+                              focusColor: color_dark_button_green,
+                              highlightColor: color_dark_button_green,
+                              splashColor: color_dark_button_green,
                             ),
                             RawMaterialButton(
                               elevation: 0,
@@ -426,30 +426,30 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                                   icon: AnimatedIcons.play_pause,
                                   progress: _play_pause,
                                   size: constraints.maxHeight / 3,
-                                  color: color_text_highlight,
+                                  color: color_dark_text_highlight,
                                 ),
                                 padding: EdgeInsets.all(constraints.maxHeight / 12),
                               ),
-                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
+                              shape: CircleBorder(side: BorderSide(width: 2, color: color_dark_button_green)),
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              hoverColor: color_button_green,
-                              focusColor: color_button_green,
-                              highlightColor: color_button_green,
-                              splashColor: color_button_green,
+                              hoverColor: color_dark_button_green,
+                              focusColor: color_dark_button_green,
+                              highlightColor: color_dark_button_green,
+                              splashColor: color_dark_button_green,
                             ),
                             RawMaterialButton(
                               elevation: 0,
                               onPressed: _onMap,
                               child: Container(
-                                child: Icon(CustomIcons.gps, color: color_text_highlight, size: constraints.maxHeight / 7),
+                                child: Icon(CustomIcons.gps, color: color_dark_text_highlight, size: constraints.maxHeight / 7),
                                 padding: EdgeInsets.all(constraints.maxHeight / 18),
                               ),
-                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
+                              shape: CircleBorder(side: BorderSide(width: 2, color: color_dark_button_green)),
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              hoverColor: color_button_green,
-                              focusColor: color_button_green,
-                              highlightColor: color_button_green,
-                              splashColor: color_button_green,
+                              hoverColor: color_dark_button_green,
+                              focusColor: color_dark_button_green,
+                              highlightColor: color_dark_button_green,
+                              splashColor: color_dark_button_green,
                             ),
                           ],
                         );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/navigator/home/home_component.dart';
+import 'file:///C:/Users/jonru/Documents/GitHub/Jogr/lib/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/models/run.dart';
@@ -27,17 +27,17 @@ class StatisticsWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    HomeComponent(
+                    DataDisplay(
                       icon: CustomIcons.distance,
                       data: roundedString(run.distance / 1000, 1),
                       label: 'km',
                     ),
-                    HomeComponent(
+                    DataDisplay(
                       icon: CustomIcons.timer,
                       data: run.timeString,
                       label: 'mm:ss',
                     ),
-                    HomeComponent(
+                    DataDisplay(
                       icon: CustomIcons.jogr,
                       data: run.paceString,
                       label: 'min/km',
@@ -47,12 +47,12 @@ class StatisticsWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    HomeComponent(
+                    DataDisplay(
                       icon: CustomIcons.burn,
                       data: '${run.calories}',
                       label: 'cal',
                     ),
-                    HomeComponent(
+                    DataDisplay(
                         icon: CustomIcons.speed,
                         data: roundedString(run.speed, 2),
                         label: 'm/s'

@@ -84,7 +84,7 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
       return RunScreen(userData, this, DatabaseService(uid: user.uid));
     } else {
       return  Scaffold(
-        backgroundColor: color_background,
+        backgroundColor: color_dark_background,
         resizeToAvoidBottomPadding: false,
         body: PageView(
           controller: controller,
@@ -100,13 +100,13 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
         bottomNavigationBar: FFNavigationBar(
 
           theme: FFNavigationBarTheme(
-            barBackgroundColor: color_background,
-            selectedItemBorderColor: color_card,
-            selectedItemBackgroundColor: color_background,
-            selectedItemIconColor: color_text_highlight,
-            selectedItemLabelColor: color_text_highlight,
-            unselectedItemIconColor: color_text_dark,
-            unselectedItemLabelColor: color_text_dark,
+            barBackgroundColor: color_dark_background,
+            selectedItemBorderColor: color_dark_card,
+            selectedItemBackgroundColor: color_dark_background,
+            selectedItemIconColor: color_dark_text_highlight,
+            selectedItemLabelColor: color_dark_text_highlight,
+            unselectedItemIconColor: color_dark_text_dark,
+            unselectedItemLabelColor: color_dark_text_dark,
             selectedItemTextStyle: TextStyle(
                 fontFamily: 'Quicksand'
             ),

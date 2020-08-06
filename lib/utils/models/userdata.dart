@@ -17,6 +17,7 @@ class UserData {
   Route lastRoute;
   List<Run> runs;
   List<Route> routes;
+  bool lightMode = true;
 
   static const int _plotDetail = 8;
 
@@ -174,13 +175,13 @@ class UserData {
           drawHorizontalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
@@ -222,7 +223,7 @@ class UserData {
         borderData:
         FlBorderData(show: false,
             border: Border.fromBorderSide(
-                BorderSide(color: color_text_dark, width: 1))),
+                BorderSide(color: color_dark_text_dark, width: 1))),
         minX: 0,
         maxX: (spots.length - 1).toDouble(),
         minY: slowest.floor().toDouble(),
@@ -241,7 +242,7 @@ class UserData {
               show: true,
               gradientFrom: Offset(0, 0),
               gradientTo: Offset(0, 1),
-              colors: [Color(0xff62ECFF), color_background].map((color) =>
+              colors: [Color(0xff62ECFF), color_dark_background].map((color) =>
                   color.withOpacity(0.2)).toList(),
             ),
           ),
@@ -304,13 +305,13 @@ class UserData {
           drawHorizontalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
@@ -350,7 +351,7 @@ class UserData {
         borderData:
         FlBorderData(show: false,
             border: Border.fromBorderSide(
-                BorderSide(color: color_text_dark, width: 1))),
+                BorderSide(color: color_dark_text_dark, width: 1))),
         minX: 0,
         maxX: (spots.length - 1).toDouble(),
         minY: shortest.floor().toDouble(),
@@ -369,7 +370,7 @@ class UserData {
               show: true,
               gradientFrom: Offset(0, 0),
               gradientTo: Offset(0, 1),
-              colors: [Color(0xff62FFA1), color_background].map((color) =>
+              colors: [Color(0xff62FFA1), color_dark_background].map((color) =>
                   color.withOpacity(0.2)).toList(),
             ),
           ),

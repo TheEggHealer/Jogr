@@ -47,6 +47,8 @@ dependencies:
   intl: ^0.16.1 # Date formatting
   path_provider: ^1.6.11
   package_info: ^0.4.1 # For reading the YAML file (getting the version)
+  outline_gradient_button: ^1.0.0+2 #Gradient buttons
+  percent_indicator: ^2.1.5 #Percent indicators for Goal widgets.
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -75,7 +77,10 @@ flutter:
   fonts:
     - family: Quicksand
       fonts:
-        - asset: fonts/Quicksand-VariableFont_wght.ttf
+        - asset: fonts/Quicksand_medium.ttf
+          weight: 300
+        - asset: fonts/Quicksand_medium.ttf
+          weight: 500
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Black.ttf

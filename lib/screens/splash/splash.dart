@@ -15,7 +15,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +24,7 @@ class SplashScreen extends StatelessWidget {
               'Jogr',
               style: TextStyle(
                 fontFamily: 'Quicksand',
-                color: color_text_dark,
+                color: color_dark_text_dark,
                 fontSize: 35,
               )
             ),
@@ -47,7 +47,7 @@ class SplashScreen extends StatelessWidget {
                 'Loading...',
                 style: TextStyle(
                   fontFamily: 'Quicksand',
-                  color: color_text_dark,
+                  color: color_dark_text_dark,
                   fontSize: 20,
                 )
             ),
@@ -61,17 +61,17 @@ class SplashScreen extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Roboto',
-                      color: color_text_dark
+                      color: color_dark_text_dark
                   )
               ),
-              disabledBorderColor: color_text_dark,
-              color: color_text_highlight,
-              splashColor: color_text_highlight,
-              highlightColor: color_text_highlight,
-              focusColor: color_text_highlight,
-              textColor: color_text_dark,
-              borderSide: BorderSide(color: color_text_highlight),
-              highlightedBorderColor: color_text_highlight,
+              disabledBorderColor: color_dark_text_dark,
+              color: color_dark_text_highlight,
+              splashColor: color_dark_text_highlight,
+              highlightColor: color_dark_text_highlight,
+              focusColor: color_dark_text_highlight,
+              textColor: color_dark_text_dark,
+              borderSide: BorderSide(color: color_dark_text_highlight),
+              highlightedBorderColor: color_dark_text_highlight,
             ),
             //Loading(),
           ],
