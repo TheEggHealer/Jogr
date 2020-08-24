@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
 class DataDisplay extends StatefulWidget {
 
   final IconData icon;
   final String data;
   final String label;
-  final bool lightMode;
+  final UserPreferences prefs;
 
-  const DataDisplay({Key key, this.icon, this.data, this.label, this.lightMode = true}) : super(key: key);
+  const DataDisplay({Key key, this.icon, this.data, this.label, this.prefs}) : super(key: key);
 
   @override
   _DataDisplayState createState() => _DataDisplayState();
@@ -21,25 +22,27 @@ class _DataDisplayState extends State<DataDisplay> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
         Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              widget.icon,
-              color: widget.lightMode ? color_light_background : color_dark_text_highlight,
-              size: 15,
+            Visibility(
+              visible: widget.icon != null,
+              child: Icon(
+                widget.icon,
+                color: widget.prefs.color_highlight,
+                size: 15,
+              ),
             ),
             Text(
               widget.data,
-              style: TextStyle(
-                fontSize: 28,
-                fontFamily: 'Quicksand',
-                color: widget.lightMode ? color_light_background : color_dark_text_highlight,
-              ),
+              style: widget.prefs.text_highlight,
             ),
           ],
         ),
@@ -48,11 +51,7 @@ class _DataDisplayState extends State<DataDisplay> {
           padding: const EdgeInsets.only(bottom: _baselineHeight),
           child: Text(
               widget.label,
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: 'Roboto',
-                color: widget.lightMode ? color_light_text_background : color_dark_text_dark,
-              )
+              style: widget.prefs.text_label,
           ),
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jogr/utils/background_clipper.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
 import '../constants.dart';
 import 'custom_card.dart';
@@ -24,6 +25,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   Widget build(BuildContext context) {
 
     BackgroundClipper clipper = BackgroundClipper();
+    UserPreferences prefs = UserPreferences(widget.userData);
 
     return LayoutBuilder(
       builder: (context, box) {
@@ -35,7 +37,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: color_light_background,
+              color: prefs.color_background,
               child: Container(
                 padding: EdgeInsets.only(top: divisionHeight),
                 child: widget.body,
@@ -47,7 +49,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                   width: double.infinity,
                   height: app_bar_height * box.maxHeight,
                   decoration: BoxDecoration(
-                    gradient: light_gradient_main,
+                    gradient: prefs.gradient_main,
                   ),
                   child: Container(
                     padding: EdgeInsets.only(bottom: app_bar_height * box.maxHeight - divisionHeight),

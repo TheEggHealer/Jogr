@@ -1,4 +1,5 @@
 import 'package:background_locator/background_locator.dart';
+import 'package:battery_optimization/battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/services/auth.dart';
@@ -18,6 +19,13 @@ class UserProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
+
+    BatteryOptimization.isIgnoringBatteryOptimizations().then((onValue) {
+      if(!onValue) {
+        //TODO: Display a dialog asking for permission.
+        BatteryOptimization.openBatteryOptimizationSettings();
+      }
+    });
 
     return StreamProvider<UserData>.value(
       value: DatabaseService(uid: user.uid).userDocument,

@@ -5,9 +5,11 @@ import 'package:jogr/screens/navigator/home/last_run_card.dart';
 import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/utils/background_clipper.dart';
 import 'package:jogr/utils/constants.dart';
-import 'package:jogr/utils/custom_widgets/custom_card.dart';
+import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/custom_widgets/custom_scaffold.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +30,7 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     UserData ud = Provider.of<UserData>(context);
+    UserPreferences prefs = UserPreferences(ud);
     BackgroundClipper clipper = BackgroundClipper();
 
     return CustomScaffold(
@@ -40,11 +43,11 @@ class HomeState extends State<Home> {
           children: <Widget>[
             Text(
               'Welcome back,',
-              style: textLightHeaderInvert,
+              style: prefs.text_header_invert_bold,
             ),
             Text(
               ud.name,
-              style: textLightBackground,
+              style: prefs.text_background,
             )
           ],
         ),
@@ -65,11 +68,14 @@ class HomeState extends State<Home> {
           ),
           Expanded(
             flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                'Goals',
-                style: textLightHeader,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'Goals',
+                  style: prefs.text_header,
+                ),
               ),
             ),
           ),
@@ -83,16 +89,40 @@ class HomeState extends State<Home> {
                     padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
-                      Goal(userData: ud,),
-                      Goal(userData: ud,),
-                      Goal(userData: ud,),
-                      Goal(userData: ud,),
-                      Goal(userData: ud,),
+                      Goal(userData: ud, a: 29, b: 50, label: 'km'),
+                      Goal(userData: ud, header: 'DAYLY', a: 126.8, b: 500, label: 'km'),
+                      Goal(userData: ud, header: 'YEARLY', a: 2009, b: 5680, label: 'km'),
+                      Goal(userData: ud, a: 2050, b: 2000, label: 'cal'),
+                      Goal(userData: ud, a: 29, b: 50, label: 'km'),
+                      Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: IconButton(
+                            icon: Icon(
+                              CustomIcons.add_circle,
+                            ),
+                            iconSize: 60,
+                            splashRadius: 30,
+                            onPressed: () {print('tap');},
+                            color: prefs.color_shadow,
+                            hoverColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+
+                          ),
+                        ),
+                      )
                     ],
                   )
                 );
               },
             ),
+          ),
+          Divider(
+            height: 0,
+            indent: 20,
+            endIndent: 20,
+            color: prefs.color_shadow,
           ),
           Expanded(
             flex: 4,
@@ -101,30 +131,26 @@ class HomeState extends State<Home> {
                 return Container(
 
                   child: Center(
-                    child: OutlineGradientButton(
-                      child: SizedBox(
-                        width: box.maxHeight / 1.5,
-                        height: box.maxHeight / 1.5,
-                        child: Center(
-                          child: Icon(
-                            Icons.directions_run,
-                            size: box.maxHeight / 3,
-                            color: color_light_text_header,
-                          )
-                        ),
-                      ),
-                      onTap: () {
+                    child: RawMaterialButton(
+                      elevation: 10,
+                      onPressed: () {
                         widget.navigator.setState(() {
                           widget.navigator.running = true;
                         });
                       },
-                      radius: Radius.circular(box.maxHeight / 1.5),
-                      gradient: light_gradient_main,
-                      strokeWidth: 4,
-                      inkWell: true,
+                      child: Container(
+                        child: Icon(Icons.directions_run, color: prefs.color_text_header, size: box.maxHeight / 5),
+                        padding: EdgeInsets.all(box.maxHeight / 3.5),
+                      ),
+                      shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      highlightColor: prefs.color_shadow,
+                      focusColor: prefs.color_shadow,
+                      hoverColor: prefs.color_shadow,
+                      splashColor: prefs.color_shadow,
 
-                    ),
-                  ),
+                    )
+                  )
                 );
               },
             )

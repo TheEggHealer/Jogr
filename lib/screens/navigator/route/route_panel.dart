@@ -3,32 +3,38 @@ import 'package:jogr/screens/navigator/route/route_planner.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/loading.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
 class WideRoutePanel extends StatefulWidget {
   RoutePlannerState planner;
   UserData userData;
 
-  WideRoutePanel(RoutePlannerState planner) {
-    this.planner = planner;
-  }
+  WideRoutePanel(this.planner, this.userData);
 
   @override
-  _WideRoutePanelState createState() => _WideRoutePanelState();
+  _WideRoutePanelState createState() => _WideRoutePanelState(userData);
 }
 
 class _WideRoutePanelState extends State<WideRoutePanel> {
+
+  UserPreferences prefs;
+
+  _WideRoutePanelState(UserData userData) {
+    prefs = UserPreferences(userData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 20, left: 20, right: 20),
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
-          color: color_dark_background,
+          color: prefs.color_background,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
           boxShadow: [
             BoxShadow(
               blurRadius: 8.0,
-              color: Colors.black,
+              color: prefs.color_shadow,
             ),
           ]
       ),
@@ -67,7 +73,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
                   setState(() {
                     widget.planner.loading = true;
                   });
-                  widget.planner.generateRoute();
+                  //widget.planner.generateRoute();
                 },
                 child: Text('GENERATE ROUTE'),
                 color: color_dark_text_highlight,
@@ -248,7 +254,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
                   setState(() {
                     widget.planner.loading = true;
                   });
-                  widget.planner.generateRoute();
+                  //widget.planner.generateRoute();
                 },
                 child: Text('GENERATE ROUTE'),
                 color: color_dark_text_highlight,

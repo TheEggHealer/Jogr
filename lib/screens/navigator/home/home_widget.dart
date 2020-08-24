@@ -20,36 +20,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget goalsBuilder(BuildContext context, int index) {
 
     List<Goal> goals = [
-      Goal(
-        header: 'THIS WEEK • RUN SOME DISTANCE',
-        fraction: true,
-        a: DataDisplay(data: '3.5', label: 'km',),
-        b: DataDisplay(data: '10', label: 'km'),
-      ),
-      Goal(
-        header: 'THIS MONTH • RUN SOME DISTANCE',
-        fraction: true,
-        a: DataDisplay(data: '17.4', label: 'km',),
-        b: DataDisplay(data: '40', label: 'km'),
-      ),
-      Goal(
-        header: 'THIS WEEK • BURN SOME CALORIES',
-        fraction: true,
-        a: DataDisplay(data: '2150', label: 'cal',),
-        b: DataDisplay(data: '2000', label: 'cal'),
-        completed: true,
-      ),
-      Goal(
-        header: 'THIS MONTH • REACH SOME PACE',
-        content: DataDisplay(data: '7.1', label: 'm/s'),
-      ),
-      Goal(
-        header: 'THIS WEEK • RUN SOME DISTANCE',
-        fraction: true,
-        a: DataDisplay(data: '3.5', label: 'km',),
-        b: DataDisplay(data: '10', label: 'km'),
-        post: 'ran',
-      ),
 
     ];
 

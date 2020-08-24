@@ -17,6 +17,8 @@ import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/file_manager.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import 'home/home_widget.dart';
@@ -36,9 +38,7 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
   bool running = false;
 
   int selectedPage = 2;
-  PageController controller = PageController(
-    initialPage: 2,
-  );
+  PersistentTabController controller;
 
   Future<int> isTracking() async {
     await BackgroundLocator.initialize();
@@ -67,88 +67,67 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
         });
       }
     });
+
+    controller = PersistentTabController(
+      initialIndex: 2,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
     UserData userData = Provider.of<UserData>(context);
+    UserPreferences prefs = UserPreferences(userData);
     bool setup = userData == null ? false : userData.raw['setup'];
     print(user.uid);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(running) {
+        //pushNewScreen(context, screen: RunScreen(userData, this, DatabaseService(uid: user.uid)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RunScreen(userData, this, DatabaseService(uid: user.uid))));
+      }
+    });
 
     if(userData == null) {
       return SplashScreen(auth: widget.auth,);
     } else if(!setup) {
       return Setup();
-    } else if(running) {
-      return RunScreen(userData, this, DatabaseService(uid: user.uid));
     } else {
-      return  Scaffold(
-        backgroundColor: color_dark_background,
-        resizeToAvoidBottomPadding: false,
-        body: PageView(
-          controller: controller,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            RoutePlanner(user),
-            SplashScreen(auth: widget.auth,),
-            Home(userData, this),
-            Statistics(userData: userData, user: user),
-            Profile(widget.auth),
-          ],
-        ),
-        bottomNavigationBar: FFNavigationBar(
+      return PersistentTabView(
+        controller: controller,
+        screens: [
+          RoutePlanner(user),
+          SplashScreen(auth: widget.auth,),
+          Home(userData, this),
+          Statistics(userData: userData, user: user),
+          Profile(widget.auth),
+        ],
+        items: [
+          PersistentBottomNavBarItem(icon: Icon(CustomIcons.map),
+              title: 'Planner',
+              inactiveColor: prefs.color_text_header,
+              activeColor: prefs.color_main),
+          PersistentBottomNavBarItem(icon: Icon(CustomIcons.goal),
+              title: 'Goals',
+              inactiveColor: prefs.color_text_header,
+              activeColor: prefs.color_main),
+          PersistentBottomNavBarItem(icon: Icon(CustomIcons.home),
+              title: 'Home',
+              inactiveColor: prefs.color_text_header,
+              activeColor: prefs.color_main),
+          PersistentBottomNavBarItem(icon: Icon(CustomIcons.stats),
+              title: 'Statistics',
+              inactiveColor: prefs.color_text_header,
+              activeColor: prefs.color_main),
+          PersistentBottomNavBarItem(icon: Icon(CustomIcons.profile),
+              title: 'Profile',
+              inactiveColor: prefs.color_text_header,
+              activeColor: prefs.color_main),
+        ],
+        backgroundColor: prefs.color_background,
 
-          theme: FFNavigationBarTheme(
-            barBackgroundColor: color_dark_background,
-            selectedItemBorderColor: color_dark_card,
-            selectedItemBackgroundColor: color_dark_background,
-            selectedItemIconColor: color_dark_text_highlight,
-            selectedItemLabelColor: color_dark_text_highlight,
-            unselectedItemIconColor: color_dark_text_dark,
-            unselectedItemLabelColor: color_dark_text_dark,
-            selectedItemTextStyle: TextStyle(
-                fontFamily: 'Quicksand'
-            ),
-            showSelectedItemShadow: false,
-          ),
-          selectedIndex: selectedPage,
-          items: [
-            FFNavigationBarItem(iconData: CustomIcons.route, label: 'Planner'),
-            FFNavigationBarItem(iconData: CustomIcons.goal, label: 'Goals'),
-            FFNavigationBarItem(iconData: CustomIcons.home, label: 'Home'),
-            FFNavigationBarItem(iconData: CustomIcons.stats, label: 'Statistics'),
-            FFNavigationBarItem(iconData: CustomIcons.profile, label: 'Profile'),
-          ],
-          onSelectTab: (index) {
-            setState(() {
-              selectedPage = index;
-              controller.jumpToPage(index);
-            });
-          },
-        ),
-        /**
-            bottomNavigationBar: SpotlightBottomNavigationBar(
-            items: [
-            SpotlightBottomNavigationBarItem(icon: CustomIcons.route),
-            SpotlightBottomNavigationBarItem(icon: CustomIcons.gps),
-            SpotlightBottomNavigationBarItem(icon: CustomIcons.home),
-            SpotlightBottomNavigationBarItem(icon: CustomIcons.stats),
-            SpotlightBottomNavigationBarItem(icon: CustomIcons.profile),
-            ],
-            iconSize: 30,
-            unselectedItemColor: color_text_dark,
-            currentIndex: selectedPage,
-            selectedItemColor: color_text_highlight,
-            backgroundColor: Colors.transparent,
-            onTap: (index) {
-            setState(() {
-            selectedPage = index;
-            controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
-            });
-            },
-            ),
-         */
+        confineInSafeArea: true,
+        navBarStyle: NavBarStyle.style13,
       );
     }
 

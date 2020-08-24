@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart' hide Route;
 import 'package:flutter/material.dart' hide Route;
-import 'file:///C:/Users/jonru/Documents/GitHub/Jogr/lib/utils/custom_widgets/data_display.dart';
 import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/screens/run/location_tracker.dart';
 import 'package:jogr/screens/run/map_dialog.dart';
@@ -10,11 +9,13 @@ import 'package:jogr/screens/run/run_complete.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/file_manager.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
 class RunScreen extends StatefulWidget {
 
@@ -263,13 +264,14 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     await FileManager.clear();
     _play_pause.reverse();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, navigator)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, navigator)));
     tracker.stopLocationService();
   }
 
   void _onMap() {
     setState(() async {
       await update();
+      map.map.setTheme(userData);
       map.map.positions = log.locations;
       if(selectedRoute != null) map.map.setupRoute(selectedRoute);
       Navigator.push(context, MaterialPageRoute(builder: (context) => map));
@@ -280,6 +282,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
 
+    UserPreferences prefs = UserPreferences(userData);
 
     return Scaffold(
       backgroundColor: color_dark_background,
@@ -303,6 +306,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                     onPressed: () {
                       navigator.setState(() {
                         navigator.running = false;
+                        Navigator.pop(context);
                       });
                     },
                   ),
@@ -385,11 +389,13 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       DataDisplay(
+                        prefs: prefs,
                         icon: CustomIcons.timer,
                         data: loading ? '--:--:--' : timeString,
                         label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
                       ),
                       DataDisplay(
+                        prefs: prefs,
                         icon: CustomIcons.distance,
                         data: loading ? '--' : '$distance',
                         label: 'm',

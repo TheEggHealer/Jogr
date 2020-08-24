@@ -11,6 +11,7 @@ import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -25,6 +26,7 @@ class RunComplete extends StatefulWidget {
 
   RunComplete(this.log, Route route, this.userData, this.db, this.navigator) {
     map.positions = log.locations;
+    map.setTheme(userData);
 
     run = !log.empty ? Run.from(log, route, userData) : Run(date: '202007241901', distance: 3093, time: 839, calories: 132, pace: 243, route: route);
   }
@@ -38,32 +40,7 @@ class _RunCompleteState extends State<RunComplete> {
   Widget statsBuilder(BuildContext context, int index) {
 
     List<Widget> goals = [
-      StatisticsWidget(widget.run),
-      Goal(
-        header: 'THIS MONTH • RUN SOME DISTANCE',
-        fraction: true,
-        a: DataDisplay(data: '17.4', label: 'km',),
-        b: DataDisplay(data: '40', label: 'km'),
-      ),
-      Goal(
-        header: 'THIS WEEK • BURN SOME CALORIES',
-        fraction: true,
-        a: DataDisplay(data: '2150', label: 'cal',),
-        b: DataDisplay(data: '2000', label: 'cal'),
-        completed: true,
-      ),
-      Goal(
-        header: 'THIS MONTH • REACH SOME PACE',
-        content: DataDisplay(data: '7.1', label: 'm/s'),
-      ),
-      Goal(
-        header: 'THIS WEEK • RUN SOME DISTANCE',
-        fraction: true,
-        a: DataDisplay(data: '3.5', label: 'km',),
-        b: DataDisplay(data: '10', label: 'km'),
-        post: 'ran',
-      ),
-
+      StatisticsWidget(widget.run, widget.userData),
     ];
 
     return Container(
@@ -84,6 +61,7 @@ class _RunCompleteState extends State<RunComplete> {
   Widget build(BuildContext context) {
 
     PageController controller = PageController(initialPage: 0);
+    UserPreferences prefs = UserPreferences(widget.userData);
 
     return Scaffold(
       body: LayoutBuilder(
@@ -225,15 +203,15 @@ class _RunCompleteState extends State<RunComplete> {
                                         'distance': run.distance,
                                         'time': run.time,
                                         'calories': run.calories,
-                                        'route': run.route.name
+                                        'route': run.route == null ? 'null' : run.route.name
                                       }
                                     })
                                   });
                                   print('Updated database');
                                   widget.navigator.setState(() {
                                     widget.navigator.running = false;
-                                    Navigator.pop(context);
                                   });
+                                  Navigator.pop(context);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(20.0),

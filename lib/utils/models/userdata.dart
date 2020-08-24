@@ -10,22 +10,29 @@ import '../constants.dart';
 
 class UserData {
 
+  String uid;
   Map<String, dynamic> raw;
 
   String name;
+  DateTime birth;
+  int age;
   double weight;
   Route lastRoute;
   List<Run> runs;
   List<Route> routes;
-  bool lightMode = true;
+  bool lightMode = false;
 
   static const int _plotDetail = 8;
 
-  UserData({ this.raw });
+  UserData({ this.raw, this.uid });
 
   setupExisting() {
     if (raw.containsKey('name')) name = raw['name'];
     if (raw.containsKey('weight')) weight = raw['weight'];
+    if (raw.containsKey('date_of_birth')) birth = DateTime.parse(raw['date_of_birth']);
+    if (raw.containsKey('light_mode')) lightMode = raw['light_mode'];
+
+    if(birth != null) age = (DateTime.now().difference(birth).inDays / 365).floor();
 
     addRuns(raw['previous_runs']);
     addRoutes(raw['saved_routes']);

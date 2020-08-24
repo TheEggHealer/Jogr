@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jogr/screens/authenticate/authenticate.dart';
 import 'package:jogr/screens/splash/splash.dart';
+import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,8 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
+    loadMapThemes();
+
     if(splash) {
       _timer = new Timer(Duration(seconds: 1), () =>
         setState(() {
