@@ -155,6 +155,7 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
                                     password = val;
                                   });
                                 },
+                                obscureText: true,
                                 textColor: prefs.color_text_header,
                                 activeColor: prefs.color_main,
                                 borderColor: prefs.color_shadow,
@@ -178,6 +179,7 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
                                     confirm = val;
                                   });
                                 },
+                                obscureText: true,
                                 textColor: prefs.color_text_header,
                                 activeColor: prefs.color_main,
                                 borderColor: prefs.color_shadow,

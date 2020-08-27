@@ -159,6 +159,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   password = val;
                                 });
                               },
+                              obscureText: true,
                               textColor: prefs.color_text_header,
                               activeColor: prefs.color_main,
                               borderColor: prefs.color_shadow,

@@ -155,7 +155,7 @@ class _StartState extends State<Start> with SingleTickerProviderStateMixin {
                     ),
                     Center(
                       child: Text(
-                        'Or create a new account',
+                        'Or',
                         style: prefs.text_header_2,
                       ),
                     ),
