@@ -4,33 +4,41 @@ import 'package:jogr/utils/models/userdata.dart';
 import 'package:jogr/utils/user_preferences.dart';
 
 import '../constants.dart';
+import '../oval_top_clipper.dart';
 import 'custom_card.dart';
 
-class CustomScaffold extends StatefulWidget {
+class LoginScaffold extends StatefulWidget {
 
-  final UserData userData;
+  final lightMode;
   final Widget appBar;
   final Widget body;
+  final bool bodyClipped;
 
-  const CustomScaffold({Key key, this.appBar, this.body, this.userData}) : super(key: key);
+  const LoginScaffold({Key key, this.appBar, this.body, this.lightMode, this.bodyClipped = false}) : super(key: key);
 
   @override
-  _CustomScaffoldState createState() => _CustomScaffoldState();
+  _LoginScaffoldState createState() => _LoginScaffoldState();
 }
 
-class _CustomScaffoldState extends State<CustomScaffold> {
+class _LoginScaffoldState extends State<LoginScaffold> {
 
+  bool gotScreenHeight = false;
+  double screenHeight;
 
   @override
   Widget build(BuildContext context) {
 
-    BackgroundClipper clipper = BackgroundClipper();
-    UserPreferences prefs = UserPreferences(widget.userData.lightMode);
+    if(!gotScreenHeight) screenHeight = MediaQuery.of(context).size.height;
+    gotScreenHeight = true;
+
+    OvalTopClipper clipper = OvalTopClipper();
+    UserPreferences prefs = UserPreferences(widget.lightMode);
 
     return LayoutBuilder(
       builder: (context, box) {
 
-        double divisionHeight = clipper.divisionHeight(box.maxWidth, app_bar_height * box.maxHeight);
+        double divisionHeight = screenHeight * 0.4;
+        print(divisionHeight);
 
         return Stack(
           children: <Widget>[
@@ -39,7 +47,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
               height: double.infinity,
               color: prefs.color_background,
               child: Container(
-                padding: EdgeInsets.only(top: divisionHeight),
+                padding: EdgeInsets.only(top: widget.bodyClipped ? divisionHeight - screenHeight * OvalTopClipper.roundness : divisionHeight),
                 child: widget.body,
               ),
             ),
@@ -47,12 +55,12 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                 clipper: clipper,
                 child: Container(
                   width: double.infinity,
-                  height: app_bar_height * box.maxHeight,
+                  height: divisionHeight,
                   decoration: BoxDecoration(
                     gradient: prefs.gradient_main,
                   ),
                   child: Container(
-                    padding: EdgeInsets.only(bottom: app_bar_height * box.maxHeight - divisionHeight),
+                    //padding: EdgeInsets.only(bottom: app_bar_height * box.maxHeight - divisionHeight),
                     child: widget.appBar,
                   ),
                 )

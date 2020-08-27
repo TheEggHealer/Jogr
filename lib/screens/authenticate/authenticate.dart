@@ -4,6 +4,11 @@ import 'register.dart';
 import 'login.dart';
 
 class Authenticate extends StatefulWidget {
+
+  bool lightMode;
+
+  Authenticate({this.lightMode});
+
   @override
   _AuthenticateState createState() => _AuthenticateState();
 }
@@ -24,8 +29,8 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
-    if(state == STATE.START) return Container(child: Start(toggleView: toggleView));
-    else if(state == STATE.LOGIN) return Container(child: Login(toggleView: toggleView));
-    else return Container(child: Register(toggleView: toggleView));
+    if(state == STATE.START) return Container(child: Start(toggleView: toggleView, lightMode: widget.lightMode));
+    else if(state == STATE.LOGIN) return Container(child: Login(toggleView: toggleView, lightMode: widget.lightMode));
+    else return Container(child: Register(toggleView: toggleView, lightMode: widget.lightMode));
   }
 }

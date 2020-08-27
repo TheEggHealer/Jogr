@@ -26,8 +26,11 @@ import 'home/home_widget.dart';
 class ScreenNavigator extends StatefulWidget {
 
   final AuthService auth;
+  bool lightModePrefs;
 
-  ScreenNavigator({this.auth});
+  ScreenNavigator({this.auth, this.lightModePrefs}){
+    print(lightModePrefs);
+  }
 
   @override
   ScreenNavigatorState createState() => ScreenNavigatorState();
@@ -77,7 +80,7 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
     UserData userData = Provider.of<UserData>(context);
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData != null ? userData.lightMode : false); //TODO: Handle loading screen when userData == null.
     bool setup = userData == null ? false : userData.raw['setup'];
     print(user.uid);
 
@@ -89,7 +92,7 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
     });
 
     if(userData == null) {
-      return SplashScreen(auth: widget.auth,);
+      return SplashScreen(auth: widget.auth, lightMode: widget.lightModePrefs,);
     } else if(!setup) {
       return Setup();
     } else {
@@ -97,7 +100,7 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
         controller: controller,
         screens: [
           RoutePlanner(user),
-          SplashScreen(auth: widget.auth,),
+          SplashScreen(auth: widget.auth, lightMode: userData.lightMode,),
           Home(userData, this),
           Statistics(userData: userData, user: user),
           Profile(widget.auth),

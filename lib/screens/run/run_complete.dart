@@ -61,7 +61,7 @@ class _RunCompleteState extends State<RunComplete> {
   Widget build(BuildContext context) {
 
     PageController controller = PageController(initialPage: 0);
-    UserPreferences prefs = UserPreferences(widget.userData);
+    UserPreferences prefs = UserPreferences(widget.userData.lightMode);
 
     return Scaffold(
       body: LayoutBuilder(

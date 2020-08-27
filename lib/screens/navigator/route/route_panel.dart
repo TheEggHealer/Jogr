@@ -20,7 +20,7 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
   UserPreferences prefs;
 
   _WideRoutePanelState(UserData userData) {
-    prefs = UserPreferences(userData);
+    prefs = UserPreferences(userData.lightMode);
   }
 
   @override

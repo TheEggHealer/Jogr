@@ -245,7 +245,7 @@ class _MapState extends State<Map> {
   Widget build(BuildContext context) {
 
     UserData userData = Provider.of<UserData>(context);
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     if(controller != null) {
       print('setting theme');

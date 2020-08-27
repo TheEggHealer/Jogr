@@ -9,6 +9,7 @@ import 'package:jogr/utils/custom_widgets/custom_scaffold.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:jogr/utils/user_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
 
@@ -45,8 +46,11 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
 
     ud = Provider.of<UserData>(context);
-    UserPreferences prefs = UserPreferences(ud);
+    UserPreferences prefs = UserPreferences(ud.lightMode);
     db = DatabaseService(uid: ud.uid);
+
+    double logoutWidth = MediaQuery.of(context).size.width * 0.4;
+    double logoutHeight = logoutWidth * 0.4;
 
     return CustomScaffold(
       userData: ud,
@@ -142,9 +146,13 @@ class _ProfileState extends State<Profile> {
                             inactiveThumbColor: prefs.color_main,
                             inactiveTrackColor: prefs.color_shadow,
                             onChanged: (val) async {
+                              SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
                               setState(() {
                                 ud.lightMode = !val;
                                 db.mergeUserDataFields({'light_mode': ud.lightMode});
+                                sharedPrefs.setBool('lightMode', ud.lightMode);
+                                UserPreferences.prefsLightMode = ud.lightMode;
+                                print('Prefs: ${sharedPrefs.getBool('lightMode')}');
                               });
                             },
                             value: !ud.lightMode,
@@ -160,59 +168,44 @@ class _ProfileState extends State<Profile> {
                   height: 50,
                 ),
 
-                OutlineButton(
-                  onPressed: () async {
-                    await widget._auth.signOut();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                        'LOGOUT',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            color: color_dark_text_dark
-                        )
-                    ),
+                SizedBox(
+                  width: logoutWidth,
+                  height: logoutHeight,
+                  child: button(
+                    onTap: () async {
+                      await widget._auth.signOut();
+                    },
+                    borderRadius: logoutHeight / 2,
+                    text: 'Logout',
+                    textColor: prefs.color_text_header,
+                    borderColor: prefs.color_main
                   ),
-                  color: prefs.color_main,
-                  splashColor: prefs.color_main,
-                  highlightColor: prefs.color_main,
-                  focusColor: prefs.color_main,
-                  textColor: prefs.color_text_header,
-                  borderSide: BorderSide(color: prefs.color_main),
-                  highlightedBorderColor: prefs.color_main,
                 ),
                 SizedBox(height: 30),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                    OutlineButton(
-                        onPressed: () { },
-                        child: Text('RESET ACCOUNT'),
-                        color: color_dark_error,
-                        highlightColor: color_dark_error,
-                        highlightedBorderColor: color_dark_error,
-                        focusColor: color_dark_error,
-                        hoverColor: color_dark_error,
-                        textColor: color_dark_text_dark,
-                        splashColor: color_dark_error,
-                        borderSide: BorderSide(color: color_dark_error),
+                      Expanded(
+                        flex: 6,
+                        child: button(
+                          onTap: (){},
+                          text: 'Clear Data',
+                          borderColor: prefs.color_error,
+                          textColor: prefs.color_text_header,
+                        ),
                       ),
-                      OutlineButton(
-                        onPressed: () { },
-                        child: Text('REMOVE ACCOUNT'),
-                        color: color_dark_error,
-                        highlightColor: color_dark_error,
-                        highlightedBorderColor: color_dark_error,
-                        focusColor: color_dark_error,
-                        hoverColor: color_dark_error,
-                        textColor: color_dark_text_dark,
-                        splashColor: color_dark_error,
-                        borderSide: BorderSide(color: color_dark_error),
-                      ),
+                      Spacer(flex: 1),
+                      Expanded(
+                        flex: 6,
+                        child: button(
+                          onTap: (){},
+                          text: 'Remove Account',
+                          borderColor: prefs.color_error,
+                          textColor: prefs.color_text_header,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -232,6 +225,7 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                 ),
+                SizedBox(height: 60),
               ],
             ),
           ),

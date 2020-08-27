@@ -19,7 +19,7 @@ class LastRunCard extends StatelessWidget {
 
     Run last = userData.lastRun;
     bool exists = last != null;
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     return CustomCard(
       userData: userData,

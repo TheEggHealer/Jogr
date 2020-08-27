@@ -43,6 +43,9 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
   int totalDistance = 0;
   bool loading = false;
 
+  bool setting_connectEnds = true;
+  bool setting_forceToRoad = true;
+
   AnimationController controller;
   PageController pageController = PageController(initialPage: 0);
 
@@ -187,26 +190,45 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  route.name,
-                  style: prefs.text_goal,
-                ),
-                DataDisplay(
-                  prefs: prefs,
-                  data: route.distance.toString(),
-                  label: 'm',
-                )
-              ],
+            Expanded(
+              flex: 8,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: route.name,
+                      style: prefs.text_background,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    textBaseline: TextBaseline.ideographic,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    children: [
+                      Text(
+                        route.distance.toString(),
+                        style: prefs.text_goal,
+                      ),
+                      Text(
+                        'm',
+                        style: prefs.text_label,
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-            button(
-              text: 'Load',
-                textColor: prefs.color_text_background,
-                splashColor: prefs.color_splash,
-                borderColor: prefs.color_highlight,
-              onTap: () { load(route); Navigator.of(context).pop(); }
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 4,
+              child: button(
+                text: 'Load',
+                  textColor: prefs.color_text_background,
+                  splashColor: prefs.color_splash,
+                  borderColor: prefs.color_highlight,
+                onTap: () { load(route); Navigator.of(context).pop(); }
+              ),
             )
 
           ],
@@ -216,7 +238,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
   }
 
   Widget loadDialog(BuildContext context) {
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
     List<Widget> items = [
       SizedBox(height: 20),
       Stack(
@@ -335,7 +357,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
 
   Widget saveDialog(BuildContext context) {
     String routeName = '';
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     return Dialog(
       backgroundColor: prefs.color_background,
@@ -368,6 +390,23 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
               ),
               SizedBox(height: 20),
 
+              textField(
+                validator: checkName,
+                onChanged: (val) {
+                  setState(() {
+                    routeName = val;
+                  });
+                },
+                textColor: prefs.color_text_header,
+                activeColor: prefs.color_main,
+                borderColor: prefs.color_shadow,
+                errorColor: prefs.color_error,
+                helperText: 'Name your route',
+                icon: Icon(CustomIcons.save, color: prefs.color_shadow),
+                textStyle: prefs.text_header_2,
+                borderRadius: 30
+              ),
+              /**
               TextFormField(
                 validator: checkName,
                 cursorColor: prefs.color_text_header,
@@ -397,7 +436,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
                 ),
                 style: prefs.text_header_2,
               ),
-
+              */
               SizedBox(height:10),
               button(
                 onTap: () {
@@ -432,7 +471,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
       controller.forward();
     });
 
-    generateRoute(UserPreferences(userData));
+    generateRoute(UserPreferences(userData.lightMode));
   }
 
   String checkName(String name) {
@@ -443,7 +482,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
   Widget build(BuildContext context) {
 
     this.userData = Provider.of<UserData>(context);
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     return LayoutBuilder(
       builder: (context, box) {
@@ -592,30 +631,6 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
                                           ),
                                         ],
                                       ),
-                                      /**
-                                          Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                          Text(
-                                          'Show markers',
-                                          style: prefs.text_header_2,
-                                          ),
-                                          Switch(
-                                          value: map.state.showMarkes,
-                                          activeColor: prefs.color_main,
-                                          inactiveThumbColor: prefs.color_text_header,
-                                          inactiveTrackColor: prefs.color_shadow,
-                                          onChanged: (val) {
-                                          setState(() {
-                                          map.state.setState(() {
-                                          map.state.showMarkes = val;
-                                          });
-                                          });
-                                          },
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          )
-                                          ],
-                                          ), */
                                     ],
                                   ),
                                 ),
@@ -632,98 +647,73 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
                                   width: box.maxWidth * 0.7,
                                   height: cardHeight,
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      SizedBox(
-                                          width: double.infinity,
-                                          child: button(
-                                              text: 'Done',
-                                              textColor: prefs.color_text_background,
-                                              splashColor: prefs.color_splash,
-                                              borderColor: prefs.color_highlight,
-                                              onTap: () {
-                                                setState(() {
-                                                  controller.forward();
-                                                  loading = true;
-                                                });
-                                                generateRoute(prefs);
-                                              }
-                                          )
-                                      ),
                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Expanded(
-                                              flex: 10,
-                                              child: button(
-                                                  text: 'Help',
-                                                  textColor: prefs.color_text_background,
-                                                  splashColor: prefs.color_splash,
-                                                  borderColor: prefs.color_highlight,
-                                                  onTap: () => showDialog(context: context, builder: helpDialog)
-                                              )
-                                          ),
-                                          Spacer(flex: 1),
-                                          Expanded(
-                                              flex: 10,
-                                              child: button(
-                                                  text: 'Clear',
-                                                  textColor: prefs.color_text_background,
-                                                  splashColor: prefs.color_splash,
-                                                  borderColor: prefs.color_highlight,
-                                                  onTap: () => clearRoute()
-                                              )
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              flex: 10,
-                                              child: button(
-                                                  text: 'Load',
-                                                  textColor: prefs.color_text_background,
-                                                  splashColor: prefs.color_splash,
-                                                  borderColor: prefs.color_highlight,
-                                                  onTap: () => showDialog(context: context, builder: loadDialog)
-                                              )
-                                          ),
-                                          Spacer(flex: 1),
-                                          Expanded(
-                                              flex: 10,
-                                              child: button(
-                                                  text: 'Save',
-                                                  textColor: prefs.color_text_background,
-                                                  splashColor: prefs.color_splash,
-                                                  borderColor: prefs.color_highlight,
-                                                  onTap: () => showDialog(context: context, builder: saveDialog)
-                                              )
-                                          ),
-                                        ],
-                                      ),
-                                      /**
-                                          Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
                                           Text(
-                                          'Show markers',
-                                          style: prefs.text_header_2,
+                                            'Connect ends',
+                                            style: prefs.text_background,
                                           ),
                                           Switch(
-                                          value: map.state.showMarkes,
-                                          activeColor: prefs.color_main,
-                                          inactiveThumbColor: prefs.color_text_header,
-                                          inactiveTrackColor: prefs.color_shadow,
-                                          onChanged: (val) {
-                                          setState(() {
-                                          map.state.setState(() {
-                                          map.state.showMarkes = val;
-                                          });
-                                          });
-                                          },
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            value: setting_connectEnds,
+                                            activeColor: prefs.color_highlight,
+                                            inactiveThumbColor: prefs.color_text_header,
+                                            inactiveTrackColor: prefs.color_shadow,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                setting_connectEnds = !setting_connectEnds;
+                                              });
+                                            },
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                           )
-                                          ],
-                                          ), */
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Follow roads',
+                                            style: prefs.text_background,
+                                          ),
+                                          Switch(
+                                            value: setting_forceToRoad,
+                                            activeColor: prefs.color_highlight,
+                                            inactiveThumbColor: prefs.color_text_header,
+                                            inactiveTrackColor: prefs.color_shadow,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                setting_forceToRoad = !setting_forceToRoad;
+                                              });
+                                            },
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Show markers',
+                                            style: prefs.text_background,
+                                          ),
+                                          Switch(
+                                            value: map.state.showMarkes,
+                                            activeColor: prefs.color_highlight,
+                                            inactiveThumbColor: prefs.color_text_header,
+                                            inactiveTrackColor: prefs.color_shadow,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                map.state.setState(() {
+                                                  map.state.showMarkes = val;
+                                                });
+                                              });
+                                            },
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),

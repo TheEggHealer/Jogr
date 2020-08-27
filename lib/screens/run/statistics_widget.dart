@@ -16,7 +16,7 @@ class StatisticsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

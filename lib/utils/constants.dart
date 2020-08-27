@@ -111,6 +111,11 @@ const textLightGoal = TextStyle(
     fontFamily: 'Quicksand',
     fontWeight: FontWeight.w300
 );
+const textLightTitle = TextStyle(
+  fontSize: 90,
+  fontFamily: 'Dosis',
+  color: color_light_background,
+);
 
 
 //DARK MODE COLORS
@@ -129,6 +134,14 @@ const dark_gradient_run_button = LinearGradient(
     colors: [
       color_dark_secondary_highlight,
       color_dark_secondary_highlight,
+    ]
+);
+const dark_gradient_title = LinearGradient(
+    begin: Alignment(0, 0),
+    end: Alignment(1, 1),
+    colors: [
+      color_dark_highlight,
+      color_dark_highlight,
     ]
 );
 
@@ -179,7 +192,11 @@ const textDarkGoal = TextStyle(
     fontFamily: 'Quicksand',
     fontWeight: FontWeight.w300
 );
-
+const textDarkTitle = TextStyle(
+  fontSize: 90,
+  fontFamily: 'Dosis',
+  color: color_dark_text_header,
+);
 
 
 
@@ -205,11 +222,47 @@ loadMapThemes() async {
 
 
 
-FlatButton button({String text, Color borderColor, Color textColor, Color splashColor, Function onTap, double borderRadius = 18.0}) {
+FlatButton button({String text, Color borderColor, Color textColor, Color splashColor, Function onTap, double borderRadius = 18.0, Image image}) {
   if(splashColor == null) splashColor = borderColor;
+
+  Widget child;
+
+  if(image == null) {
+    child = Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'RobotoLight',
+        fontWeight: FontWeight.w900,
+        color: textColor,
+        fontSize: 16,
+      ),
+    );
+  }
+  else {
+    child = Stack(
+      children: [
+        Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'RobotoLight',
+              fontWeight: FontWeight.w900,
+              color: textColor,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: image,
+        )
+      ],
+    );
+  }
+
   return FlatButton(
     onPressed: onTap,
-    child: Text(text,),
+    child: child,
     color: Colors.transparent,
     highlightColor: splashColor,
     focusColor: splashColor,
@@ -223,6 +276,34 @@ FlatButton button({String text, Color borderColor, Color textColor, Color splash
   );
 }
 
+TextFormField textField({String helperText, TextStyle textStyle, Color textColor, Color borderColor, Color activeColor, Color errorColor, Icon icon, dynamic Function(String val) validator, Function(String val) onChanged, double borderRadius = 30}) {
+  return TextFormField(
+    validator: validator,
+    onChanged: onChanged,
+    cursorColor: textColor,
+    decoration: InputDecoration(
+      contentPadding: EdgeInsets.symmetric(vertical: 18),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(borderRadius)),borderSide: BorderSide(color: borderColor)),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(borderRadius)),borderSide: BorderSide(color: activeColor)),
+      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(borderRadius)),borderSide: BorderSide(color: errorColor)),
+      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(borderRadius)),borderSide: BorderSide(color: errorColor)),
+      errorStyle: TextStyle(
+          fontFamily: 'RobotoLight',
+          color: errorColor
+      ),
+      border: OutlineInputBorder(borderSide: BorderSide(color: borderColor)),
+      hintText: helperText,
+      hintStyle: TextStyle(
+          fontFamily: 'RobotoLight',
+          color: textColor
+      ),
+      prefixIcon: icon,
+      focusColor: activeColor,
+      hoverColor: activeColor,
+    ),
+    style: textStyle,
+  );
+}
 
 
 

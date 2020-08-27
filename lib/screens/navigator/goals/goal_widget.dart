@@ -23,7 +23,7 @@ class Goal extends StatelessWidget {
     aString = a % 1 == 0 ? a.toInt().toString() : a.toString();
     bString = b % 1 == 0 ? b.toInt().toString() : b.toString();
 
-    prefs = UserPreferences(userData);
+    prefs = UserPreferences(userData.lightMode);
   }
 
   Widget get center {

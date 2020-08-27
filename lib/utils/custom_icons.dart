@@ -29,6 +29,7 @@ class CustomIcons {
   static const IconData speed = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData add_circle = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData map = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData password = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData back = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData burn = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData distance = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -36,6 +37,7 @@ class CustomIcons {
   static const IconData home = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData profile = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData save = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData mail = IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData timer = IconData(0xe812, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData stats = IconData(0xe813, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -52,6 +52,8 @@ dependencies:
   battery_optimization: ^0.1.0 #Ask the user to turn off battery optimization.
   persistent_bottom_nav_bar: ^2.0.5 #Bottom Navigation bar.
   lite_rolling_switch: ^0.1.1
+  gradient_text: ^1.0.2 #Gradient text
+  shared_preferences: ^0.5.10 #Shared Preferences
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

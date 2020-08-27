@@ -23,7 +23,7 @@ class _CustomCardState extends State<CustomCard> {
   @override
   Widget build(BuildContext context) {
 
-    UserPreferences prefs = UserPreferences(widget.userData);
+    UserPreferences prefs = UserPreferences(widget.userData.lightMode);
 
     List<Widget> content = [
       Container(

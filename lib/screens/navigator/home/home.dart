@@ -30,7 +30,7 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     UserData ud = Provider.of<UserData>(context);
-    UserPreferences prefs = UserPreferences(ud);
+    UserPreferences prefs = UserPreferences(ud.lightMode);
     BackgroundClipper clipper = BackgroundClipper();
 
     return CustomScaffold(

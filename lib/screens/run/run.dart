@@ -282,7 +282,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
 
-    UserPreferences prefs = UserPreferences(userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     return Scaffold(
       backgroundColor: color_dark_background,
