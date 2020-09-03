@@ -9,6 +9,8 @@ import 'package:jogr/screens/run/run_complete.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/custom_card.dart';
+import 'package:jogr/utils/custom_widgets/custom_scaffold.dart';
 import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/file_manager.dart';
 import 'package:jogr/utils/models/route.dart';
@@ -56,65 +58,70 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     selectedRoute = userData.routes.isNotEmpty ? (userData.lastRoute != null ? userData.lastRoute : userData.routes[0]) : null;
   }
 
-  Widget routeWidget(BuildContext context, Route route) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Card(
-        color: color_dark_card,
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+  Widget routeWidget(BuildContext context, Route route, UserPreferences prefs) {
+    return CustomCard(
+      userData: userData,
+      onTap: null,
+      paddingFactor: 4,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 8,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    route.name,
-                    style: textStyleDarkLightLarge,
+                  RichText(
+                    text: TextSpan(
+                      text: route.name,
+                      style: prefs.text_background,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.ideographic,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
                       Text(
-                        '${route.distance}',
-                        style: textStyleHeaderSmall,
+                        route.distance.toString(),
+                        style: prefs.text_goal,
                       ),
-                      SizedBox(width: 5,),
                       Text(
                         'm',
-                        style: textStyleDark,
+                        style: prefs.text_label,
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
-              OutlineButton(
-                onPressed: () {
-                  setState(() {
-                    selectedRoute = route;
-                  });
-                  Navigator.of(context).pop();
-                },
-                child: Text('LOAD'),
-                color: color_dark_text_highlight,
-                highlightColor: color_dark_text_highlight,
-                highlightedBorderColor: color_dark_text_highlight,
-                focusColor: color_dark_text_highlight,
-                hoverColor: color_dark_text_highlight,
-                textColor: color_dark_text_dark,
-                borderSide: BorderSide(color: color_dark_text_highlight),
+            ),
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 4,
+              child: button(
+                  text: 'Load',
+                  textColor: prefs.color_text_background,
+                  splashColor: prefs.color_splash,
+                  borderColor: prefs.color_highlight,
+                  onTap: () {
+                    setState(() {
+                      selectedRoute = route;
+                    });
+                    Navigator.of(context).pop();
+                  }
               ),
-            ],
-          ),
+            )
+
+          ],
         ),
       ),
     );
   }
 
-  Widget pickRouteDialog(BuildContext context) {
+  Widget loadDialog(BuildContext context) {
+    UserPreferences prefs = UserPreferences(userData.lightMode);
     List<Widget> items = [
       SizedBox(height: 20),
       Stack(
@@ -122,14 +129,14 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
         children: [
           Center(
             child: Text(
-              'Pick route',
-              style: textStyleHeader,
+              'Select route',
+              style: prefs.text_header,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: IconButton(
-              icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
+              icon: Icon(CustomIcons.back, size: 30, color: prefs.color_main),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -138,13 +145,13 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
         ],
       ),
       SizedBox(height: 20),
-    ]..addAll(userData.routes.map((e) => routeWidget(context, e)).toList());
+    ]..addAll(this.userData.routes.map((e) => routeWidget(context, e, prefs)).toList());
 
     return Dialog(
-      backgroundColor: color_dark_background,
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+      backgroundColor: prefs.color_background,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
           child: ScrollConfiguration(
             behavior: NoScrollGlow(),
             child: CustomScrollView(
@@ -284,6 +291,168 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
 
     UserPreferences prefs = UserPreferences(userData.lightMode);
 
+    return Scaffold(
+      body: CustomScaffold(
+        userData: userData,
+        appBar: Padding(
+          padding: const EdgeInsets.only(left: 30.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Run',
+              style: prefs.text_header_invert_bold,
+            ),
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Spacer(flex: 4),
+              Flexible(
+                flex: 5,
+                child: CustomCard(
+                  userData: userData,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Planned route',
+                            style: prefs.text_label,
+                          ),
+                          Text(
+                            selectedRoute == null ? 'No route' : selectedRoute.name,
+                            style: prefs.text_header_invert_2,
+                          ),
+                          DataDisplay(
+                            prefs: prefs,
+                            data: selectedRoute == null ? '--' : selectedRoute.distance.toString(),
+                            label: 'm',
+                          )
+                        ],
+                      ),
+                      button(
+                        onTap: () => showDialog(context: context, builder: loadDialog),
+                        text: 'Pick route',
+                        borderColor: prefs.color_highlight,
+                        textColor: prefs.color_text_background,
+                        splashColor: prefs.color_splash,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Divider(
+                color: prefs.color_shadow,
+              ),
+              Flexible(
+                flex: 7,
+                child: CustomCard(
+                  userData: userData,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Current run',
+                        style: prefs.text_label,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            DataDisplay(
+                              prefs: prefs,
+                              icon: CustomIcons.timer,
+                              data: loading ? '--:--:--' : timeString,
+                              label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
+                            ),
+                            DataDisplay(
+                              prefs: prefs,
+                              icon: CustomIcons.distance,
+                              data: loading ? '--' : '$distance',
+                              label: 'm',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 10,
+                child: LayoutBuilder(
+                  builder: (context, box) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RawMaterialButton(
+                          elevation: 0,
+                          onPressed: _onStop,
+                          child: Container(
+                            child: Icon(Icons.stop, color: prefs.color_main, size: box.maxHeight / 7),
+                            padding: EdgeInsets.all(box.maxHeight / 14),
+                          ),
+                          shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          highlightColor: prefs.color_shadow,
+                          focusColor: prefs.color_shadow,
+                          hoverColor: prefs.color_shadow,
+                          splashColor: prefs.color_shadow,
+                        ),
+                        RawMaterialButton(
+                          elevation: 0,
+                          onPressed: _onPlayPause,
+                          child: Container(
+                            child: AnimatedIcon(
+                              icon: AnimatedIcons.play_pause,
+                              progress: _play_pause,
+                              size: box.maxHeight / 2.5,
+                              color: prefs.color_main,
+                            ),
+                            padding: EdgeInsets.all(box.maxHeight / 10),
+                          ),
+                          shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          highlightColor: prefs.color_shadow,
+                          focusColor: prefs.color_shadow,
+                          hoverColor: prefs.color_shadow,
+                          splashColor: prefs.color_shadow,
+                        ),
+                        RawMaterialButton(
+                          elevation: 0,
+                          onPressed: _onMap,
+                          child: Container(
+                            child: Icon(CustomIcons.gps, color: prefs.color_main, size: box.maxHeight / 7),
+                            padding: EdgeInsets.all(box.maxHeight / 14),
+                          ),
+                          shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          highlightColor: prefs.color_shadow,
+                          focusColor: prefs.color_shadow,
+                          hoverColor: prefs.color_shadow,
+                          splashColor: prefs.color_shadow,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
+            ]
+          ),
+        )
+      )
+    );
+
+    /**
     return Scaffold(
       backgroundColor: color_dark_background,
       body: Container(
@@ -469,6 +638,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
         ),
       ),
     );
+    */
   }
 
   @override

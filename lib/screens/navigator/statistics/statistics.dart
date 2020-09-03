@@ -4,9 +4,13 @@ import 'package:jogr/screens/navigator/statistics/stat_list_item.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:jogr/utils/custom_widgets/custom_scaffold.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'dart:math';
+
+import 'package:jogr/utils/user_preferences.dart';
+import 'package:provider/provider.dart';
 
 class Statistics extends StatelessWidget {
 
@@ -30,78 +34,88 @@ class Statistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(top: 60),
-        child: Column(
-            children: [
-              Center(
-                child: Text(
-                  'Statistics',
-                  style: textStyleHeader,
-                ),
-              ),
-              divider,
-              Container(
-                height: 70,
-                padding: const EdgeInsets.symmetric(horizontal: 60),
-                child: OutlineButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (con) => PreviousRuns(user, userData)));
-                    //await db.mergeUserDataFields({
-                    //  'previous_runs': userData.raw['previous_runs'].putIfAbsent('', () => {'20200714': {'distance': 2843 + rng.nextInt(1000),'time':900 + rng.nextInt(150),'calories':90 + rng.nextInt(50)}})
-                    //});
-                  },
-                  child: Text(
-                      'SEE ALL PREVIOUS RUNS',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Roboto',
-                          color: color_dark_text_dark
-                      )
+    UserData userData = Provider.of<UserData>(context);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
+
+    return CustomScaffold(
+      userData: userData,
+      appBar: Padding(
+        padding: const EdgeInsets.only(left: 30.0),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Statistics (WIP)',
+            style: prefs.text_header_invert_bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(top: 60),
+          child: Column(
+              children: [
+                Container(
+                  height: 70,
+                  padding: const EdgeInsets.symmetric(horizontal: 60),
+                  child: OutlineButton(
+                    onPressed: () {
+                      notImplemented();
+                      //Navigator.push(context, MaterialPageRoute(builder: (con) => PreviousRuns(user, userData)));
+                      //await db.mergeUserDataFields({
+                      //  'previous_runs': userData.raw['previous_runs'].putIfAbsent('', () => {'20200714': {'distance': 2843 + rng.nextInt(1000),'time':900 + rng.nextInt(150),'calories':90 + rng.nextInt(50)}})
+                      //});
+                    },
+                    child: Text(
+                        'SEE ALL PREVIOUS RUNS',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                            color: color_dark_text_dark
+                        )
+                    ),
+                    color: color_dark_text_highlight,
+                    splashColor: color_dark_text_highlight,
+                    highlightColor: color_dark_text_highlight,
+                    focusColor: color_dark_text_highlight,
+                    textColor: color_dark_text_dark,
+                    borderSide: BorderSide(color: color_dark_text_highlight),
+                    highlightedBorderColor: color_dark_text_highlight,
                   ),
-                  color: color_dark_text_highlight,
-                  splashColor: color_dark_text_highlight,
-                  highlightColor: color_dark_text_highlight,
-                  focusColor: color_dark_text_highlight,
-                  textColor: color_dark_text_dark,
-                  borderSide: BorderSide(color: color_dark_text_highlight),
-                  highlightedBorderColor: color_dark_text_highlight,
                 ),
-              ),
-              divider,
-              Text(
-                  'Your running speed over time:',
-                  style: textStyleHeaderSmall
-              ),
-              SizedBox(height: 25),
-              _speedChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
-                _speedChart,
-              ),
-              SizedBox(height: 50),
-              Text(
-                  'Your running distance over time:',
-                  style: textStyleHeaderSmall
-              ),
-              SizedBox(height: 25),
-              _distanceChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
-                userData.getDistanceChart(),
-              ),
-              divider,
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  children: [
-                    StatListItem(title: 'Average running speed:', value: _stats[0], label: 'm/s',),
-                    StatListItem(title: 'Fastest running speed:', value: _stats[1], label: 'm/s',),
-                    StatListItem(title: 'Average time / 10km:', value: _stats[5], label: _stats[5].split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',),
-                    StatListItem(title: 'Total distance ran:', value: _stats[2], label: 'km',),
-                    StatListItem(title: 'Total calories burned:', value: _stats[3], label: 'cal',),
-                    StatListItem(title: 'Total amount of runs:', value: _stats[4], label: 'runs', spacing: 40,),
-                  ],
+                divider,
+                Text(
+                    'Your running speed over time:',
+                    style: textStyleHeaderSmall
                 ),
-              ),
-            ]
+                SizedBox(height: 25),
+                _speedChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
+                  _speedChart,
+                ),
+                SizedBox(height: 50),
+                Text(
+                    'Your running distance over time:',
+                    style: textStyleHeaderSmall
+                ),
+                SizedBox(height: 25),
+                _distanceChart == null ? Text('Not enough data, go for more runs!', style: textStyleDarkLight,) : LineChart(
+                  userData.getDistanceChart(),
+                ),
+                divider,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    children: [
+                      StatListItem(title: 'Average running speed:', value: _stats[0], label: 'm/s',),
+                      StatListItem(title: 'Fastest running speed:', value: _stats[1], label: 'm/s',),
+                      StatListItem(title: 'Average time / 10km:', value: _stats[5], label: _stats[5].split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',),
+                      StatListItem(title: 'Total distance ran:', value: _stats[2], label: 'km',),
+                      StatListItem(title: 'Total calories burned:', value: _stats[3], label: 'cal',),
+                      StatListItem(title: 'Total amount of runs:', value: _stats[4], label: 'runs', spacing: 40,),
+                    ],
+                  ),
+                ),
+              ]
+          ),
         ),
       ),
     );

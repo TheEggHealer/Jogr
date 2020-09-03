@@ -49,7 +49,7 @@ class Goal extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       userData: userData,
-      onTap: () {},
+      onTap: notImplemented,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

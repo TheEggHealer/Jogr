@@ -87,7 +87,8 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(running) {
         //pushNewScreen(context, screen: RunScreen(userData, this, DatabaseService(uid: user.uid)));
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RunScreen(userData, this, DatabaseService(uid: user.uid))));
+        print('Opening new run screen');
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RunScreen(userData, this, DatabaseService(uid: user.uid))));
       }
     });
 

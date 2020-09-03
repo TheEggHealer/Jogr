@@ -662,6 +662,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
                                             inactiveThumbColor: prefs.color_text_header,
                                             inactiveTrackColor: prefs.color_shadow,
                                             onChanged: (val) {
+                                              notImplemented();
                                               setState(() {
                                                 setting_connectEnds = !setting_connectEnds;
                                               });
@@ -683,6 +684,7 @@ class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderSta
                                             inactiveThumbColor: prefs.color_text_header,
                                             inactiveTrackColor: prefs.color_shadow,
                                             onChanged: (val) {
+                                              notImplemented();
                                               setState(() {
                                                 setting_forceToRoad = !setting_forceToRoad;
                                               });

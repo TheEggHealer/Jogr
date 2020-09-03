@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jogr/screens/navigator/profile/profile_item.dart';
 import 'package:jogr/services/auth.dart';
 import 'package:jogr/services/database.dart';
@@ -81,7 +82,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     CustomCard(
                       userData: ud,
-                      onTap: () {},
+                      onTap: notImplemented,
                       child: Container(
                         constraints: BoxConstraints(
                           minWidth: 80,
@@ -100,7 +101,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     CustomCard(
                       userData: ud,
-                      onTap: () {},
+                      onTap: notImplemented,
                       child: Container(
                         constraints: BoxConstraints(
                           minWidth: 80,
@@ -189,7 +190,7 @@ class _ProfileState extends State<Profile> {
                       Expanded(
                         flex: 6,
                         child: button(
-                          onTap: (){},
+                          onTap: notImplemented, //TODO implement
                           text: 'Clear Data',
                           borderColor: prefs.color_error,
                           textColor: prefs.color_text_header,
@@ -199,7 +200,7 @@ class _ProfileState extends State<Profile> {
                       Expanded(
                         flex: 6,
                         child: button(
-                          onTap: (){},
+                          onTap: notImplemented, //TODO implement
                           text: 'Remove Account',
                           borderColor: prefs.color_error,
                           textColor: prefs.color_text_header,

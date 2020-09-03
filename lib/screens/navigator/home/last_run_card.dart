@@ -23,7 +23,7 @@ class LastRunCard extends StatelessWidget {
 
     return CustomCard(
       userData: userData,
-      onTap: () {},
+      onTap: notImplemented,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,

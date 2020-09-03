@@ -36,7 +36,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: double.infinity,
+              height: box.maxHeight,
               color: prefs.color_background,
               child: Container(
                 padding: EdgeInsets.only(top: divisionHeight),

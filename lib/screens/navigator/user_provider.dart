@@ -23,13 +23,6 @@ class UserProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
 
-    BatteryOptimization.isIgnoringBatteryOptimizations().then((onValue) {
-      if(!onValue) {
-        //TODO: Display a dialog asking for permission.
-        BatteryOptimization.openBatteryOptimizationSettings();
-      }
-    });
-
     return StreamProvider<UserData>.value(
       value: DatabaseService(uid: user.uid).userDocument,
       child: ScreenNavigator(auth: _auth, lightModePrefs: lightModePrefs,)

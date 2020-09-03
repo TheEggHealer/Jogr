@@ -4,6 +4,7 @@ import 'package:jogr/screens/authenticate/authenticate.dart';
 import 'package:jogr/screens/splash/splash.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/models/user.dart';
+import 'package:jogr/utils/models/userdata.dart';
 import 'package:jogr/utils/user_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +59,10 @@ class _WrapperState extends State<Wrapper> {
         return Authenticate(lightMode: (sharedPreferences.getBool('lightMode') ?? true));
       }
       else {
+        if(sharedPreferences != null) {
+          UserData userData = UserData(uid: user.uid);
+          sharedPreferences.setBool('lightMode', userData.lightMode);
+        }
         return MediaQuery.of(context).size.width > 100 ? UserProvider(lightModePrefs: (sharedPreferences.getBool('lightMode') ?? true),) : SplashScreen(lightMode: (sharedPreferences.getBool('lightMode') ?? true),);
       }
     } else {
