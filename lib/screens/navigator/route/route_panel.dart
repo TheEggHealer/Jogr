@@ -3,32 +3,38 @@ import 'package:jogr/screens/navigator/route/route_planner.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/loading.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
 class WideRoutePanel extends StatefulWidget {
   RoutePlannerState planner;
   UserData userData;
 
-  WideRoutePanel(RoutePlannerState planner) {
-    this.planner = planner;
-  }
+  WideRoutePanel(this.planner, this.userData);
 
   @override
-  _WideRoutePanelState createState() => _WideRoutePanelState();
+  _WideRoutePanelState createState() => _WideRoutePanelState(userData);
 }
 
 class _WideRoutePanelState extends State<WideRoutePanel> {
+
+  UserPreferences prefs;
+
+  _WideRoutePanelState(UserData userData) {
+    prefs = UserPreferences(userData.lightMode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 20, left: 20, right: 20),
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
-          color: color_background,
+          color: prefs.color_background,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
           boxShadow: [
             BoxShadow(
               blurRadius: 8.0,
-              color: Colors.black,
+              color: prefs.color_shadow,
             ),
           ]
       ),
@@ -53,43 +59,43 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
               OutlineButton(
                 onPressed: () { showDialog(context: context, builder: widget.planner.helpDialog); },
                 child: Text('HELP'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
               OutlineButton(
                 onPressed: () {
                   setState(() {
                     widget.planner.loading = true;
                   });
-                  widget.planner.generateRoute();
+                  //widget.planner.generateRoute();
                 },
                 child: Text('GENERATE ROUTE'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
               OutlineButton(
                 onPressed: () { widget.planner.clearRoute(); },
                 child: Text('CLEAR'),
-                color: color_error,
-                highlightColor: color_error,
-                highlightedBorderColor: color_error,
-                focusColor: color_error,
-                hoverColor: color_error,
-                textColor: color_text_dark,
-                splashColor: color_error,
-                borderSide: BorderSide(color: color_error),
+                color: color_dark_error,
+                highlightColor: color_dark_error,
+                highlightedBorderColor: color_dark_error,
+                focusColor: color_dark_error,
+                hoverColor: color_dark_error,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_error,
+                borderSide: BorderSide(color: color_dark_error),
               ),
 
             ],
@@ -106,42 +112,42 @@ class _WideRoutePanelState extends State<WideRoutePanel> {
                   setState(() {});
                 },
                 child: Text(widget.planner.map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
               OutlineButton(
                 onPressed: () {
                   showDialog(context: context, builder: widget.planner.loadDialog);
                 },
                 child: Text('LOAD'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
               OutlineButton(
                 onPressed: () {
                   showDialog(context: context, builder: widget.planner.saveDialog);
                 },
                 child: Text('SAVE'),
-                color: color_button_green,
-                highlightColor: color_button_green,
-                highlightedBorderColor: color_button_green,
-                focusColor: color_button_green,
-                hoverColor: color_button_green,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_button_green),
+                color: color_dark_button_green,
+                highlightColor: color_dark_button_green,
+                highlightedBorderColor: color_dark_button_green,
+                focusColor: color_dark_button_green,
+                hoverColor: color_dark_button_green,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_button_green),
               ),
             ],
           ),
@@ -204,7 +210,7 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
       padding: EdgeInsets.only(top: 20, left: 20, right: 20),
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
-          color: color_background,
+          color: color_dark_background,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
           boxShadow: [
             BoxShadow(
@@ -234,31 +240,31 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               OutlineButton(
                 onPressed: () { showDialog(context: context, builder: widget.planner.helpDialog); },
                 child: Text('HELP'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
               OutlineButton(
                 onPressed: () {
                   setState(() {
                     widget.planner.loading = true;
                   });
-                  widget.planner.generateRoute();
+                  //widget.planner.generateRoute();
                 },
                 child: Text('GENERATE ROUTE'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
 
             ],
@@ -270,14 +276,14 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               OutlineButton(
                 onPressed: () { widget.planner.clearRoute(); },
                 child: Text('CLEAR'),
-                color: color_error,
-                highlightColor: color_error,
-                highlightedBorderColor: color_error,
-                focusColor: color_error,
-                hoverColor: color_error,
-                textColor: color_text_dark,
-                splashColor: color_error,
-                borderSide: BorderSide(color: color_error),
+                color: color_dark_error,
+                highlightColor: color_dark_error,
+                highlightedBorderColor: color_dark_error,
+                focusColor: color_dark_error,
+                hoverColor: color_dark_error,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_error,
+                borderSide: BorderSide(color: color_dark_error),
               ),
               OutlineButton(
                 onPressed: () {
@@ -287,14 +293,14 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
                   setState(() {});
                 },
                 child: Text(widget.planner.map.state.showMarkes ? 'HIDE MARKERS' : 'SHOW MARKERS'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
 
             ],
@@ -306,28 +312,28 @@ class _NarrowRoutePanelState extends State<NarrowRoutePanel> {
               OutlineButton(
                 onPressed: () { showDialog(context: context, builder: widget.planner.loadDialog); },
                 child: Text('LOAD'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_text_highlight),
+                color: color_dark_text_highlight,
+                highlightColor: color_dark_text_highlight,
+                highlightedBorderColor: color_dark_text_highlight,
+                focusColor: color_dark_text_highlight,
+                hoverColor: color_dark_text_highlight,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_text_highlight),
               ),
               OutlineButton(
                 onPressed: () {
                   showDialog(context: context, builder: widget.planner.saveDialog);
                 },
                 child: Text('SAVE'),
-                color: color_button_green,
-                highlightColor: color_button_green,
-                highlightedBorderColor: color_button_green,
-                focusColor: color_button_green,
-                hoverColor: color_button_green,
-                textColor: color_text_dark,
-                splashColor: color_text_highlight,
-                borderSide: BorderSide(color: color_button_green),
+                color: color_dark_button_green,
+                highlightColor: color_dark_button_green,
+                highlightedBorderColor: color_dark_button_green,
+                focusColor: color_dark_button_green,
+                hoverColor: color_dark_button_green,
+                textColor: color_dark_text_dark,
+                splashColor: color_dark_text_highlight,
+                borderSide: BorderSide(color: color_dark_button_green),
               ),
             ],
           ),

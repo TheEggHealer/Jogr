@@ -39,7 +39,7 @@ class _SetupState extends State<Setup> {
     DatabaseService db = DatabaseService(uid: user.uid);
 
     return Scaffold(
-        backgroundColor: color_background,
+        backgroundColor: color_dark_background,
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -79,12 +79,12 @@ class _SetupState extends State<Setup> {
                                   name = val;
                                 });
                               },
-                              cursorColor: color_text_highlight,
+                              cursorColor: color_dark_text_highlight,
                               decoration: InputDecoration(
                                 filled: false,
-                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                                border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                                border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                               ),
                               style: textStyleDarkLight,
                             ),
@@ -107,13 +107,13 @@ class _SetupState extends State<Setup> {
                                     date = selectedDate.toString().split(' ')[0];
                                   },
                                   child: Text('CHANGE'),
-                                  color: color_text_highlight,
-                                  splashColor: color_text_highlight,
-                                  highlightColor: color_text_highlight,
-                                  focusColor: color_text_highlight,
-                                  textColor: color_text_dark,
-                                  borderSide: BorderSide(color: color_text_highlight),
-                                  highlightedBorderColor: color_text_highlight,
+                                  color: color_dark_text_highlight,
+                                  splashColor: color_dark_text_highlight,
+                                  highlightColor: color_dark_text_highlight,
+                                  focusColor: color_dark_text_highlight,
+                                  textColor: color_dark_text_dark,
+                                  borderSide: BorderSide(color: color_dark_text_highlight),
+                                  highlightedBorderColor: color_dark_text_highlight,
                                 ),
                                 SizedBox(width: 30),
                                 Text(
@@ -145,9 +145,9 @@ class _SetupState extends State<Setup> {
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       filled: false,
-                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                                      border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
+                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
+                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_highlight)),
+                                      border: OutlineInputBorder(borderSide: BorderSide(color: color_dark_text_dark)),
                                     ),
                                     style: textStyleDarkLight
                                   ),
@@ -156,11 +156,11 @@ class _SetupState extends State<Setup> {
                                 ToggleButtons(
                                   isSelected: isSelected,
                                   borderRadius: BorderRadius.circular(5),
-                                  selectedColor: color_text_highlight,
-                                  disabledColor: color_text_dark,
-                                  highlightColor: color_text_dark,
-                                  borderColor: color_text_dark,
-                                  color: color_text_dark,
+                                  selectedColor: color_dark_text_highlight,
+                                  disabledColor: color_dark_text_dark,
+                                  highlightColor: color_dark_text_dark,
+                                  borderColor: color_dark_text_dark,
+                                  color: color_dark_text_dark,
                                   fillColor: Colors.transparent,
                                   onPressed: (selected) {
                                     setState(() {
@@ -169,7 +169,7 @@ class _SetupState extends State<Setup> {
                                       }
                                     });
                                   },
-                                  selectedBorderColor: color_text_highlight,
+                                  selectedBorderColor: color_dark_text_highlight,
                                   borderWidth: 1,
                                   children: [
                                     Text('KG'),
@@ -210,17 +210,17 @@ class _SetupState extends State<Setup> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Roboto',
-                                  color: color_text_dark
+                                  color: color_dark_text_dark
                               )
                           ),
-                          disabledBorderColor: color_text_dark,
-                          color: color_text_highlight,
-                          splashColor: color_text_highlight,
-                          highlightColor: color_text_highlight,
-                          focusColor: color_text_highlight,
-                          textColor: color_text_dark,
-                          borderSide: BorderSide(color: color_text_highlight),
-                          highlightedBorderColor: color_text_highlight,
+                          disabledBorderColor: color_dark_text_dark,
+                          color: color_dark_text_highlight,
+                          splashColor: color_dark_text_highlight,
+                          highlightColor: color_dark_text_highlight,
+                          focusColor: color_dark_text_highlight,
+                          textColor: color_dark_text_dark,
+                          borderSide: BorderSide(color: color_dark_text_highlight),
+                          highlightedBorderColor: color_dark_text_highlight,
                         ),
                       ),
                     ],

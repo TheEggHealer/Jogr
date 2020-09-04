@@ -2,17 +2,23 @@ import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/screens/navigator/route/map.dart';
 import 'package:jogr/screens/navigator/route/route_panel.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/custom_card.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
+import 'package:jogr/utils/loading.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/user.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../run/map_widget.dart';
 
@@ -26,9 +32,9 @@ class RoutePlanner extends StatefulWidget {
   RoutePlannerState createState() => RoutePlannerState();
 }
 
-class RoutePlannerState extends State<RoutePlanner> {
+class RoutePlannerState extends State<RoutePlanner> with SingleTickerProviderStateMixin {
 
-  Map map = Map();
+  Map map;
   double dist = 0;
   Set<Polyline> _polylines = {};
 
@@ -37,9 +43,32 @@ class RoutePlannerState extends State<RoutePlanner> {
   int totalDistance = 0;
   bool loading = false;
 
+  bool setting_connectEnds = true;
+  bool setting_forceToRoad = true;
+
+  AnimationController controller;
+  PageController pageController = PageController(initialPage: 0);
+
   static final _formKey = GlobalKey<FormState>();
 
-  void generateRoute() async {
+  @override
+  void initState() {
+    super.initState();
+    map = Map(this);
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  void generateRoute(UserPreferences prefs) async {
     _polylines.clear();
     List<LatLng> routeCoordinates = [];
     List<LatLng> waypoints = map.waypoints;
@@ -94,7 +123,7 @@ class RoutePlannerState extends State<RoutePlanner> {
     setState(() {
       Polyline polyline = Polyline(
           polylineId: PolylineId('Route'),
-          color: color_text_highlight,
+          color: prefs.color_error,
           width: 4,
           points: routeCoordinates
       );
@@ -113,6 +142,7 @@ class RoutePlannerState extends State<RoutePlanner> {
 
   void clearRoute() {
     setState(() {
+      if(controller.status == AnimationStatus.completed) controller.reverse();
       this.totalDistance = 0;
       map.state.setState(() {
         map.polylines = {};
@@ -150,61 +180,65 @@ class RoutePlannerState extends State<RoutePlanner> {
     });
   }
 
-  Widget routeWidget(BuildContext context, Route route) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Card(
-        color: color_card,
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+  Widget routeWidget(BuildContext context, Route route, UserPreferences prefs) {
+    return CustomCard(
+      userData: userData,
+      onTap: null,
+      paddingFactor: 4,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 8,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    route.name,
-                    style: textStyleDarkLightLarge,
+                  RichText(
+                    text: TextSpan(
+                      text: route.name,
+                      style: prefs.text_background,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.ideographic,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
                       Text(
-                        '${route.distance}',
-                        style: textStyleHeaderSmall,
+                        route.distance.toString(),
+                        style: prefs.text_goal,
                       ),
-                      SizedBox(width: 5,),
                       Text(
                         'm',
-                        style: textStyleDark,
+                        style: prefs.text_label,
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
-              OutlineButton(
-                onPressed: () { load(route); Navigator.of(context).pop(); },
-                child: Text('LOAD'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                borderSide: BorderSide(color: color_text_highlight),
+            ),
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 4,
+              child: button(
+                text: 'Load',
+                  textColor: prefs.color_text_background,
+                  splashColor: prefs.color_splash,
+                  borderColor: prefs.color_highlight,
+                onTap: () { load(route); Navigator.of(context).pop(); }
               ),
-            ],
-          ),
+            )
+
+          ],
         ),
       ),
     );
   }
 
   Widget loadDialog(BuildContext context) {
-    print(this.userData);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
     List<Widget> items = [
       SizedBox(height: 20),
       Stack(
@@ -213,13 +247,13 @@ class RoutePlannerState extends State<RoutePlanner> {
           Center(
             child: Text(
               'Select route',
-              style: textStyleHeader,
+              style: prefs.text_header,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: IconButton(
-              icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+              icon: Icon(CustomIcons.back, size: 30, color: prefs.color_main),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -228,13 +262,13 @@ class RoutePlannerState extends State<RoutePlanner> {
         ],
       ),
       SizedBox(height: 20),
-    ]..addAll(this.userData.routes.map((e) => routeWidget(context, e)).toList());
+    ]..addAll(this.userData.routes.map((e) => routeWidget(context, e, prefs)).toList());
 
     return Dialog(
-      backgroundColor: color_background,
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+      backgroundColor: prefs.color_background,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
           child: ScrollConfiguration(
             behavior: NoScrollGlow(),
             child: CustomScrollView(
@@ -260,11 +294,11 @@ class RoutePlannerState extends State<RoutePlanner> {
 
     TextStyle highlight = TextStyle(
       fontFamily: 'RobotoLight',
-      color: color_text_highlight,
+      color: color_dark_text_highlight,
     );
 
     return Dialog (
-      backgroundColor: color_background,
+      backgroundColor: color_dark_background,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -282,7 +316,7 @@ class RoutePlannerState extends State<RoutePlanner> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: IconButton(
-                    icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                    icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -323,11 +357,12 @@ class RoutePlannerState extends State<RoutePlanner> {
 
   Widget saveDialog(BuildContext context) {
     String routeName = '';
-    print('Before: $userData');
+    UserPreferences prefs = UserPreferences(userData.lightMode);
+
     return Dialog(
-      backgroundColor: color_background,
+      backgroundColor: prefs.color_background,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.all(10),
         child: Form(
           key: _formKey,
           child: Column(
@@ -339,13 +374,13 @@ class RoutePlannerState extends State<RoutePlanner> {
                   Center(
                     child: Text(
                       'Save',
-                      style: textStyleHeader,
+                      style: prefs.text_header,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: IconButton(
-                      icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                      icon: Icon(CustomIcons.back, size: 30, color: prefs.color_main),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -354,72 +389,66 @@ class RoutePlannerState extends State<RoutePlanner> {
                 ],
               ),
               SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.ideographic,
 
-                children: [
-                  Text(
-                    'Distance:',
-                    style: textStyleDarkLightLarge,
-                  ),
-                  SizedBox(width: 15,),
-                  Text(
-                    '$totalDistance',
-                    style: textStyleHeader,
-                  ),
-                  SizedBox(width: 5,),
-                  Text(
-                    'm',
-                    style: textStyleDark,
-                  )
-                ],
+              textField(
+                validator: checkName,
+                onChanged: (val) {
+                  setState(() {
+                    routeName = val;
+                  });
+                },
+                textColor: prefs.color_text_header,
+                activeColor: prefs.color_main,
+                borderColor: prefs.color_shadow,
+                errorColor: prefs.color_error,
+                helperText: 'Name your route',
+                icon: Icon(CustomIcons.save, color: prefs.color_shadow),
+                textStyle: prefs.text_header_2,
+                borderRadius: 30
               ),
-              SizedBox(height:10),
-
+              /**
               TextFormField(
                 validator: checkName,
-                cursorColor: color_text_highlight,
+                cursorColor: prefs.color_text_header,
                 onChanged: (val) {
                   setState(() {
                     routeName = val;
                   });
                 },
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: color_text_highlight)),
-                    border: OutlineInputBorder(borderSide: BorderSide(color: color_text_dark)),
-                    hintText: 'Name your route',
-                    hintStyle: TextStyle(
-                        fontFamily: 'RobotoLight',
-                        color: Color(0x1fffffff)
-                    )
-                ),
-                style: textStyleDarkLight,
-              ),
-
-              SizedBox(height:10),
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: OutlineButton(
-                  onPressed: () {
-                    if(_formKey.currentState.validate()) {
-                      save(routeName);
-                    }
-                  },
-                  child: Container(
-                    child: Text('SAVE')
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30)),borderSide: BorderSide(color: prefs.color_shadow)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30)),borderSide: BorderSide(color: prefs.color_main)),
+                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30)),borderSide: BorderSide(color: prefs.color_error)),
+                  focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30)),borderSide: BorderSide(color: prefs.color_error)),
+                  errorStyle: TextStyle(
+                      fontFamily: 'RobotoLight',
+                      color: prefs.color_error
                   ),
-                  color: color_button_green,
-                  highlightColor: color_button_green,
-                  highlightedBorderColor: color_button_green,
-                  focusColor: color_button_green,
-                  hoverColor: color_button_green,
-                  textColor: color_text_dark,
-                  splashColor: color_button_green,
-                  borderSide: BorderSide(color: color_button_green),
+                  border: OutlineInputBorder(borderSide: BorderSide(color: prefs.color_shadow)),
+                  hintText: 'Name your route',
+                  hintStyle: TextStyle(
+                      fontFamily: 'RobotoLight',
+                      color: prefs.color_shadow
+                  ),
+                  prefixIcon: Icon(CustomIcons.save, color: prefs.color_shadow),
+                  focusColor: prefs.color_main,
+                  hoverColor: prefs.color_main,
                 ),
+                style: prefs.text_header_2,
+              ),
+              */
+              SizedBox(height:10),
+              button(
+                onTap: () {
+                  if(_formKey.currentState.validate()) {
+                    save(routeName);
+                    Navigator.pop(context);
+                  }
+                },
+                text: 'Save',
+                textColor: prefs.color_text_header,
+                borderColor: prefs.color_main,
+                borderRadius: 30
               ),
             ],
           ),
@@ -439,9 +468,10 @@ class RoutePlannerState extends State<RoutePlanner> {
 
     setState(() {
       loading = true;
+      controller.forward();
     });
 
-    generateRoute();
+    generateRoute(UserPreferences(userData.lightMode));
   }
 
   String checkName(String name) {
@@ -452,40 +482,307 @@ class RoutePlannerState extends State<RoutePlanner> {
   Widget build(BuildContext context) {
 
     this.userData = Provider.of<UserData>(context);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
     return LayoutBuilder(
-      builder: (context, constraints) {
-        print(constraints);
-        return SlidingUpPanel(
-          parallaxEnabled: true,
-          parallaxOffset: 0.4,
-          renderPanelSheet: false,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
-          maxHeight: constraints.maxWidth > 400 ? MediaQuery.of(context).size.height/2.7 : MediaQuery.of(context).size.height/1.7,
-          minHeight: 70,
+      builder: (context, box) {
+        print('Panel: $box');
 
-          collapsed: Container(
-              margin: EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                color: color_background,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+        double cardHeight = box.maxHeight / 3.2;
+        double minHeight = 70;
+
+        return Stack(
+          children: [
+            SlidingUpPanel(
+              parallaxEnabled: true,
+              parallaxOffset: 0.4,
+              renderPanelSheet: false,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+              maxHeight: cardHeight + minHeight + 30,
+              minHeight: minHeight,
+
+              collapsed: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  decoration: BoxDecoration(
+                    color: prefs.color_background,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                          Icons.remove,
+                          size: 30,
+                          color: prefs.color_shadow
+                      ),
+                      Text(
+                        'Route Planner',
+                        style: prefs.text_header,
+                      ),
+                    ],
+                  )
               ),
-              child: Column(
-                children: [
-                  Icon(
-                      Icons.drag_handle,
-                      size: 30,
-                      color: color_text_dark
-                  ),
-                  Text(
-                    'Route planner',
-                    style: textStyleHeaderSmall,
-                  ),
-                ],
-              )
-          ),
-          panel: constraints.maxWidth > 400 ? WideRoutePanel(this) : NarrowRoutePanel(this),
-          body: map,
+              panel: Container(
+                margin: EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                    color: prefs.color_background,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 8.0,
+                        color: prefs.color_shadow,
+                      ),
+                    ]
+                ),
+                child: Column(
+                  //mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(
+                        Icons.remove,
+                        size: 30,
+                        color: prefs.color_shadow
+                    ),
+                    Text(
+                      'Route Planner',
+                      style: prefs.text_header,
+                    ),
+                    Divider(
+                      color: prefs.color_shadow,
+                    ),
+                    Container(
+                      height: cardHeight,
+                      child: PageView(
+                        controller: pageController,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 14, left: 5, right: 5),
+                            child: Center(
+                              child: CustomCard(
+                                userData: userData,
+                                paddingFactor: 1,
+                                child: Container(
+                                  width: box.maxWidth * 0.7,
+                                  height: cardHeight,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: double.infinity,
+                                          child: button(
+                                              text: 'Done',
+                                              textColor: prefs.color_text_background,
+                                              splashColor: prefs.color_splash,
+                                              borderColor: prefs.color_highlight,
+                                              onTap: () {
+                                                setState(() {
+                                                  controller.forward();
+                                                  loading = true;
+                                                });
+                                                generateRoute(prefs);
+                                              }
+                                          )
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 10,
+                                              child: button(
+                                                  text: 'Help',
+                                                  textColor: prefs.color_text_background,
+                                                  splashColor: prefs.color_splash,
+                                                  borderColor: prefs.color_highlight,
+                                                  onTap: () => showDialog(context: context, builder: helpDialog)
+                                              )
+                                          ),
+                                          Spacer(flex: 1),
+                                          Expanded(
+                                              flex: 10,
+                                              child: button(
+                                                  text: 'Clear',
+                                                  textColor: prefs.color_text_background,
+                                                  splashColor: prefs.color_splash,
+                                                  borderColor: prefs.color_highlight,
+                                                  onTap: () => clearRoute()
+                                              )
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 10,
+                                              child: button(
+                                                  text: 'Load',
+                                                  textColor: prefs.color_text_background,
+                                                  splashColor: prefs.color_splash,
+                                                  borderColor: prefs.color_highlight,
+                                                  onTap: () => showDialog(context: context, builder: loadDialog)
+                                              )
+                                          ),
+                                          Spacer(flex: 1),
+                                          Expanded(
+                                              flex: 10,
+                                              child: button(
+                                                  text: 'Save',
+                                                  textColor: prefs.color_text_background,
+                                                  splashColor: prefs.color_splash,
+                                                  borderColor: prefs.color_highlight,
+                                                  onTap: () => showDialog(context: context, builder: saveDialog)
+                                              )
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 14, left: 5, right: 5),
+                            child: Center(
+                              child: CustomCard(
+                                userData: userData,
+                                paddingFactor: 1,
+                                child: Container(
+                                  width: box.maxWidth * 0.7,
+                                  height: cardHeight,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Connect ends',
+                                            style: prefs.text_background,
+                                          ),
+                                          Switch(
+                                            value: setting_connectEnds,
+                                            activeColor: prefs.color_highlight,
+                                            inactiveThumbColor: prefs.color_text_header,
+                                            inactiveTrackColor: prefs.color_shadow,
+                                            onChanged: (val) {
+                                              notImplemented();
+                                              setState(() {
+                                                setting_connectEnds = !setting_connectEnds;
+                                              });
+                                            },
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Follow roads',
+                                            style: prefs.text_background,
+                                          ),
+                                          Switch(
+                                            value: setting_forceToRoad,
+                                            activeColor: prefs.color_highlight,
+                                            inactiveThumbColor: prefs.color_text_header,
+                                            inactiveTrackColor: prefs.color_shadow,
+                                            onChanged: (val) {
+                                              notImplemented();
+                                              setState(() {
+                                                setting_forceToRoad = !setting_forceToRoad;
+                                              });
+                                            },
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Show markers',
+                                            style: prefs.text_background,
+                                          ),
+                                          Switch(
+                                            value: map.state.showMarkes,
+                                            activeColor: prefs.color_highlight,
+                                            inactiveThumbColor: prefs.color_text_header,
+                                            inactiveTrackColor: prefs.color_shadow,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                map.state.setState(() {
+                                                  map.state.showMarkes = val;
+                                                });
+                                              });
+                                            },
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SmoothPageIndicator(
+                      controller: pageController,
+                      effect: WormEffect(
+                        radius: 4,
+                        spacing: 4,
+                        strokeWidth: 1,
+                        dotHeight: 8,
+                        dotWidth: 8,
+                        activeDotColor: prefs.color_main,
+                        dotColor: prefs.color_text_header,
+                      ),
+                      count: 2,
+                    )
+                  ],
+                ),
+              ),
+              //panel: constraints.maxWidth > 400 ? WideRoutePanel(this, userData) : NarrowRoutePanel(this),
+              body: map,
+            ),
+            Center(
+              heightFactor: 0,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: Offset(0, -1),
+                  end: Offset(0, 1),
+                ).animate(CurvedAnimation(
+                  parent: controller,
+                  curve: Curves.ease,
+                )),
+                child: CustomCard(
+                  userData: userData,
+                  child: Container(
+                    width: box.maxWidth / 3,
+                    height: 40,
+                    child: AnimatedCrossFade(
+                      duration: Duration(milliseconds: 300),
+                      reverseDuration: Duration(milliseconds: 300),
+                      firstChild: Center(
+                        child: SpinKitChasingDots(
+                          color: prefs.color_shadow,
+                          size: 20,
+                        ),
+                      ),
+                      secondChild: Center(
+                        child: DataDisplay(
+                          prefs: prefs,
+                          data: totalDistance.toString(),
+                          label: 'm',
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                    )
+                  )
+                ),
+              ),
+            ),
+          ]
         );
       },
     );

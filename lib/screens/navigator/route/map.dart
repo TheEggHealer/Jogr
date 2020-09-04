@@ -8,10 +8,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jogr/screens/navigator/route/route_planner.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:provider/provider.dart';
 
 class Map extends StatefulWidget {
   Set<Marker> markers = {};
@@ -20,13 +24,17 @@ class Map extends StatefulWidget {
   String _mapTheme = "";
 
   _MapState state = _MapState();
+  RoutePlannerState parent;
 
+  Map(this.parent);
 
   @override
   _MapState createState() => state;
 }
 
 class _MapState extends State<Map> {
+
+  GoogleMapController controller;
 
   LatLng position = LatLng(0, 0);
   bool showMarkes = true;
@@ -55,14 +63,6 @@ class _MapState extends State<Map> {
     return LatLng(_locationData.latitude, _locationData.longitude);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    rootBundle.loadString('assets/map_theme.json').then((string) {
-      widget._mapTheme = string;
-    });
-  }
-
   void swapMarkers(int a, int b) async {
     Marker last = widget.markers.firstWhere((m) => m.markerId.value == 'point$b');
     Marker selected = widget.markers.firstWhere((m) => m.markerId.value == 'point$a');
@@ -81,6 +81,7 @@ class _MapState extends State<Map> {
   void removeMarker(int id) async {
     widget.markers.clear();
     widget.waypoints.removeAt(id-1);
+    widget.parent.controller.reverse();
 
     for(int i = 0; i < widget.waypoints.length; i++) {
       widget.markers.add(await createMarker(widget.waypoints[i], i+1));
@@ -91,11 +92,12 @@ class _MapState extends State<Map> {
 
   Future<Marker> createMarker(LatLng loc, int num) async {
     widget.polylines = {};
+    widget.parent.controller.reverse();
 
     BitmapDescriptor icon = await getMarkerIcon(
         num,
-        color_button_green,
-        color_background,
+        color_light_secondary_highlight,
+        color_dark_background,
         70
     );
 
@@ -107,6 +109,7 @@ class _MapState extends State<Map> {
         widget.waypoints[num-1] = pos;
         print(widget.waypoints.length);
         widget.polylines.clear();
+        widget.parent.controller.reverse();
         setState(() {});
       },
       onTap: () {
@@ -127,7 +130,7 @@ class _MapState extends State<Map> {
     return StatefulBuilder(
       builder: (context, setState) {
         return Dialog(
-          backgroundColor: color_background,
+          backgroundColor: color_dark_background,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
@@ -145,7 +148,7 @@ class _MapState extends State<Map> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: IconButton(
-                        icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                        icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -164,7 +167,7 @@ class _MapState extends State<Map> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(CustomIcons.down, color: num == 1 ? color_text_dark : color_text_highlight),
+                          icon: Icon(CustomIcons.down, color: num == 1 ? color_dark_text_dark : color_dark_text_highlight),
                           onPressed: num == 1 ? null : () {
                             setState(() {
                               num--;
@@ -176,7 +179,7 @@ class _MapState extends State<Map> {
                           style: textStyleHeader,
                         ),
                         IconButton(
-                          icon: Icon(CustomIcons.up, color: num == widget.waypoints.length ? color_text_dark : color_text_highlight),
+                          icon: Icon(CustomIcons.up, color: num == widget.waypoints.length ? color_dark_text_dark : color_dark_text_highlight),
                           onPressed: num == widget.waypoints.length ? null : () {
                             setState(() {
                               num++;
@@ -201,14 +204,14 @@ class _MapState extends State<Map> {
                         child: Container(
                           child: Text('REMOVE')
                         ),
-                        color: color_error,
-                        highlightColor: color_error,
-                        highlightedBorderColor: color_error,
-                        focusColor: color_error,
-                        hoverColor: color_error,
-                        textColor: color_text_dark,
-                        splashColor: color_error,
-                        borderSide: BorderSide(color: color_error),
+                        color: color_dark_error,
+                        highlightColor: color_dark_error,
+                        highlightedBorderColor: color_dark_error,
+                        focusColor: color_dark_error,
+                        hoverColor: color_dark_error,
+                        textColor: color_dark_text_dark,
+                        splashColor: color_dark_error,
+                        borderSide: BorderSide(color: color_dark_error),
                       ),
                       OutlineButton(
                         onPressed: () {
@@ -218,14 +221,14 @@ class _MapState extends State<Map> {
                         child: Container(
                             child: Text('CONFIRM'),
                         ),
-                        color: color_text_highlight,
-                        highlightColor: color_text_highlight,
-                        highlightedBorderColor: color_text_highlight,
-                        focusColor: color_text_highlight,
-                        hoverColor: color_text_highlight,
-                        textColor: color_text_dark,
-                        splashColor: color_text_highlight,
-                        borderSide: BorderSide(color: color_text_highlight),
+                        color: color_dark_text_highlight,
+                        highlightColor: color_dark_text_highlight,
+                        highlightedBorderColor: color_dark_text_highlight,
+                        focusColor: color_dark_text_highlight,
+                        hoverColor: color_dark_text_highlight,
+                        textColor: color_dark_text_dark,
+                        splashColor: color_dark_text_highlight,
+                        borderSide: BorderSide(color: color_dark_text_highlight),
                       ),
                     ],
                   ),
@@ -241,11 +244,19 @@ class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
 
+    UserData userData = Provider.of<UserData>(context);
+    UserPreferences prefs = UserPreferences(userData.lightMode);
+
+    if(controller != null) {
+      print('setting theme');
+      controller.setMapStyle(prefs.map_theme);
+    }
+
     void onCreate(GoogleMapController controller) async {
-      controller.setMapStyle(widget._mapTheme);
       position = await setupLocation();
       controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: position, zoom: 18)));
-
+      controller.setMapStyle(prefs.map_theme);
+      this.controller = controller;
     }
 
     void addWaypoint(LatLng loc) async {
@@ -267,6 +278,7 @@ class _MapState extends State<Map> {
       polylines: widget.polylines,
       markers: showMarkes ? widget.markers : {},
       padding: EdgeInsets.only(top: 20, bottom: 120),
+
     );
   }
 

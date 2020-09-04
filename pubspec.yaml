@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1-beta.200729+2
+version: 1.1.0-beta.200828+3
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -32,7 +32,7 @@ dependencies:
   fl_chart: ^0.10.1 # Graphs and Charts
   month_picker_dialog: ^0.3.2
   google_maps_flutter: ^0.5.28+1
-  flutter_background_location: ^0.0.4 # Not needed
+  flutter_background_location: ^0.0.4 # Not used
   background_locator: ^1.1.11+1
   latlong: ^0.6.1
   location: ^3.0.0
@@ -43,10 +43,18 @@ dependencies:
   smooth_page_indicator: ^0.1.5
   bottom_navy_bar: ^5.4.0 # Not used
   bubbled_navigation_bar: ^0.0.3 # Not used
-  ff_navigation_bar: ^0.1.4
+  ff_navigation_bar: ^0.1.4 # Not used
   intl: ^0.16.1 # Date formatting
   path_provider: ^1.6.11
   package_info: ^0.4.1 # For reading the YAML file (getting the version)
+  outline_gradient_button: ^1.0.0+2 #Gradient buttons
+  percent_indicator: ^2.1.5 #Percent indicators for Goal widgets.
+  battery_optimization: ^0.1.0 #Ask the user to turn off battery optimization.
+  persistent_bottom_nav_bar: ^2.0.5 #Bottom Navigation bar.
+  lite_rolling_switch: ^0.1.1
+  gradient_text: ^1.0.2 #Gradient text
+  shared_preferences: ^0.5.10 #Shared Preferences
+  fluttertoast: ^7.0.2 #Toast
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -68,6 +76,7 @@ flutter:
   assets:
     - assets/google_logo.png
     - assets/map_theme.json
+    - assets/map_theme_light.json
     - assets/launcher/app_icon.png
 
   uses-material-design: true
@@ -75,7 +84,10 @@ flutter:
   fonts:
     - family: Quicksand
       fonts:
-        - asset: fonts/Quicksand-VariableFont_wght.ttf
+        - asset: fonts/Quicksand_medium.ttf
+          weight: 300
+        - asset: fonts/Quicksand_medium.ttf
+          weight: 500
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Black.ttf

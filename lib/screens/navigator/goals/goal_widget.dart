@@ -1,60 +1,73 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jogr/screens/navigator/home/home_component.dart';
 import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/custom_widgets/custom_card.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
+import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Goal extends StatelessWidget {
 
+  UserData userData;
+  UserPreferences prefs;
   String header;
-  String pre, post;
-  HomeComponent a, b;
-  bool fraction;
-  Widget content;
-  bool completed;
+  double a, b;
+  String aString, bString;
+  String label;
+  double percent;
 
-  Goal({ this.header = 'THIS WEEK', this.pre = '', this.post = '', this.a, this.b, this.fraction = false, this.content, this.completed = false });
+
+  Goal({ @required this.userData, this.header = 'WEEKLY', this.a, this.b, this.label }) {
+    percent = (a / b).clamp(0.0, 1.0);
+    aString = a % 1 == 0 ? a.toInt().toString() : a.toString();
+    bString = b % 1 == 0 ? b.toInt().toString() : b.toString();
+
+    prefs = UserPreferences(userData.lightMode);
+  }
+
+  Widget get center {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(aString, style: prefs.text_goal,),
+        Divider(
+          height: 0,
+          thickness: 0.5,
+          color: prefs.color_highlight,
+          indent: 25,
+          endIndent: 25,
+        ),
+        Text(bString, style: prefs.text_goal,),
+        Text(label, style: prefs.text_label,),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              header,
-              style: textStyleDark,
-            ),
-            Icon(
-              Icons.check,
-              size: 15,
-              color: completed ? color_button_green : color_background
-            )
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.ideographic,
-          children: [
-            pre.isNotEmpty ? Text(pre, style: textStyleHeader,) : SizedBox(width: 0,),
-            SizedBox(width: pre.isNotEmpty ? 10 : 0,),
-            (fraction && a != null && b != null) ? Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.ideographic,
-              children: [
-                a,
-                SizedBox(width: 10,),
-                Text('/', style: textStyleHeader,),
-                SizedBox(width: 10,),
-                b
-              ],
-            ) : content,
-            SizedBox(width: post.isNotEmpty ? 10 : 0,),
-            post.isNotEmpty ? Text(post, style: textStyleHeader,) : SizedBox(width: 0,),
-          ],
-        )
-      ],
+    return CustomCard(
+      userData: userData,
+      onTap: notImplemented,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            header,
+            style: prefs.text_label
+          ),
+          CircularPercentIndicator(
+            radius: 90,
+            lineWidth: 4,
+            percent: percent,
+            center: center,
+            progressColor: prefs.color_secondary_highlight,
+            backgroundColor: prefs.color_shadow,
+          ),
+        ],
+      ),
     );
   }
 }

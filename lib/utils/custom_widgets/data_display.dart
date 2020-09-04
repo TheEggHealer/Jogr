@@ -1,59 +1,57 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../utils/constants.dart';
+import 'package:jogr/utils/constants.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
-class HomeComponent extends StatefulWidget {
+class DataDisplay extends StatefulWidget {
 
   final IconData icon;
   final String data;
   final String label;
+  final UserPreferences prefs;
 
-  const HomeComponent({Key key, this.icon, this.data, this.label}) : super(key: key);
+  const DataDisplay({Key key, this.icon, this.data, this.label, this.prefs}) : super(key: key);
 
   @override
-  _HomeComponentState createState() => _HomeComponentState();
+  _DataDisplayState createState() => _DataDisplayState();
 }
 
-class _HomeComponentState extends State<HomeComponent> {
+class _DataDisplayState extends State<DataDisplay> {
 
   static const double _baselineHeight = 4.0;
 
   @override
   Widget build(BuildContext context) {
+
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
         Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              widget.icon,
-              color: color_text_highlight,
-              size: 20,
+            Visibility(
+              visible: widget.icon != null,
+              child: Icon(
+                widget.icon,
+                color: widget.prefs.color_highlight,
+                size: 15,
+              ),
             ),
             Text(
               widget.data,
-              style: TextStyle(
-                fontSize: 28,
-                fontFamily: 'Quicksand',
-                color: color_text_highlight,
-              ),
+              style: widget.prefs.text_highlight,
             ),
           ],
         ),
-
-        SizedBox(width: 5),
 
         Padding(
           padding: const EdgeInsets.only(bottom: _baselineHeight),
           child: Text(
               widget.label,
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: 'Roboto',
-                color: color_text_dark,
-              )
+              style: widget.prefs.text_label,
           ),
         ),
       ],

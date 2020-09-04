@@ -25,7 +25,6 @@ class RunLog {
       int index = 0;
       int size = 0;
       while(index++ < data.length - 1) {
-        print('Added position ${index}');
         if(data[index] == '*') {
           part++;
           locations.add([]);

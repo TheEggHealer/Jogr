@@ -16,6 +16,7 @@ class DatabaseService {
   }
 
   Future mergeUserDataFields(Map<String, dynamic> fields) async {
+    print('======== Uploading data to firebase: $fields ========');
     return await userData.document(uid).setData(fields, merge: true);
   }
 
@@ -35,7 +36,8 @@ class DatabaseService {
   UserData _userDataFromDocument(DocumentSnapshot snapshot) {
     Map<String, dynamic> raw = snapshot.data;
     UserData data = UserData(
-        raw: raw,
+      raw: raw,
+      uid: uid,
     );
 
     data.setupExisting();

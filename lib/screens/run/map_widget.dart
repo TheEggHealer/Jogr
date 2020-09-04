@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/models/route.dart';
+import 'package:jogr/utils/models/userdata.dart';
 import 'package:latlong/latlong.dart' as ll;
 import 'package:location/location.dart';
 
@@ -17,10 +18,19 @@ class MapWidget extends StatefulWidget {
   Set<Polyline> _polylines = {};
   List<LatLng> waypoints = [];
   List<List<ll.LatLng>> positions = [];
+  String _mapTheme = '';
 
   bool staticMap = true;
   bool showMarkers = true;
   bool showRoute = true;
+
+  void setTheme(UserData userData) {
+    String file = userData.lightMode ? 'assets/map_theme_light.json' : 'assets/map_theme.json';
+
+    rootBundle.loadString(file).then((string) {
+      _mapTheme = string;
+    });
+  }
 
   void setupRoute(Route route) async {
     waypoints.clear();
@@ -38,7 +48,7 @@ class MapWidget extends StatefulWidget {
 
       return Polyline(
         polylineId: PolylineId(id),
-        color: color_button_green,
+        color: color_dark_button_green,
         zIndex: 1,
         width: 4,
         points: path.coordinates.map((e) => LatLng(e.latitude, e.longitude)).toList(),
@@ -51,8 +61,8 @@ class MapWidget extends StatefulWidget {
   Future<Marker> createMarker(LatLng loc, int num) async {
     BitmapDescriptor icon = await getMarkerIcon(
         num,
-        color_button_green,
-        color_background,
+        color_dark_button_green,
+        color_dark_background,
         70
     );
 
@@ -74,7 +84,6 @@ class _MapWidgetState extends State<MapWidget> {
 
   LatLng position = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
-  String _mapTheme = '';
   int selectedMarked = -1;
 
   Future<LatLng> setupLocation() async {
@@ -148,7 +157,7 @@ class _MapWidgetState extends State<MapWidget> {
     setState(() {
       Polyline polyline = Polyline(
           polylineId: PolylineId('Route'),
-          color: color_text_highlight,
+          color: color_dark_text_highlight,
           width: 4,
           points: routeCoordinates
       );
@@ -164,8 +173,8 @@ class _MapWidgetState extends State<MapWidget> {
 
     BitmapDescriptor icon = await getMarkerIcon(
         num,
-        color_button_green,
-        color_background,
+        color_dark_button_green,
+        color_dark_background,
         70
     );
 
@@ -223,7 +232,7 @@ class _MapWidgetState extends State<MapWidget> {
     return StatefulBuilder(
         builder: (context, setState) {
           return Dialog(
-            backgroundColor: color_background,
+            backgroundColor: color_dark_background,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
@@ -241,7 +250,7 @@ class _MapWidgetState extends State<MapWidget> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: IconButton(
-                          icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                          icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -260,7 +269,7 @@ class _MapWidgetState extends State<MapWidget> {
                       Row(
                         children: [
                           IconButton(
-                            icon: Icon(CustomIcons.down, color: num == 1 ? color_text_dark : color_text_highlight),
+                            icon: Icon(CustomIcons.down, color: num == 1 ? color_dark_text_dark : color_dark_text_highlight),
                             onPressed: num == 1 ? null : () {
                               setState(() {
                                 num--;
@@ -272,7 +281,7 @@ class _MapWidgetState extends State<MapWidget> {
                             style: textStyleHeader,
                           ),
                           IconButton(
-                            icon: Icon(CustomIcons.up, color: num == widget.waypoints.length ? color_text_dark : color_text_highlight),
+                            icon: Icon(CustomIcons.up, color: num == widget.waypoints.length ? color_dark_text_dark : color_dark_text_highlight),
                             onPressed: num == widget.waypoints.length ? null : () {
                               setState(() {
                                 num++;
@@ -297,14 +306,14 @@ class _MapWidgetState extends State<MapWidget> {
                           child: Container(
                               child: Text('REMOVE')
                           ),
-                          color: color_error,
-                          highlightColor: color_error,
-                          highlightedBorderColor: color_error,
-                          focusColor: color_error,
-                          hoverColor: color_error,
-                          textColor: color_text_dark,
-                          splashColor: color_error,
-                          borderSide: BorderSide(color: color_error),
+                          color: color_dark_error,
+                          highlightColor: color_dark_error,
+                          highlightedBorderColor: color_dark_error,
+                          focusColor: color_dark_error,
+                          hoverColor: color_dark_error,
+                          textColor: color_dark_text_dark,
+                          splashColor: color_dark_error,
+                          borderSide: BorderSide(color: color_dark_error),
                         ),
                         OutlineButton(
                           onPressed: () {
@@ -314,14 +323,14 @@ class _MapWidgetState extends State<MapWidget> {
                           child: Container(
                             child: Text('CONFIRM'),
                           ),
-                          color: color_text_highlight,
-                          highlightColor: color_text_highlight,
-                          highlightedBorderColor: color_text_highlight,
-                          focusColor: color_text_highlight,
-                          hoverColor: color_text_highlight,
-                          textColor: color_text_dark,
-                          splashColor: color_text_highlight,
-                          borderSide: BorderSide(color: color_text_highlight),
+                          color: color_dark_text_highlight,
+                          highlightColor: color_dark_text_highlight,
+                          highlightedBorderColor: color_dark_text_highlight,
+                          focusColor: color_dark_text_highlight,
+                          hoverColor: color_dark_text_highlight,
+                          textColor: color_dark_text_dark,
+                          splashColor: color_dark_text_highlight,
+                          borderSide: BorderSide(color: color_dark_text_highlight),
                         ),
                       ],
                     ),
@@ -334,20 +343,12 @@ class _MapWidgetState extends State<MapWidget> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    rootBundle.loadString('assets/map_theme.json').then((string) {
-      _mapTheme = string;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
 
     void onCreate(GoogleMapController controller) async {
-      controller.setMapStyle(_mapTheme);
+      controller.setMapStyle(widget._mapTheme);
       _controller.complete(controller);
       generateRoute();
       for(int i = 0; i < widget.positions.length; i++) {

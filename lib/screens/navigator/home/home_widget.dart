@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:jogr/screens/navigator/goals/goal_widget.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../goals/goal_widget.dart';
-import 'home_component.dart';
 
 
 class HomeWidget extends StatefulWidget {
@@ -20,36 +20,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget goalsBuilder(BuildContext context, int index) {
 
     List<Goal> goals = [
-      Goal(
-        header: 'THIS WEEK • RUN SOME DISTANCE',
-        fraction: true,
-        a: HomeComponent(data: '3.5', label: 'km',),
-        b: HomeComponent(data: '10', label: 'km'),
-      ),
-      Goal(
-        header: 'THIS MONTH • RUN SOME DISTANCE',
-        fraction: true,
-        a: HomeComponent(data: '17.4', label: 'km',),
-        b: HomeComponent(data: '40', label: 'km'),
-      ),
-      Goal(
-        header: 'THIS WEEK • BURN SOME CALORIES',
-        fraction: true,
-        a: HomeComponent(data: '2150', label: 'cal',),
-        b: HomeComponent(data: '2000', label: 'cal'),
-        completed: true,
-      ),
-      Goal(
-        header: 'THIS MONTH • REACH SOME PACE',
-        content: HomeComponent(data: '7.1', label: 'm/s'),
-      ),
-      Goal(
-        header: 'THIS WEEK • RUN SOME DISTANCE',
-        fraction: true,
-        a: HomeComponent(data: '3.5', label: 'km',),
-        b: HomeComponent(data: '10', label: 'km'),
-        post: 'ran',
-      ),
 
     ];
 
@@ -57,7 +27,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Card(
         elevation: 5,
-        color: color_card,
+        color: color_dark_card,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Center(child: goals[index]),
@@ -90,17 +60,17 @@ class _HomeWidgetState extends State<HomeWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              HomeComponent(
+              DataDisplay(
                 icon: CustomIcons.distance,
                 data: userData.runs.length > 0 ? userData.lastRun.distanceString : '--',
                 label: 'km',
               ),
-              HomeComponent(
+              DataDisplay(
                 icon: CustomIcons.timer,
                 data: userData.runs.length > 0 ? userData.lastRun.timeString : '--:--',
                 label: userData.runs.length > 0 ? (userData.lastRun.timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss') : 'mm:ss',
               ),
-              HomeComponent(
+              DataDisplay(
                 icon: CustomIcons.burn,
                 data: userData.runs.length > 0 ? userData.lastRun.calories.toString() : '--',
                 label: 'cal',
@@ -136,8 +106,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                   controller: controller,
                   count: 5,
                   effect: ExpandingDotsEffect(
-                      dotColor: color_text_dark,
-                      activeDotColor: color_text_highlight,
+                      dotColor: color_dark_text_dark,
+                      activeDotColor: color_dark_text_highlight,
                       dotWidth: 6,
                       dotHeight: 6,
                       spacing: 3,

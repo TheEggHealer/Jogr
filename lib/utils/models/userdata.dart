@@ -4,32 +4,52 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:flutter/material.dart' hide Route;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../constants.dart';
+import '../user_preferences.dart';
 
 class UserData {
 
+  String uid;
   Map<String, dynamic> raw;
 
   String name;
+  DateTime birth;
+  int age;
   double weight;
   Route lastRoute;
   List<Run> runs;
   List<Route> routes;
+  bool lightMode = false;
 
   static const int _plotDetail = 8;
 
-  UserData({ this.raw });
+  UserData({ this.raw, this.uid });
 
   setupExisting() {
     if (raw.containsKey('name')) name = raw['name'];
     if (raw.containsKey('weight')) weight = raw['weight'];
+    if (raw.containsKey('date_of_birth')) birth = DateTime.parse(raw['date_of_birth']);
+    if (raw.containsKey('light_mode')) lightMode = raw['light_mode'];
+
+    if(birth != null) age = (DateTime.now().difference(birth).inDays / 365).floor();
 
     addRuns(raw['previous_runs']);
     addRoutes(raw['saved_routes']);
 
     if (raw.containsKey('lastRoute')) lastRoute = routes[raw['lastRoute']];
+
+    updateSharedPreferences();
+  }
+
+  void updateSharedPreferences() async {
+    sharedPreferences.setBool('lightMode', lightMode);
+    UserPreferences.prefsLightMode = lightMode;
+    print('Setting userpref lightmode to $lightMode');
+    print('UserPref lightmode is now: ${UserPreferences.prefsLightMode}');
+    print('Reading shared: ${sharedPreferences.getBool('lightMode')}');
   }
 
   addRuns(Map<String, dynamic> runs) {
@@ -174,13 +194,13 @@ class UserData {
           drawHorizontalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
@@ -222,7 +242,7 @@ class UserData {
         borderData:
         FlBorderData(show: false,
             border: Border.fromBorderSide(
-                BorderSide(color: color_text_dark, width: 1))),
+                BorderSide(color: color_dark_text_dark, width: 1))),
         minX: 0,
         maxX: (spots.length - 1).toDouble(),
         minY: slowest.floor().toDouble(),
@@ -241,7 +261,7 @@ class UserData {
               show: true,
               gradientFrom: Offset(0, 0),
               gradientTo: Offset(0, 1),
-              colors: [Color(0xff62ECFF), color_background].map((color) =>
+              colors: [Color(0xff62ECFF), color_dark_background].map((color) =>
                   color.withOpacity(0.2)).toList(),
             ),
           ),
@@ -304,13 +324,13 @@ class UserData {
           drawHorizontalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: color_text_dark,
+              color: color_dark_text_dark,
               strokeWidth: 1,
             );
           },
@@ -350,7 +370,7 @@ class UserData {
         borderData:
         FlBorderData(show: false,
             border: Border.fromBorderSide(
-                BorderSide(color: color_text_dark, width: 1))),
+                BorderSide(color: color_dark_text_dark, width: 1))),
         minX: 0,
         maxX: (spots.length - 1).toDouble(),
         minY: shortest.floor().toDouble(),
@@ -369,7 +389,7 @@ class UserData {
               show: true,
               gradientFrom: Offset(0, 0),
               gradientTo: Offset(0, 1),
-              colors: [Color(0xff62FFA1), color_background].map((color) =>
+              colors: [Color(0xff62FFA1), color_dark_background].map((color) =>
                   color.withOpacity(0.2)).toList(),
             ),
           ),

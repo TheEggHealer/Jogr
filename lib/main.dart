@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         home: Wrapper(),
         theme: ThemeData(
-          accentColor: color_text_dark
+          accentColor: color_dark_text_dark
         ),
       ),
     );

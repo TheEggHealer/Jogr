@@ -37,7 +37,7 @@ class _MapDialogState extends State<MapDialog> {
             collapsed: Container(
                 margin: EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
-                  color: color_background,
+                  color: color_dark_background,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
                 ),
                 child: Column(
@@ -46,7 +46,7 @@ class _MapDialogState extends State<MapDialog> {
                     Icon(
                         Icons.drag_handle,
                         size: 30,
-                        color: color_text_dark
+                        color: color_dark_text_dark
                     ),
                     Stack(
                       alignment: Alignment.centerLeft,
@@ -60,7 +60,7 @@ class _MapDialogState extends State<MapDialog> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: IconButton(
-                            icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                            icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -75,7 +75,7 @@ class _MapDialogState extends State<MapDialog> {
                 margin: EdgeInsets.only(top: 10),
                 padding: EdgeInsets.only(top: 30),
                 decoration: BoxDecoration(
-                  color: color_background,
+                  color: color_dark_background,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
                 ),
                 child: Column(
@@ -92,7 +92,7 @@ class _MapDialogState extends State<MapDialog> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: IconButton(
-                            icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+                            icon: Icon(CustomIcons.back, size: 30, color: color_dark_text_highlight),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -115,28 +115,28 @@ class _MapDialogState extends State<MapDialog> {
                             widget.map.showMarkers = !widget.map.showMarkers;
                           }); },
                           child: Text(widget.map.showMarkers ? 'HIDE MARKERS' : 'SHOW MARKERS'),
-                          color: color_text_highlight,
-                          highlightColor: color_text_highlight,
-                          highlightedBorderColor: color_text_highlight,
-                          focusColor: color_text_highlight,
-                          hoverColor: color_text_highlight,
-                          textColor: color_text_dark,
-                          splashColor: color_text_highlight,
-                          borderSide: BorderSide(color: color_text_highlight),
+                          color: color_dark_text_highlight,
+                          highlightColor: color_dark_text_highlight,
+                          highlightedBorderColor: color_dark_text_highlight,
+                          focusColor: color_dark_text_highlight,
+                          hoverColor: color_dark_text_highlight,
+                          textColor: color_dark_text_dark,
+                          splashColor: color_dark_text_highlight,
+                          borderSide: BorderSide(color: color_dark_text_highlight),
                         ),
                         OutlineButton(
                           onPressed: () { setState(() {
                             widget.map.showRoute = !widget.map.showRoute;
                           }); },
                           child: Text(widget.map.showRoute ? 'HIDE ROUTE' : 'SHOW ROUTE'),
-                          color: color_text_highlight,
-                          highlightColor: color_text_highlight,
-                          highlightedBorderColor: color_text_highlight,
-                          focusColor: color_text_highlight,
-                          hoverColor: color_text_highlight,
-                          textColor: color_text_dark,
-                          splashColor: color_text_highlight,
-                          borderSide: BorderSide(color: color_text_highlight),
+                          color: color_dark_text_highlight,
+                          highlightColor: color_dark_text_highlight,
+                          highlightedBorderColor: color_dark_text_highlight,
+                          focusColor: color_dark_text_highlight,
+                          hoverColor: color_dark_text_highlight,
+                          textColor: color_dark_text_dark,
+                          splashColor: color_dark_text_highlight,
+                          borderSide: BorderSide(color: color_dark_text_highlight),
                         ),
                       ],
                     )

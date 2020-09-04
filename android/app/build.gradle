@@ -62,9 +62,9 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.release
             // Signing with the debug keys for now, so `flutter run --release` works.
-            // signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
         }
     }
 }

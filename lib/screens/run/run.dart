@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart' hide Route;
 import 'package:flutter/material.dart' hide Route;
-import 'package:jogr/screens/navigator/home/home_component.dart';
 import 'package:jogr/screens/navigator/screen_navigator.dart';
 import 'package:jogr/screens/run/location_tracker.dart';
 import 'package:jogr/screens/run/map_dialog.dart';
@@ -10,11 +9,15 @@ import 'package:jogr/screens/run/run_complete.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/custom_card.dart';
+import 'package:jogr/utils/custom_widgets/custom_scaffold.dart';
+import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/file_manager.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:jogr/utils/models/run_log.dart';
 import 'package:jogr/utils/models/userdata.dart';
+import 'package:jogr/utils/user_preferences.dart';
 
 class RunScreen extends StatefulWidget {
 
@@ -55,65 +58,70 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     selectedRoute = userData.routes.isNotEmpty ? (userData.lastRoute != null ? userData.lastRoute : userData.routes[0]) : null;
   }
 
-  Widget routeWidget(BuildContext context, Route route) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Card(
-        color: color_card,
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+  Widget routeWidget(BuildContext context, Route route, UserPreferences prefs) {
+    return CustomCard(
+      userData: userData,
+      onTap: null,
+      paddingFactor: 4,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 8,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    route.name,
-                    style: textStyleDarkLightLarge,
+                  RichText(
+                    text: TextSpan(
+                      text: route.name,
+                      style: prefs.text_background,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.ideographic,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
                       Text(
-                        '${route.distance}',
-                        style: textStyleHeaderSmall,
+                        route.distance.toString(),
+                        style: prefs.text_goal,
                       ),
-                      SizedBox(width: 5,),
                       Text(
                         'm',
-                        style: textStyleDark,
+                        style: prefs.text_label,
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
-              OutlineButton(
-                onPressed: () {
-                  setState(() {
-                    selectedRoute = route;
-                  });
-                  Navigator.of(context).pop();
-                },
-                child: Text('LOAD'),
-                color: color_text_highlight,
-                highlightColor: color_text_highlight,
-                highlightedBorderColor: color_text_highlight,
-                focusColor: color_text_highlight,
-                hoverColor: color_text_highlight,
-                textColor: color_text_dark,
-                borderSide: BorderSide(color: color_text_highlight),
+            ),
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 4,
+              child: button(
+                  text: 'Load',
+                  textColor: prefs.color_text_background,
+                  splashColor: prefs.color_splash,
+                  borderColor: prefs.color_highlight,
+                  onTap: () {
+                    setState(() {
+                      selectedRoute = route;
+                    });
+                    Navigator.of(context).pop();
+                  }
               ),
-            ],
-          ),
+            )
+
+          ],
         ),
       ),
     );
   }
 
-  Widget pickRouteDialog(BuildContext context) {
+  Widget loadDialog(BuildContext context) {
+    UserPreferences prefs = UserPreferences(userData.lightMode);
     List<Widget> items = [
       SizedBox(height: 20),
       Stack(
@@ -121,14 +129,14 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
         children: [
           Center(
             child: Text(
-              'Pick route',
-              style: textStyleHeader,
+              'Select route',
+              style: prefs.text_header,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: IconButton(
-              icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
+              icon: Icon(CustomIcons.back, size: 30, color: prefs.color_main),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -137,13 +145,13 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
         ],
       ),
       SizedBox(height: 20),
-    ]..addAll(userData.routes.map((e) => routeWidget(context, e)).toList());
+    ]..addAll(this.userData.routes.map((e) => routeWidget(context, e, prefs)).toList());
 
     return Dialog(
-      backgroundColor: color_background,
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+      backgroundColor: prefs.color_background,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
           child: ScrollConfiguration(
             behavior: NoScrollGlow(),
             child: CustomScrollView(
@@ -169,7 +177,6 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
           if(--updateTimeDistanceCooldown <= 0) {
             updateTimeDistanceCooldown = 20;
             update();
-            print('Updating');
           }
           timeString = Run(time: stopwatch.elapsed.inSeconds + startTimeSeconds).timeString;
         });
@@ -179,6 +186,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
 
   Future<void> update() async {
     String fileContent = await FileManager.read();
+    print('File content: $fileContent');
     if(fileContent.isNotEmpty) {
       this.log = RunLog(fileContent);
       startTimeSeconds = ((DateTime.now().millisecondsSinceEpoch - log.startTime) / 1000).round();
@@ -192,6 +200,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     String fileContent = await FileManager.read();
     print('SETING UP');
     if(fileContent.isNotEmpty) {
+      print('Creating runlog from: $fileContent');
       this.log = RunLog(fileContent);
 
       setState(() {
@@ -237,230 +246,291 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
       //CallbackHandler.setActive(false);
       FileManager.write('*\n');
     }
-
-    /**
-    running = !running;
-    running ? _play_pause.forward() : _play_pause.reverse();
-    if(running) {
-      startTimer();
-      stopwatch.start();
-      if(!tracker.initializedTracking) tracker.startLocationService();
-      tracker.setTracking(true);
-    } else {
-      stopwatch.stop();
-      tracker.setTracking(false);
-    }
-        */
   }
 
   void _onStop() async {
-    if((await FileManager.read()).isNotEmpty) tracker.startLocationService();
-    stopwatch.stop();
-    running = false;
-    //CallbackHandler.setActive(false);
-    print(await FileManager.read());
-    print('File size: ${await FileManager.fileSize()}');
-    await FileManager.clear();
-    _play_pause.reverse();
+    if(running) {
+      if ((await FileManager.read()).isNotEmpty) tracker.startLocationService();
+      stopwatch.stop();
+      running = false;
+      //CallbackHandler.setActive(false);
+      print(await FileManager.read());
+      print('File size: ${await FileManager.fileSize()}');
+      await FileManager.clear();
+      _play_pause.reverse();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, navigator)));
-    tracker.stopLocationService();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RunComplete(log, selectedRoute, userData, db, navigator)));
+      tracker.stopLocationService();
+    } else {
+      await FileManager.clear();
+      tracker.stopLocationService();
+      widget.navigator.running = false;
+      Navigator.pop(context);
+    }
   }
 
   void _onMap() {
     setState(() async {
       await update();
+      map.map.setTheme(userData);
       map.map.positions = log.locations;
       if(selectedRoute != null) map.map.setupRoute(selectedRoute);
       Navigator.push(context, MaterialPageRoute(builder: (context) => map));
     });
   }
 
+  Future<bool> _onWillPop(UserPreferences prefs) {
+    print(running);
+    if(running) {
+      return showDialog(
+        context: context,
+        builder: (context) =>
+        new Dialog(
+          backgroundColor: prefs.color_background,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    'Exit?',
+                    style: prefs.text_header,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'If you go back, your current run will be lost. Are you sure you want to exit?',
+                  style: prefs.text_header_2,
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    button(
+                      onTap: () => Navigator.of(context).pop(false),
+                      borderColor: prefs.color_main,
+                      textColor: prefs.color_text_header,
+                      splashColor: prefs.color_splash,
+                      text: 'Cancel',
+                    ),
+                    button(
+                      onTap: () async {
+                        tracker.stopLocationService();
+                        stopwatch.stop();
+                        running = false;
+                        await FileManager.clear();
+                        widget.navigator.running = false;
+                        Navigator.of(context).pop(true);
+                      },
+                      borderColor: prefs.color_error,
+                      textColor: prefs.color_text_header,
+                      splashColor: prefs.color_splash,
+                      text: 'Exit',
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ) ?? false;
+    } else {
+      widget.navigator.running = false;
+      Navigator.pop(context);
+      return Future.value(true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
+    UserPreferences prefs = UserPreferences(userData.lightMode);
 
-    return Scaffold(
-      backgroundColor: color_background,
-      body: Container(
-        padding: EdgeInsets.only(top: 60),
-        child: Column(
-          children: [
-            Stack(
+    return WillPopScope(
+      onWillPop: () {
+        return _onWillPop(prefs);
+      },
+      child: Scaffold(
+        body: CustomScaffold(
+          userData: userData,
+          appBar: Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Align(
               alignment: Alignment.centerLeft,
-              children: [
-                Center(
-                  child: Text(
-                    'Run!',
-                    style: textStyleHeader,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: IconButton(
-                    icon: Icon(CustomIcons.back, size: 30, color: color_text_highlight),
-                    onPressed: () {
-                      navigator.setState(() {
-                        navigator.running = false;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            divider,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text(
-                    '• ROUTE',
-                    style: textStyleDark
+                  IconButton(
+                    onPressed: () async {
+                      if(running) {
+                        bool quit = await _onWillPop(prefs);
+                        if (quit) Navigator.pop(context);
+                      } else {
+                        widget.navigator.running = false;
+                        Navigator.pop(context);
+                      }
+                    },
+                    iconSize: 30,
+                    splashColor: prefs.color_splash,
+                    icon: Icon(CustomIcons.back, color: prefs.color_highlight,),
+                    color: prefs.color_highlight,
                   ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
+                  Text(
+                    'Run',
+                    style: prefs.text_header_invert_bold,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Spacer(flex: 4),
+                Flexible(
+                  flex: 5,
+                  child: CustomCard(
+                    userData: userData,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                selectedRoute != null ? selectedRoute.name : 'No route.',
-                                style: textStyleHeader,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            OutlineButton(
-                              onPressed: () { showDialog(context: context, builder: pickRouteDialog); },
-                              child: Text('PICK ROUTE'),
-                              color: color_text_highlight,
-                              highlightColor: color_text_highlight,
-                              highlightedBorderColor: color_text_highlight,
-                              focusColor: color_text_highlight,
-                              hoverColor: color_text_highlight,
-                              textColor: color_text_dark,
-                              splashColor: color_text_highlight,
-                              borderSide: BorderSide(color: color_text_highlight),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.ideographic,
-
-                          children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
                             Text(
-                              'Distance:',
-                              style: textStyleDarkLightLarge,
+                              'Planned route',
+                              style: prefs.text_label,
                             ),
-                            SizedBox(width: 15,),
                             Text(
-                              '${selectedRoute != null ? selectedRoute.distance : '--'}',
-                              style: textStyleHeader,
+                              selectedRoute == null ? 'No route' : selectedRoute.name,
+                              style: prefs.text_header_invert_2,
                             ),
-                            SizedBox(width: 5,),
-                            Text(
-                              'm',
-                              style: textStyleDark,
+                            DataDisplay(
+                              prefs: prefs,
+                              data: selectedRoute == null ? '--' : selectedRoute.distance.toString(),
+                              label: 'm',
                             )
                           ],
                         ),
+                        button(
+                          onTap: () => showDialog(context: context, builder: loadDialog),
+                          text: 'Pick route',
+                          borderColor: prefs.color_highlight,
+                          textColor: prefs.color_text_background,
+                          splashColor: prefs.color_splash,
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-            divider,
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(height:30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      HomeComponent(
-                        icon: CustomIcons.timer,
-                        data: loading ? '--:--:--' : timeString,
-                        label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
-                      ),
-                      HomeComponent(
-                        icon: CustomIcons.distance,
-                        data: loading ? '--' : '$distance',
-                        label: 'm',
-                      ),
-                    ],
                   ),
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly,
-                          children: [
-                            RawMaterialButton(
-                              elevation: 0,
-                              onPressed: _onStop,
-                              child: Container(
-                                child: Icon(Icons.stop, color: color_text_highlight, size: constraints.maxHeight / 7),
-                                padding: EdgeInsets.all(constraints.maxHeight / 18),
+                ),
+                Divider(
+                  color: prefs.color_shadow,
+                ),
+                Flexible(
+                  flex: 7,
+                  child: CustomCard(
+                    userData: userData,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Current run',
+                          style: prefs.text_label,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              DataDisplay(
+                                prefs: prefs,
+                                icon: CustomIcons.timer,
+                                data: loading ? '--:--:--' : timeString,
+                                label: timeString.split(':').length > 2 ? 'hh:mm:ss' : 'mm:ss',
                               ),
-                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              hoverColor: color_button_green,
-                              focusColor: color_button_green,
-                              highlightColor: color_button_green,
-                              splashColor: color_button_green,
-                            ),
-                            RawMaterialButton(
-                              elevation: 0,
-                              onPressed: _onPlayPause,
-                              child: Container(
-                                child: AnimatedIcon(
-                                  icon: AnimatedIcons.play_pause,
-                                  progress: _play_pause,
-                                  size: constraints.maxHeight / 3,
-                                  color: color_text_highlight,
-                                ),
-                                padding: EdgeInsets.all(constraints.maxHeight / 12),
+                              DataDisplay(
+                                prefs: prefs,
+                                icon: CustomIcons.distance,
+                                data: loading ? '--' : '$distance',
+                                label: 'm',
                               ),
-                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              hoverColor: color_button_green,
-                              focusColor: color_button_green,
-                              highlightColor: color_button_green,
-                              splashColor: color_button_green,
-                            ),
-                            RawMaterialButton(
-                              elevation: 0,
-                              onPressed: _onMap,
-                              child: Container(
-                                child: Icon(CustomIcons.gps, color: color_text_highlight, size: constraints.maxHeight / 7),
-                                padding: EdgeInsets.all(constraints.maxHeight / 18),
-                              ),
-                              shape: CircleBorder(side: BorderSide(width: 2, color: color_button_green)),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              hoverColor: color_button_green,
-                              focusColor: color_button_green,
-                              highlightColor: color_button_green,
-                              splashColor: color_button_green,
-                            ),
-                          ],
-                        );
-                      }
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                ),
+                Expanded(
+                  flex: 10,
+                  child: LayoutBuilder(
+                    builder: (context, box) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        children: [
+                          RawMaterialButton(
+                            elevation: 0,
+                            onPressed: _onStop,
+                            child: Container(
+                              child: Icon(Icons.stop, color: prefs.color_main, size: box.maxHeight / 7),
+                              padding: EdgeInsets.all(box.maxHeight / 14),
+                            ),
+                            shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            highlightColor: prefs.color_shadow,
+                            focusColor: prefs.color_shadow,
+                            hoverColor: prefs.color_shadow,
+                            splashColor: prefs.color_shadow,
+                          ),
+                          RawMaterialButton(
+                            elevation: 0,
+                            onPressed: _onPlayPause,
+                            child: Container(
+                              child: AnimatedIcon(
+                                icon: AnimatedIcons.play_pause,
+                                progress: _play_pause,
+                                size: box.maxHeight / 2.5,
+                                color: prefs.color_main,
+                              ),
+                              padding: EdgeInsets.all(box.maxHeight / 10),
+                            ),
+                            shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            highlightColor: prefs.color_shadow,
+                            focusColor: prefs.color_shadow,
+                            hoverColor: prefs.color_shadow,
+                            splashColor: prefs.color_shadow,
+                          ),
+                          RawMaterialButton(
+                            elevation: 0,
+                            onPressed: _onMap,
+                            child: Container(
+                              child: Icon(CustomIcons.gps, color: prefs.color_main, size: box.maxHeight / 7),
+                              padding: EdgeInsets.all(box.maxHeight / 14),
+                            ),
+                            shape: CircleBorder(side: BorderSide(width: 2, color: prefs.color_main)),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            highlightColor: prefs.color_shadow,
+                            focusColor: prefs.color_shadow,
+                            hoverColor: prefs.color_shadow,
+                            splashColor: prefs.color_shadow,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                )
+              ]
             ),
-          ],
-        ),
+          )
+        )
       ),
     );
   }
