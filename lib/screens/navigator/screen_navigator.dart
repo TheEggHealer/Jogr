@@ -29,7 +29,7 @@ class ScreenNavigator extends StatefulWidget {
   bool lightModePrefs;
 
   ScreenNavigator({this.auth, this.lightModePrefs}){
-    print(lightModePrefs);
+    //print(lightModePrefs);
   }
 
   @override
@@ -49,6 +49,11 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
 
     String fileContent = await FileManager.read();
     bool background = fileContent.isNotEmpty;
+    if(background) {
+      print('Found exception in tracker-file');
+      background = !fileContent.split('\n')[0].contains('#');
+      //await FileManager.clear(); //Not possible to close app when running and keep the log when starting app again when this line isn't commented out.
+    }
 
     if(tracking && background) return 1;
     else if(tracking && !background) return 2;
@@ -88,15 +93,17 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
       if(running) {
         //pushNewScreen(context, screen: RunScreen(userData, this, DatabaseService(uid: user.uid)));
         print('Opening new run screen');
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RunScreen(userData, this, DatabaseService(uid: user.uid))));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RunScreen(userData, this, DatabaseService(uid: user.uid))));
       }
     });
 
     if(userData == null) {
+      print('Splashscreen in navigator with lightMode: ${widget.lightModePrefs}');
       return SplashScreen(auth: widget.auth, lightMode: widget.lightModePrefs,);
     } else if(!setup) {
       return Setup();
     } else {
+      //if(running) return RunScreen(userData, this, DatabaseService(uid: user.uid));
       return PersistentTabView(
         controller: controller,
         screens: [

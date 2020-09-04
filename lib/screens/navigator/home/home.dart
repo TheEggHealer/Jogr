@@ -8,6 +8,7 @@ import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
 import 'package:jogr/utils/custom_widgets/custom_scaffold.dart';
 import 'package:jogr/utils/custom_widgets/data_display.dart';
+import 'package:jogr/utils/file_manager.dart';
 import 'package:jogr/utils/models/userdata.dart';
 import 'package:jogr/utils/user_preferences.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
@@ -103,7 +104,7 @@ class HomeState extends State<Home> {
                               CustomIcons.add_circle,
                             ),
                             iconSize: 60,
-                            //splashRadius: 30,
+                            splashRadius: 30,
                             onPressed: notImplemented,
                             color: prefs.color_shadow,
                             hoverColor: Colors.transparent,
@@ -133,7 +134,8 @@ class HomeState extends State<Home> {
                   child: Center(
                     child: RawMaterialButton(
                       elevation: 10,
-                      onPressed: () {
+                      onPressed: () async {
+                        await FileManager.clear();
                         widget.navigator.setState(() {
                           widget.navigator.running = true;
                         });

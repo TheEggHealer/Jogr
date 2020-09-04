@@ -4,9 +4,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
 import 'package:flutter/material.dart' hide Route;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../constants.dart';
+import '../user_preferences.dart';
 
 class UserData {
 
@@ -38,6 +40,16 @@ class UserData {
     addRoutes(raw['saved_routes']);
 
     if (raw.containsKey('lastRoute')) lastRoute = routes[raw['lastRoute']];
+
+    updateSharedPreferences();
+  }
+
+  void updateSharedPreferences() async {
+    sharedPreferences.setBool('lightMode', lightMode);
+    UserPreferences.prefsLightMode = lightMode;
+    print('Setting userpref lightmode to $lightMode');
+    print('UserPref lightmode is now: ${UserPreferences.prefsLightMode}');
+    print('Reading shared: ${sharedPreferences.getBool('lightMode')}');
   }
 
   addRuns(Map<String, dynamic> runs) {

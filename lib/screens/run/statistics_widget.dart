@@ -10,8 +10,9 @@ class StatisticsWidget extends StatelessWidget {
 
   Run run;
   UserData userData;
+  UserPreferences prefs;
 
-  StatisticsWidget(this.run, this.userData);
+  StatisticsWidget(this.run, this.userData, this.prefs);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +22,56 @@ class StatisticsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'STATISTICS',
-          style: textStyleDark,
-        ),
+
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  DataDisplay(
+                    prefs: prefs,
+                    icon: CustomIcons.distance,
+                    data: roundedString(run.distance / 1000, 1),
+                    label: 'km',
+                  ),
+                  DataDisplay(
+                    prefs: prefs,
+                    icon: CustomIcons.timer,
+                    data: run.timeString,
+                    label: 'mm:ss',
+                  ),
+                  DataDisplay(
+                    prefs: prefs,
+                    icon: CustomIcons.burn,
+                    data: run.calories.toString(),
+                    label: 'cal',
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  DataDisplay(
+                    prefs: prefs,
+                    icon: CustomIcons.jogr,
+                    data: run.paceString,
+                    label: 'time/km',
+                  ),
+                  DataDisplay(
+                    prefs: prefs,
+                    icon: CustomIcons.speed,
+                    data: roundedString(run.speed, 2),
+                    label: 'm/s',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )
+
+        /**
         Expanded(
           child: Center(
             child: Column(
@@ -74,6 +121,7 @@ class StatisticsWidget extends StatelessWidget {
             ),
           ),
         )
+            */
       ],
     );
   }

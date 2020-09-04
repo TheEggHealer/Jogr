@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 const double app_bar_height = 0.25; // % of screen height
@@ -203,8 +204,9 @@ const textDarkTitle = TextStyle(
 
 String map_theme_light = '';
 String map_theme_dark = '';
+SharedPreferences sharedPreferences;
 
-loadMapThemes() async {
+loadEssentials() async {
   if(map_theme_light.isEmpty) {
     String file = 'assets/map_theme_light.json';
     rootBundle.loadString(file).then((string) {
@@ -218,8 +220,9 @@ loadMapThemes() async {
       map_theme_dark = string;
     });
   }
-}
 
+  sharedPreferences = await SharedPreferences.getInstance();
+}
 
 
 void notImplemented() {

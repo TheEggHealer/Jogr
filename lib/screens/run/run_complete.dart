@@ -6,6 +6,7 @@ import 'package:jogr/screens/run/statistics_widget.dart';
 import 'package:jogr/services/database.dart';
 import 'package:jogr/utils/constants.dart';
 import 'package:jogr/utils/custom_icons.dart';
+import 'package:jogr/utils/custom_widgets/custom_card.dart';
 import 'package:jogr/utils/custom_widgets/data_display.dart';
 import 'package:jogr/utils/models/route.dart';
 import 'package:jogr/utils/models/run.dart';
@@ -37,25 +38,7 @@ class RunComplete extends StatefulWidget {
 
 class _RunCompleteState extends State<RunComplete> {
 
-  Widget statsBuilder(BuildContext context, int index) {
-
-    List<Widget> goals = [
-      StatisticsWidget(widget.run, widget.userData),
-    ];
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Card(
-        elevation: 5,
-        color: color_dark_card,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(child: goals[index]),
-
-        ),
-      ),
-    );
-  }
+  PageController pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +48,178 @@ class _RunCompleteState extends State<RunComplete> {
 
     return Scaffold(
       body: LayoutBuilder(
-        builder: (context, constraints) {
+        builder: (context, box) {
+
+          double cardHeight = box.maxHeight / 4.3;
+          double rest = box.maxHeight / 3 - cardHeight;
+          double minHeight = 100;
+
+          return SlidingUpPanel(
+            parallaxEnabled: true,
+            parallaxOffset: 0.4,
+            renderPanelSheet: false,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+            maxHeight: cardHeight + minHeight + rest + 30,
+            minHeight: minHeight,
+            collapsed: Container(
+                margin: EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                  color: prefs.color_background,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                        Icons.remove,
+                        size: 30,
+                        color: prefs.color_shadow
+                    ),
+                    Text(
+                      'Run Completed',
+                      style: prefs.text_header,
+                    ),
+                  ],
+                )
+            ),
+            panel: Container(
+              margin: EdgeInsets.only(top: 10),
+              decoration: BoxDecoration(
+                color: prefs.color_background,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0), ),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 8.0,
+                    color: prefs.color_shadow,
+                  ),
+                ]
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                      Icons.remove,
+                      size: 30,
+                      color: prefs.color_shadow
+                  ),
+                  Text(
+                    'Run Completed',
+                    style: prefs.text_header,
+                  ),
+                  SizedBox(height: 20),
+                  Divider(
+                    color: prefs.color_shadow,
+                  ),
+                  Container(
+                    height: cardHeight,
+                    child: PageView(
+                      controller: pageController,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Center(
+                            child: CustomCard(
+                              userData: widget.userData,
+                              paddingFactor: 1,
+                              child: Container(
+                                width: box.maxWidth * 0.8,
+                                height: cardHeight,
+                                child: StatisticsWidget(widget.run, widget.userData, prefs),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 14, left: 5, right: 5),
+                          child: Center(
+                            child: CustomCard(
+                              userData: widget.userData,
+                              paddingFactor: 1,
+                              child: Container(
+                                width: box.maxWidth * 0.7,
+                                height: cardHeight,
+                                child: Center(
+                                  child: Text(
+                                    'Height difference chart',
+                                    style: prefs.text_header,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SmoothPageIndicator(
+                    controller: pageController,
+                    effect: WormEffect(
+                      radius: 4,
+                      spacing: 4,
+                      strokeWidth: 1,
+                      dotHeight: 8,
+                      dotWidth: 8,
+                      activeDotColor: prefs.color_main,
+                      dotColor: prefs.color_text_header,
+                    ),
+                    count: 2,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 60),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            icon: Icon(CustomIcons.trash, color: prefs.color_text_header),
+                            onPressed: () async {
+                              //TODO Show dialog asking if user wants to throw away run
+                              widget.navigator.setState(() {
+                                widget.navigator.running = false;
+                                Navigator.pop(context);
+                              });
+                            },
+                            iconSize: 30,
+                          ),
+                          SizedBox(width: 20,),
+                          Expanded(
+                            child: SizedBox(
+                              height: 60,
+                              child: button(
+                                onTap: () async {
+                                  Run run = widget.run;
+                                  await widget.db.mergeUserDataFields({
+                                    'previous_runs': widget.userData.raw['previous_runs'].putIfAbsent('', () => {
+                                      run.date: {
+                                        'distance': run.distance,
+                                        'time': run.time,
+                                        'calories': run.calories,
+                                        'route': run.route == null ? 'null' : run.route.name
+                                      }
+                                    })
+                                  });
+                                  print('Updated database');
+                                  widget.navigator.setState(() {
+                                    widget.navigator.running = false;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                text: 'Save and continue',
+                                textColor: prefs.color_text_header,
+                                borderColor: prefs.color_main,
+                                splashColor: prefs.color_splash,
+                                borderRadius: 30,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            body: widget.map,
+          );
+          /**
           return SlidingUpPanel(
             renderPanelSheet: false,
             defaultPanelState: PanelState.OPEN,
@@ -244,6 +398,7 @@ class _RunCompleteState extends State<RunComplete> {
 
             body: widget.map,
           );
+              */
         },
       ),
     );
