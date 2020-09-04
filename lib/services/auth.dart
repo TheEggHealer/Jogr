@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jogr/services/database.dart';
-import 'package:jogr/utils/models/user.dart';
+import 'package:jogr/utils/models/user.dart' as UserModel;
 
 class AuthService {
 
@@ -9,20 +9,20 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // auth change user stream
-  Stream<User> get user {
-    return _auth.onAuthStateChanged.map(_toUser);
+  Stream<UserModel.User> get user {
+    return _auth.authStateChanges().map(_toUser);
   }
 
   // create User object based on firebase user
-  User _toUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+  UserModel.User _toUser(User user) {
+    return user != null ? UserModel.User(uid: user.uid) : null;
   }
 
   // sign in anon
   Future signInAnon() async {
     try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.signInAnonymously();
+      User user = result.user;
       return _toUser(user);
     } catch(e) {
 
@@ -42,13 +42,13 @@ class AuthService {
       idToken: googleSignInAuthentication.idToken,
     );
 
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
+    final UserCredential authResult = await _auth.signInWithCredential(credential);
+    final User user = authResult.user;
 
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = _auth.currentUser;
     assert(user.uid == currentUser.uid);
 
     DatabaseService db = DatabaseService(uid: user.uid);
@@ -64,8 +64,8 @@ class AuthService {
 
   Future loginEmailPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
 
       DatabaseService db = DatabaseService(uid: user.uid);
       if(!(await db.checkExist())) {
@@ -89,8 +89,8 @@ class AuthService {
   // register email & pass
   Future registerEmailPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
 
       //Create new document in firestore database
       await DatabaseService(uid: user.uid).updateUserData(false, '', '', 0);

@@ -103,7 +103,6 @@ class ScreenNavigatorState extends State<ScreenNavigator> {
     } else if(!setup) {
       return Setup();
     } else {
-      //if(running) return RunScreen(userData, this, DatabaseService(uid: user.uid));
       return PersistentTabView(
         controller: controller,
         screens: [
